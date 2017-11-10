@@ -169,10 +169,7 @@ objMessage.Configuration.Fields.Item _
 ("http://schemas.microsoft.com/cdo/configuration/smtpconnectiontimeout") = 60
 objMessage.Configuration.Fields.Update
 '==End remote SMTP server configuration section==
-objMessage.Send
+'objMessage.Send
 
 'end if
 %>
-
-
-

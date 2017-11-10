@@ -1,0 +1,168 @@
+BODY {
+	PADDING-RIGHT: 0px; PADDING-LEFT: 0px; FONT-SIZE: 13px; BACKGROUND: url(/templates/images/pagebck.jpg) #0169aa fixed no-repeat center top; PADDING-BOTTOM: 0px; MARGIN: 0px; COLOR: #000; PADDING-TOP: 0px; FONT-FAMILY: Verdana, Arial, Helvetica, sans-serif; TEXT-ALIGN: center
+}
+TABLE.layout {
+	BORDER-RIGHT: #1698ec 1px solid; PADDING-RIGHT: 0px; BORDER-TOP: #1698ec 1px solid; PADDING-LEFT: 0px; PADDING-BOTTOM: 0px; MARGIN: 0px auto; BORDER-LEFT: #1698ec 1px solid; WIDTH: 1014px; PADDING-TOP: 0px; BORDER-BOTTOM: #1698ec 1px solid; BORDER-COLLAPSE: collapse; BACKGROUND-COLOR: #fff
+}
+TABLE.layout TD {
+	BORDER-TOP-WIDTH: 0px; PADDING-RIGHT: 0px; PADDING-LEFT: 0px; BORDER-LEFT-WIDTH: 0px; BORDER-BOTTOM-WIDTH: 0px; PADDING-BOTTOM: 0px; MARGIN: 0px; VERTICAL-ALIGN: top; PADDING-TOP: 0px; BORDER-COLLAPSE: collapse; BORDER-RIGHT-WIDTH: 0px
+}
+TD.top {
+	BACKGROUND-IMAGE: url(/templates/images/img_03.jpg); BACKGROUND-REPEAT: no-repeat; HEIGHT: 108px
+}
+TD.top_ad_space {
+	WIDTH: 468px; BACKGROUND-REPEAT: no-repeat; TEXT-ALIGN: center! important
+}
+TD.top_search {
+	PADDING-LEFT: 30px! important; WIDTH: 190px; BACKGROUND-REPEAT: no-repeat; TEXT-ALIGN: left
+}
+TD.top_search P {
+	FONT-WEIGHT: bold; FONT-SIZE: 14px; COLOR: #009
+}
+TD.top_search INPUT.searchtxtbox {
+	BORDER-RIGHT: #600 1px solid; BORDER-TOP: #600 1px solid; FONT-SIZE: 11px; VERTICAL-ALIGN: top; BORDER-LEFT: #600 1px solid; BORDER-BOTTOM: #600 1px solid; FONT-FAMILY: "Courier New", Courier, monospace; HEIGHT: 1.5em
+}
+TABLE.sidebar_container {
+	BORDER-TOP-WIDTH: 0px; PADDING-RIGHT: 0px; PADDING-LEFT: 0px; BORDER-LEFT-WIDTH: 0px; BORDER-BOTTOM-WIDTH: 0px; PADDING-BOTTOM: 0px; WIDTH: 244px; PADDING-TOP: 0px; BORDER-COLLAPSE: collapse; BACKGROUND-COLOR: #fff; BORDER-RIGHT-WIDTH: 0px
+}
+TD.sidebar {
+	FONT-SIZE: 11px; BACKGROUND-IMAGE: url(/templates/images/img_28.jpg); WIDTH: 234px; BACKGROUND-REPEAT: repeat-y; TEXT-ALIGN: left
+}
+TD.sidebar A {
+	DISPLAY: block; FONT-WEIGHT: bold; MARGIN: 0.5em 1em; COLOR: #91ecff; TEXT-DECORATION: none
+}
+DIV.subnav {
+	MARGIN-LEFT: 1em
+}
+TD.sidebar A:hover {
+	COLOR: #c00
+}
+TD.sidebar P {
+	FONT-SIZE: 13px
+}
+TD.sidebar P A {
+	COLOR: #fff
+}
+DIV.submenu {
+	FONT-SIZE: 11px; TEXT-ALIGN: left
+}
+.submenu A {
+	DISPLAY: block; FONT-WEIGHT: bold; MARGIN: 0.25em 0.5em; COLOR: #00d; TEXT-DECORATION: none
+}
+.submenu DIV.subnav {
+	MARGIN-LEFT: 0.5em
+}
+.submenu A:hover {
+	COLOR: #c00
+}
+.submenu P {
+	FONT-SIZE: 13px
+}
+.submenu P A {
+	COLOR: #006
+}
+TABLE.contentcontainer {
+	MARGIN: 10px; WIDTH: 750px
+}
+TABLE.contentcontainer TD.content_1 {
+	PADDING-RIGHT: 10px; PADDING-LEFT: 10px; PADDING-BOTTOM: 10px; WIDTH: 100%; PADDING-TOP: 10px; BACKGROUND-COLOR: #c2ddfa; TEXT-ALIGN: left
+}
+TABLE.contentcontainer TD.content_2 {
+	PADDING-RIGHT: 10px; PADDING-LEFT: 10px; PADDING-BOTTOM: 10px; WIDTH: 49%; PADDING-TOP: 10px; BACKGROUND-COLOR: #c2ddfa; TEXT-ALIGN: left
+}
+TABLE.contentcontainer TD.content_2_col1 {
+	PADDING-RIGHT: 10px; PADDING-LEFT: 10px; PADDING-BOTTOM: 10px; PADDING-TOP: 10px; BACKGROUND-COLOR: #c2ddfa; TEXT-ALIGN: left
+}
+TABLE.contentcontainer TD.content_2_col2 {
+	PADDING-RIGHT: 10px; PADDING-LEFT: 10px; PADDING-BOTTOM: 10px; WIDTH: 244px; PADDING-TOP: 10px; BACKGROUND-COLOR: #fff; TEXT-ALIGN: left
+}
+TABLE.contentcontainer TD.content_3 {
+	PADDING-RIGHT: 10px; PADDING-LEFT: 10px; PADDING-BOTTOM: 10px; WIDTH: 100%; PADDING-TOP: 10px; BACKGROUND-COLOR: #fff; TEXT-ALIGN: left
+}
+TABLE.contentcontainer TD.content_4 {
+	PADDING-RIGHT: 2px; PADDING-LEFT: 2px; PADDING-BOTTOM: 2px; WIDTH: 100%; PADDING-TOP: 2px; BACKGROUND-COLOR: #fff; TEXT-ALIGN: left
+}
+TABLE.contentcontainer TD.midspace {
+	WIDTH: 15px
+}
+H1 {
+	FONT-SIZE: 18px; COLOR: #008
+}
+H2 {
+	FONT-SIZE: 14px; COLOR: #800
+}
+H3 {
+	FONT-SIZE: 13px; COLOR: #800; FONT-STYLE: italic
+}
+.morelink {
+	FONT-SIZE: 11px; COLOR: #008; TEXT-ALIGN: right
+}
+.morelink A {
+	TEXT-DECORATION: none
+}
+.morelink A:hover {
+	TEXT-DECORATION: underline
+}
+DIV.callout {
+	FONT-SIZE: 11px; PADDING-BOTTOM: 1em; MARGIN: 1em auto; WIDTH: 50%; BACKGROUND-COLOR: #e1e1e1
+}
+DIV.callout H3 {
+	PADDING-BOTTOM: 4px; COLOR: #fff; PADDING-TOP: 4px; FONT-STYLE: normal; BACKGROUND-COLOR: #006; TEXT-ALIGN: center
+}
+DIV.callout P {
+	MARGIN: 0.5em 1em 1em
+}
+DIV#footer {
+	FONT-SIZE: 11px; MARGIN-BOTTOM: 2em; COLOR: #666; TEXT-ALIGN: center
+}
+TABLE.calendar {
+	BORDER-RIGHT: #000 1px solid; PADDING-RIGHT: 0px; BORDER-TOP: #000 1px solid; PADDING-LEFT: 0px; PADDING-BOTTOM: 0px; MARGIN: 0px auto; BORDER-LEFT: #000 1px solid; WIDTH: 100%; PADDING-TOP: 0px; BORDER-BOTTOM: #000 1px solid; BORDER-COLLAPSE: collapse
+}
+TABLE.calendar TD {
+	BORDER-TOP-WIDTH: 0px; PADDING-RIGHT: 4px; PADDING-LEFT: 4px; BORDER-LEFT-WIDTH: 0px; BORDER-BOTTOM-WIDTH: 0px; PADDING-BOTTOM: 4px; MARGIN: 0px; PADDING-TOP: 4px; BORDER-COLLAPSE: collapse; BORDER-RIGHT-WIDTH: 0px
+}
+TABLE.calendar TH {
+	BORDER-TOP-WIDTH: 0px; PADDING-RIGHT: 4px; PADDING-LEFT: 4px; BORDER-LEFT-WIDTH: 0px; BORDER-BOTTOM-WIDTH: 0px; PADDING-BOTTOM: 4px; MARGIN: 0px; COLOR: #fff; PADDING-TOP: 4px; BORDER-COLLAPSE: collapse; BACKGROUND-COLOR: #000; TEXT-ALIGN: left; BORDER-RIGHT-WIDTH: 0px
+}
+TABLE.calendar TD.events {
+	
+}
+TABLE.calendar TH.dates {
+	WIDTH: 100px
+}
+UL.articledetails {
+	PADDING-RIGHT: 0px; PADDING-LEFT: 0px; PADDING-BOTTOM: 0px; MARGIN: 0px; PADDING-TOP: 0px
+}
+UL.articledetails LI {
+	PADDING-RIGHT: 8px; DISPLAY: inline; FONT-SIZE: 10px; LIST-STYLE-TYPE: none
+}
+.error {
+	FONT-SIZE: 14px; COLOR: #f00
+}
+DIV.leftsidebar {
+	TEXT-ALIGN: center
+}
+DIV.leftsidebar IMG {
+	DISPLAY: block; MARGIN: 1em auto
+}
+DIV.rightsidebar {
+	TEXT-ALIGN: center
+}
+DIV.rightsidebar IMG {
+	DISPLAY: block; MARGIN: 1em auto
+}
+DIV.joincallout {
+	BORDER-RIGHT: #999 1px solid; PADDING-RIGHT: 5px; BORDER-TOP: #999 1px solid; PADDING-LEFT: 5px; PADDING-BOTTOM: 5px; BORDER-LEFT: #999 1px solid; PADDING-TOP: 5px; BORDER-BOTTOM: #999 1px solid
+}
+DIV.joincallout H3 {
+	MARGIN: 0px
+}
+DIV.joincallout IMG {
+	FLOAT: right; MARGIN: 5px
+}
+P.links_header {
+	PADDING-RIGHT: 8px; PADDING-LEFT: 0px; FONT-WEIGHT: normal; PADDING-BOTTOM: 0px; MARGIN: 0px; PADDING-TOP: 0px; TEXT-ALIGN: right
+}
+P.links_header A {
+	COLOR: #009; TEXT-DECORATION: none
+}

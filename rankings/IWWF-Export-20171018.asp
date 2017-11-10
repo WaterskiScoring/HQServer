@@ -350,6 +350,20 @@ do while not rs.eof
         IF rs("MemberFed") <> "USA" and rs("ForFedStat") <> "Present" and LastNoLicMem <> rs("MemberID") and InStr(rs("Email"),"@") > 0 THEN
 
             LastNoLicMem = rs("MemberID")
+
+			' Prepare and Send Notification eMail
+			objMessage.Subject = "ACTION REQUIRED !!  IWWF License ID needed to submit your scores"
+			'objMessage.From = """USA Water Ski Membership (Melanie Hanson)"" <mhanson@usawaterski.org>"
+		    objMessage.From = """Dave Allen"" <mawsa@comcast.net>"
+
+		    objMessage.To = """Dave Allen"" <mawsa@comcast.net>"
+			' objMessage.To = """" & rs("FName") & " " & rs("LName") & """ <" & rs("Email") & ">"
+		    ' objMessage.To = """Dave Clark"" <awsatechdude@comcast.net>"
+		    ' objMessage.CC = """Dave Clark"" <AWSATechDude@comcast.net>"
+			' objMessage.CC = eMailCC & "; " & eMailTo
+
+
+
 			emailBody = "<html><head><title>ACTION REQUIRED !!  IWWF License ID needed to submit your scores</title></head>"
 			emailBody = emailBody & "<body><basefont face=""arial,sans-serif,helvetica,verdana,tahoma"" color=""#000000"" size=""2"">"
 
@@ -478,11 +492,12 @@ set objTextOut = nothing
         ' Prepare and Send Notification eMail
         ' ***************************************
         objMessage.Subject = sIWWFSubj
-        objMessage.From = """USA Water Ski"" <dclark@usawaterski.org>"
-
+        ' objMessage.From = """USA Water Ski"" <dclark@usawaterski.org>"
 		' objMessage.To = """Dave Clark"" <AWSATechDude@comcast.net>"
-		objMessage.To = """IWWF Ranking Data"" <rankingdata@iwsftournament.com>"
-		objMessage.CC = """Dave Clark"" <AWSATechDude@comcast.net>; ""IWWF-EA"" <competitions@iwwfed-ea.org"
+		' objMessage.To = """IWWF Ranking Data"" <rankingdata@iwsftournament.com>"
+		' objMessage.CC = """Dave Clark"" <AWSATechDude@comcast.net>; ""IWWF-EA"" <competitions@iwwfed-ea.org"
+	    objMessage.From = """Dave Allen"" <mawsa@comcast.net>"
+	    objMessage.To = """Dave Allen"" <mawsa@comcast.net>"
 
 		objMessage.AddAttachment PathtoIWWF & "\" & left(sTourID,6) & "RS.TXT"
 

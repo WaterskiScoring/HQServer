@@ -1,0 +1,577 @@
+ 
+          HOW TO USE THIS NCWSA REGISTRATION TEMPLATE 
+          =========================================== 
+ 
+ 
+Overview Information              <---- 
+Important Do's and Don'ts         <---- Click on the links
+What's in this Excel Workbook     <---- to the left to find
+Registration Management           <---- your way around in
+Officials Information             <---- these instructions
+B Teams -- New Information        <---- 
+Membership Status Information 
+Sports Division Indicators       What's New -- Information 
+Adding Members to this template  that is new this year, has 
+Exporting your Entry Lists       been highlighted in red in 
+Potential Export Problem         the material below. 
+Cut-n-Paste Rows -- Excel 101 
+ 
+  
+ 
+ Overview Information
+ ==================== 
+ 
+ 
+This NCWSA Registration Template has been pre-populated with most of 
+the information you'll need to set up an NCWSA Tournament for scoring 
+with WSTIMS.  It contains multiple sections, whose tabs can be seen 
+at the lower left corner of the Excel window.  Click these tabs to 
+move between the sections.
+
+The four primary sections of this Excel workbook have all been filled 
+in with the information supplied by the respective team captains, 
+through the new NCWSA Online Registration system.  All of the 
+pre-registered team skiers will be found in these four sections of 
+the workbook.  The "All Other" section contains all other non-pre-
+registered NCWSA team members, as well as other USA Water Ski members 
+who might be participants at an NCWSA Tournament.
+ 
+The vast majority of the prep work has already been done by the new 
+NCWSA Online Team Registration System -- the captains will have used 
+that system to prepare their respective Team Entry and Rotation 
+Plans, and those details are all incorporated into this workbook. 
+About all that the Registrar needs to do is to make any last minute 
+changes that captains may show up with.
+
+Here is a high-level outline of the steps you'll need to go through 
+with this template, to prepare for your tournament.  More details on 
+these steps can be found further down in these instructions ...
+ 
+   (1)  Make any changes in the Rotation Numbers (Team Sequence 
+        numbers, 1 thru 5) in the SL & TR & JP columns, to indicate 
+        what rotation each skier will ski in.  A blank in a column 
+        indicates that skier will not be competing in that event. 
+        You do NOT need to remove or delete team members not skiing 
+        -- WSTIMS will only pick up those with event entry codes 
+        indicated. 
+ 
+   (2)  If necessary to add a team member who was not pre-registered, 
+        you should be able to find that person in the All Other 
+        section of this workbook.  Most likely they will be found in 
+        the team-coded skiers that appear at the top of that section, 
+        or otherwise in the non-team-coded alphabetic list that 
+        appears below those, for entirely new team members.  Just 
+        copy and paste that additional row to the appropriate spot 
+        for their team, in the Men's or Women's A or B team 
+        section(s), and then fill in the rotation numbers for the
+        specific events they will be skiing. 
+ 
+   (3)  Chief and Appointed Officials listed in the Sanction system 
+        for your tournament will appear as a separate "Officials" 
+        team block, at the top of the Men (B tm) tab section.  Be 
+        sure to add any Assistant Chief officials to that block, 
+        along with their position codes.  Other volunteer officials 
+        should also be added to that block.  See the Officials 
+        Information section below for more details. 
+ 
+   (4)  Once all of the team entry information is complete and 
+        checked, then finally export each of the four sections to 
+        text files, so they can be read by WSTIMS. Even if there are 
+        no B teams skiing, be sure that you export the Men (B Team) 
+        section, so that you can import the Officials information 
+        that is contained in that section into WSTIMS.
+ 
+ 
+ 
+ IMPORTANT DO's AND DON'Ts
+ ========================= 
+ 
+ 
+   DO ----- Check the Rotation numbers under the SL & TR & JP columns
+            for each Team's roster.  Except for All Stars, no more 
+            than 5 skiers per team should be indicated in any A team 
+            event, and each of those must have a unique number.  You 
+            can't have 2 from same team both coded "4", for example. 
+            The online Team Rotation Planning system will have pre-
+            validated the plans entered there by the respective team 
+            captains -- but any changes made after this template was 
+            downloaded should be checked to ensure that no duplicate 
+            rotation sequences were inadvertently entered. 
+ 
+   DON'T -- Tinker with the sizes or arrangement of the columns in 
+            this Excel template -- WSTIMS expects to see the data 
+            arranged in columns exactly as it's originally formatted 
+            by the download -- keep it that way please. 
+ 
+   DO ----- Keep the Men and Women skiers in their respective 
+            separate sections.  WSTIMS expects to be given two 
+            (or 4 if B teams are involved) entry lists. 
+ 
+   DON'T -- Change the Team Codes.  The Team Headers included in this 
+            template come from the NCWSA Master Team list, and it is 
+            important that these be used, exactly as given.  If you 
+            have a new Team that does not appear in this template,  
+            please consult with your Regional NCWSA chairman to get 
+            an official code assigned to this new team, then use 
+            that code and create a new Team Header row. 
+ 
+   DO ----- Ensure that you are using the latest version of WSTIMS. 
+            The currently available version and date is cited on the  
+            "Scoring" link you will find on the Waterski page of the 
+            USA Water Ski website -- check that against what you 
+            have installed on your scoring computer(s). 
+ 
+   DO ----- Consult the remainder of this instruction material, if 
+            you are not absolutely certain about any details.  A  
+            quick look here, can save you tons of redo time later.  
+            Details on a variety of topics are included here.  You  
+            can click on topics in the Index section at the top of  
+            this document, to take you directly to material on that  
+            particular topic.  In addition, the WSTIMS User's Guide  
+            has an NCWSA Casebook section, with details on how to  
+            set up and score an NCWSA Tournament. 
+ 
+ 
+ 
+ What's in this Excel Workbook
+ ============================= 
+ 
+ 
+The four primary sections of this Excel workbook -- Men (A Team), 
+Women (A Team), Men (B Team) and Women (B Team) -- have all been 
+filled in with the Team Entry and Rotation Plan information, that was 
+input by the respective team captains through the new NCWSA Online 
+Team Registration system.  All of the pre-registered team skiers will 
+be found in these four sections of the workbook.
+
+The "All Other" section contains all other non-pre-registered NCWSA 
+team members, as well as other USA Water Ski members who might be 
+participants at an NCWSA Tournament.  This includes anyone age 16-29, 
+plus anyone who has declared NCWSA as either their primary or 
+secondary sports division.
+
+In addition, all of the Chief and Appointed officials for this 
+tournament that are listed in the Sanction system, will also be 
+included.  Those officials will appear as one block, at the top of 
+the Men (B Team) section.  In addition to the skiers themselves, the 
+information on these officials also needs to be imported into WSTIMS, 
+so that they will be available for Officials recording in events.
+
+If it becomes necessary to add a team member who was not pre-
+registered, you should be able to find that person in the All Others 
+section of this workbook.  Most likely they will be found in the 
+team-coded skiers that appear at the top of that section, otherwise 
+in the non-team-coded alphabetic list that appears below those, for 
+entirely new team members.  Just copy and paste that additional row 
+to the appropriate spot for their team, in the Men's or Women's A or 
+B team section(s), and then fill in the rotation numbers for those 
+events they will be skiing in.
+
+The Online registration system will have validated the membership 
+status for all pre-registered skiers.  But be sure to check the "Not 
+Ready to Ski" information on any members you copy from this All 
+Others section -- that will indicate any members whose membership is 
+not of the appropriate type, or who are expired.  It is strongly 
+recommended that such members visit the USA Water Ski website to 
+rectify any membership status deficiencies.
+ 
+The "Example" section of this workbook illustrates what a completed  
+Men's entry list sections should look like, when you're ready to  
+export the data to WSTIMS to set up for scoring.  In the A team Men 
+or Women section, each team should look like the MSU example that 
+appears at the top of that example section -- complete with the 
+original team code and name, followed by all of that team's skiers. 
+The B Team sections may also include separate special groups of 
+Ineligible skiers and/or Officials.  Both of these latter groups 
+should be coded with AWSA Age Division codes instead of CM or CW 
+in the Age Div code column.  See Fall 2009 B Team Instructions. 
+ 
+ 
+ 
+ Registration Management
+ ======================= 
+ 
+ 
+You should use the "Mem Status" and "Amt Paid" and "Amt Due" columns  
+(columns O and rightwards) to keep track of this information for the  
+skiers and for each team as a whole.  Essentially, you can use these  
+areas in this workbook to help you manage your registration duties,  
+and to keep track of other information that you may need.  Feel free  
+to add other columns to the right for other purposes as you see fit.
+
+Aside from dealing with verifying membership status on any skiers
+that you copy across from the All Others section, you should review
+the "Reason if Not ready to Ski" column in the four Entered Skiers
+sections of your entries workbook.  Those who had not executed
+the required Event Waiver online before you pulled your Registration
+download, will be indicated as "Nds Evt Wvr" in that column.  You
+should get these people to sign a paper Event Waiver form for you
+at Registration.  If one or more of those skiers claim they did 
+their waiver online (after you pulled your Registration template),
+then if you have internet access, then you can review their waiver 
+status through the Collegiate Registration tools.
+ 
+As a prudent operating protocol, we encourage you to save this  
+workbook periodically -- you don't want to chance losing your work. 
+ 
+ 
+ 
+ Officials Information 
+ ===================== 
+ 
+ 
+The column Headed OFCL / DJCS contains four letter codes that  
+indicates each member's Officials ratings as a Driver, Judge,  
+Calculator (Scorer) and Safety Director.  The specific letter that  
+appears in each of those four positions of the overall code,  
+indicates the highest rating held in that officiating discipline,  
+across the three events.  A hyphen (dash) is used where the member  
+has no rating in the corresponding discipline.  Be sure to include  
+all of your volunteer officials, either as AWSA skiers (in the B team  
+section), or as non-skiers in the Mens A team section, below the  
+teams and just above the END OF LIST marker.   
+ 
+For input to WSTIMS, your Chief and Assistant Officials need to have 
+their "Chief Code" entered in this column, where the rating codes 
+would otherwise appear.  See the "Chief Codes" explanation in the 
+WSTIMS User's Guide for more information on this subject.  All Chief 
+and Appointed officials that are coded in the online Sanctioning 
+system, will be included as a separate "Officials" team block, at the 
+top of the Men (B tm) tab section.  Chief officials will be indicated 
+by their appropriate Chief Code in the DJCS column.  If you have any 
+Assistant Chief officials, be aware that those are not carried in the 
+Sanction system, and so will need to be added to this block, and 
+appropriately coded in the DJCS column. 
+ 
+Other volunteer officials should also be added to this block.  If they 
+have listed NCWSA as a primary or secondary sports division in their 
+USA Waterski membership profile, then you should find them included 
+in the All Others section of this template.  Otherwise you may 
+need to use the lookup function on the website to get their details 
+to paste into this template.  See the Adding Members to this template 
+section below for details on how to do that. 
+ 
+If officials will be skiing as AWSA skiers in your tournament, they  
+would do so either with the B team skiers, or as an entirely separate 
+group, as you may see fit.  In the latter case, then copy this block 
+of officials to a separate section, and then export a separate entry 
+list section for these folks, if you want to keep them separate from 
+your other B team skiers. 
+ 
+ 
+ 
+ B Teams -- New Information
+ ========================== 
+ 
+ 
+The B Team sections, both Men and Women, may contain up to three 
+distinct sets of participants: 
+ 
+   (1)  Full Time Eligible NCWSA skiers who are 6th position or 
+        lower on their respective Team's Roster and hence not 
+        able to ski as part of that school's A team.  These skiers 
+        should have been entered by their captains and coded with 
+        a B team Rotation selection.  That will result in their
+        showing up in the respective B team section of your Excel
+        workbook, and will be coded with the CM or CW division code. 
+        Such skiers will have their performances included in the 
+        NCWSA Rankings, but will not contribute to the A team 
+        scoring for this tournament. 
+ 
+   (2)  Part time, or 5th+ year, or first yr transfers, or otherwise 
+        ineligible NCWSA skiers, who should not be included in the 
+        NCWSA Rankings.  These skiers should be coded with their AWSA 
+        Age Division codes of M1 or W1.  Such skiers should have been 
+        entered by their captains with the Age Div rotation choice, 
+        and will then appear with the B team skiers for their team, 
+        but with the applicable Age Division code.
+ 
+   (3)  Officials & AWSA Skiers.  All of your volunteer officials 
+        should be included in the participant list, whether skiing 
+        or not (see Officials Information above).  Those who will 
+        be skiing should be included in the B team section, and 
+        coded with their respective AWSA Age Division code in the 
+        Age Division column.  The events in which they will ski  
+        should be coded with a unique Rotation number, in the  
+        applicable event column(s).  Whether skiing or not, all of  
+        these officials should have either an Officials rating code 
+        string or a Chief Code coded in the DJCS column, so that 
+        they will be picked up into the Officials Master List. 
+ 
+See the Example section of this template for an illustration of what 
+a completed Men B Team entry list section might look like, including 
+all three of the above groups. 
+ 
+ 
+ 
+ Membership Status Information
+ ============================= 
+ 
+ 
+Each member's status is included in this template.  Those skiers 
+found in the Men's and Women's A and B Team sections have already 
+been  verified and are good to go as of the date of your tournament. 
+The members found in the All Others section may show a number of 
+membership deficiencies -- including those in supporting status, or 
+whose previous active  membership has expired, or who may not yet 
+have signed the Annual USA  Water Ski participation waiver.  If 
+applicable, the amount required  for them to upgrade or renew their 
+membership is also indicated. 
+ 
+It is strongly recommended that members intending to participate who 
+are found to have such deficiencies, visit the  USA Water Ski website 
+to rectify those deficiencies. 
+ 
+It is recommended that you pull this template as late as possible 
+before your tournament, so that any last-minute membership activity 
+by the team skiers will be reflected herein.  For any skiers showing 
+up who are not good, if an internet connection is available, then have 
+them enroll or upgrade or renew that way, rather than using paper 
+forms and having to collect money and so on.  Plus online enrollment 
+will give them their membership number immediately, which you can 
+then enter into this template. 
+ 
+ 
+
+ Sports Division Indicators 
+ ========================== 
+ 
+ 
+This template will show each member's declared Sports Division in 
+column Q over to the right.  If a collegiate skier does NOT have  
+NCWSA shown here, we would like you to encourage that participant to 
+contact USA Waterski HQ and add NCWSA as either their primary or 
+secondary Sports Division.  We recognize that some NCWSA skiers may 
+also be AWSA competitors during the summer, or ski for an NSSA show 
+club -- but in those instances they can -- and should -- list NCWSA 
+as their second preference.  NCWSA needs to be sure that all of our 
+Collegiate skiing participants are properly indicated in the USA 
+Waterski membership system.  Pls help us in this effort.  Thanx !! 
+ 
+ 
+
+ Adding Members to this Template 
+ ============================== 
+ 
+ 
+If you have an internet connection available, and you have a skier 
+who is not included in your Registration template, yet who you have  
+reason to believe may now be in the USA Waterski membership system, 
+you can use the "Lookup Individual Members" function on the website. 
+That feature can be found in the same admin area from which you  
+originally downloaded this Registration Template.  Use the Sanction 
+ID and Edit Code to sign on there. 
+ 
+If you have any AWSA skiers (officials), or non-skiing officials 
+that will be participating, you should add those people to this 
+template.  Non-Skiing officials should be included in the Men (B 
+Team) section, with their applicable age division code. 
+ 
+If you are copying such folks from an AWSA entry list, be aware that 
+the arrangement of the columns in the AWSA Registration template is 
+a bit different from this NCWSA format, and so be sure you only copy 
+columns A-L (through the officials DJCS column), and leave out the 
+the ranking list scores and ranking levels columns that you'll find 
+in the AWSA template, or in the lookup area on the website. 
+ 
+If you are adding a skier who is enrolling on the spot using a paper 
+membership enrollment form, then you will not have a membership 
+number for that person.  Make up a "dummy" number, in the form 
+000-00-00xx, where the xx at the end are any two numeric digits -- 
+WSTIMS will accept such dummy numbers in a pinch.  Any such added 
+dummy numbers need to be unique across the entire entry template, 
+so be careful -- duplication will lead to grief later. 
+ 
+Discourage teams and skiers from planning to do their membership  
+enrollment on-site -- having them go to the www.usawaterski.org  
+website is much easier, and will get them their official membership  
+card and member number in advance of the tournament -- and make your  
+job easier. 
+ 
+ 
+
+ Exporting your Entry Lists 
+ ========================== 
+ 
+ 
+This sections explains how to export the WSTIMS "Entry Lists" from  
+this workbook, to feed these entry details into the WSTIMS scoring  
+program. 
+ 
+Before producing these extracts, there are two important steps that  
+you should have carried out beforehand.  First, you should be sure to  
+save the entire workbook, in its native Excel format.  Second, you  
+should have already started the WSTIMS system and set up the new  
+Directory (folder) for the tournament.  You will need to export your  
+entry lists into that specific path, so that WSTIMS can find them.  
+that folder will typically be located at C:\WSTIMS\[folder].  If the  
+registration workbook is being processed on a different computer  
+(separate from the one where the scoring will be done), then these  
+extracts can be put onto a floppy disk instead, and then later copied  
+onto the scoring computer. 
+ 
+You will need to produce a separate entry list extract from each of  
+the Men (A Team) and Women (A Team) sections of this workbook. If you  
+have B teams as well, then those two sections should also be  
+extracted as well.  Repeat the following steps below, for each  
+section that you need to export -- each extract file will only  
+contain one section from a multi-section workbook like this. 
+ 
+For each extract, first click on the appropriate section tab at the  
+bottom of the Excel window, then select the "File" and "Save As"  
+choices from the menu bar at the top of the Excel window.  This will  
+open up a standard Windows "Save As" dialog box. 
+ 
+Once you've got that Save As dialog box up, you must first navigate 
+to the C:\WSTIMS\[folder] for the tournament -- this is where the  
+resulting extract file is to be placed.  Or navigate to the floppy  
+disk instead, if your destination is on another computer. 
+ 
+Next you must choose the appropriate "Save as Type" choice, from the  
+drop-down list which appears in the box at the bottom of the Save As  
+dialog box.  The choice you want is the "Formatted Text (Space  
+Delimited)" option.  Please note that the list of choices is long,  
+and this specific choice is located near the bottom of that list -- 
+be sure you do NOT choose the "Text (Tab Delimited)" option which 
+appears earlier in the list -- that one is NOT what you want. 
+ 
+Next you need to specify a file name.  This file name must be no 
+more than 8 characters long, and cannot contain any spaces or other  
+punctuation, with the exception of a hyphen.  So you could use file  
+names like "A-Men" and "A-Women" -- but not "Men's A team Entries".   
+Do not specify a period and a qualifier for the file name -- the  
+Formatted Text choice will automatically cause the extract file to  
+be given the ".prn" type qualifier. 
+ 
+Finally, click on the SAVE button at the bottom of that dialog box.   
+That will extract the entry information, from that specific tab  
+section of the workbook, into that designated file in the WSTIMS  
+scoring folder.  When you click that "Save" button, you will then 
+see one or two Excel dialog boxes come up, warning you that the  
+.prn file type selected does not support multiple sheets, and may 
+not support features included in your data -- in both cases select 
+OK button to proceed anyways. 
+ 
+Then repeat the above steps for each of the remaining sections of 
+the workbook that you need to extract. 
+ 
+After you have completed these extracts, it is important to note 
+that the Excel title will now show only the last extract file name,  
+rather than the name of the entire Excel workbook.  If you need to 
+do any further work in the original workbook format, then it is 
+important to close the Excel window, and then re-open the original 
+workbook again.  Otherwise you could inadventently lose the other 
+sections of the workbook, if you are not careful.  When you do close  
+Excel after doing one or more of the above "Save As" processes, you 
+will probably see a warning message that the last .prn file name has 
+not been saved -- you can safely ignore this and choose the "No" 
+option on that dialog box. 
+ 
+ 
+
+ Potential Export Problem 
+ ======================== 
+ 
+ 
+!! NOTICE !!  Please be aware of one potential problem area in this  
+process.  On rare occasions, an Excel user may find that their  
+exported text-format entry list gets "Scrunched".  That is, each  
+field in the sheet has been narrowed by one character position,  
+resulting in the fields being lined up incorrectly. So if you should  
+find yourself getting a lot of error messages when you process your  
+entry list into WSTIMS, then this might be the underlying problem.  
+ 
+To check, use the WSTIMS Edit a Text File task to examine your  
+exported text.  If the data columns in that text file appear  
+schrunched together -- for example the first letter of each member's  
+last name is right next to their member number, instead of there  
+being one space in between -- then this is your problem.  All other  
+columns will likewise be narrower. 
+ 
+Fortunately, our good friend Jeff Clark of Lakeland FL has recently  
+helped identify the underlying cause of this problem, and happily  
+this turns out to be pretty easy to fix. 
+ 
+This results when a user has changed their Desktop Appearance setting  
+from the normal 96 bpi font size, to the larger 120 bpi font size.  
+While this setting makes it a bit easier for us older folks to read  
+text on today's larger high resolution monitors, it also produces  
+this unexpected negative side effect in Excel.  So the solution is  
+fairly easy -- just go back to your desktop font setting, reset to  
+the normal 96 bpi font size (which will require you to reboot your  
+computer), then you should be able to successfully export your entry  
+list correctly.  Afterwards you can then reset the font if wish.  The  
+path to this particular setting is as follows -- 
+ 
+     Control Panel / Display / Settings / Advanced 
+ 
+ 
+
+ Cut-n-Paste Rows -- Excel 101 
+ ============================= 
+ 
+ 
+The most common Excel data manipulation activity the user of this  
+Registration Template will face, is how to copy or move a line of  
+skier data from one place in your the template, to another place, 
+possibly even in a different tab section. 
+ 
+Excel offers several ways whereby you can accomplish this, but we'll 
+describe what we feel is the simplest and most robust method.  This 
+is the "Cut" (or Copy) and "Insert Cut Cells" method. 
+ 
+The process involves two steps.  First you go to the spot in the  
+list where you find the row(s) that you want to move (or copy) to  
+the active area at the top of the section you are working on.  If 
+that involves more than one adjacent row, then first you'll need to  
+highlight the RANGE of rows that you intend to move.  To highlight  
+such a range of rows, put the mouse pointer over the row number of  
+the top row of the range, then press and hold the left mouse button,  
+then drag the mouse pointer down across the additional row numbers  
+you want, until all are highlighted.  Then release the left mouse  
+button, and that group of lines should stay highlighted.  Then put  
+the mouse pointer back over one of the rows in the range, and then  
+click the right mouse button (right click), which will open up an  
+operations choice list.  Then click on the CUT option.  That range of  
+lines should then appear surrounded by a rapidly-blinking border. 
+ 
+If you have just one single line that you need to move, then all 
+you need to do is to place the mouse pointer over the row number 
+at the left border of that row, and then right click, then choose 
+CUT (or COPY) from the operations choice list that pops up.  That  
+line should then appear surrounded by a rapidly-blinking border. 
+ 
+The line(s) of data you intend to move have now been placed on the 
+windows "Clipboard", even though you can still see the data at the 
+original position.  The blinking border indicates that this area 
+will later disappear, once you tell Excel where to move that data. 
+ 
+Then the second step is to show Excel where you want to insert the 
+line(s).  That may be in the same tab section, or might be in an 
+entirely different tab section -- either is perfectly OK.  So go 
+to the area of the tab section where you want to insert that line, 
+and then place the mouse pointer on the row number of the line 
+where you want the new line(s) to go.  The operation which Excel 
+will then carry out will move the existing data on that line, and 
+on all of the lines below it, down by the number of lines that you 
+are inserting at that row. 
+ 
+Then right click on that row number, and you should find an INSERT 
+CUT CELLS option in the operations choice pop-up box.  Click that 
+choice, and the data lines previously cut should appear at that 
+line, and all the other lines obligingly move down accordingly. 
+ 
+That's all there is to it.  A couple of times through this exercise 
+and you'll find this is very easy to carry out. 
+ 
+ 
+ 
+= = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = 
+ 
+Version 1.1 -- 2008/08/22 -- developed by Dave Clark 
+Version 1.2 -- 2009/09/17 -- Updated for Fall 2009 B team handling 
+Version 1.3 -- 2010/03/19 -- Added Chf/Apptd Officials to Men A tm 
+Version 1.4 -- 2011/01/25 -- New Online Registration system
+ 
+Direct queries or suggestions for change to the author at  
+clark.dave@comcast.net 
