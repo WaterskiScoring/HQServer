@@ -894,8 +894,29 @@ Set curTemplateFile = nothing
 Set folderFileList = nothing
 Set regTemplateFilename = Nothing
 
+
+Response.Flush
+      
+' This final bit of HTML is written after processing is successfully completed
+' to tell the user how to download their template, and where to go from here.
+      
 %>
-        <br /><%=curTraceMsg %>
+    <br /><%=curTraceMsg %>
+    
+    <SCRIPT LANGUAGE="JavaScript">
+    if(upLevel) {
+      var splash = document.getElementById("splashScreen");
+    }
+    else if(ns4) {
+      var splash = document.splashScreen;
+    }
+    else if(ie4) {
+      var splash = document.all.splashScreen;
+    }
+      
+    hideObject(splash);
+    </SCRIPT>  
+
 
     </body>
 

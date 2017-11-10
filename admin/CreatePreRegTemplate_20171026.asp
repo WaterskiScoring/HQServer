@@ -1020,6 +1020,171 @@ Set fc = nothing
 Set fileRegXls = Nothing
 
 %>
+    <SCRIPT LANGUAGE="JavaScript">
+    if(upLevel) {
+      var splash = document.getElementById("splashScreen");
+    }
+    else if(ns4) {
+      var splash = document.splashScreen;
+    }
+    else if(ie4) {
+      var splash = document.all.splashScreen;
+    }
+      
+    hideObject(splash);
+    </SCRIPT>  
+
     </body>
 
+</html>
+
+<%
+' This final bit of HTML is written after processing is successfully completed
+' to tell the user how to download their template, and where to go from here.
+      
+Response.Flush
+%>
+
+<html>
+
+<head>
+<title>Create Pre-Registration Export v1.5</title>
+
+<meta http-equiv="Content-Type" content="text/html; charset=iso-8859-1">
+</head>
+
+<body bgcolor="#FFFFFF" background = "/images/TopBackground.jpg" leftMargin=0 topMargin=0 marginheight="0" marginwidth="0" >
+
+<table width="100%" border="0" cellspacing="0" cellpadding="0">
+  <tr> 
+    <td bgcolor="#42639F">
+      <p>&nbsp;</p>
+      <p align="center"><font face="Verdana" size="6" color="#FFFFFF">
+      	USA Water Ski Pre-Registration Export</font></p>
+      <p align="center"><font face="Verdana" size="4" color="#FFFFFF">
+      	Registration Support for -- <%=session("TournamentName")%></font></p>
+      <p>&nbsp;</p>
+    </td>
+  </tr>
+</table>  
+  
+<table border="0" cellspacing="0" cellpadding="0">  
+  <tr> 
+    <td width="185" valign="top" bgcolor="#42639F">
+
+	<font face="Verdana" size="2" COLOR="#FFFFFF"><br>&nbsp;Currently Logged in as: </font><br>
+	<font face="Verdana" size="2" COLOR="#FFFFFF">&nbsp;<%=Session("UserName")%>&nbsp;&nbsp;
+		<%=session("TournamentDate")%></font><br>
+	<br>
+	
+			<font face="Verdana" size="2"> 
+         <br>&nbsp;<a href="logout.asp"><font face="arial" COLOR="#FFFFFF">Log Out</font></a>&nbsp;<br>
+			</font>
+			<br>
+	        &nbsp;<a href="/admin/index.asp"><font face="arial" size="2" COLOR="#FFFFFF">Back to Admin Index</font></a><br>&nbsp;<br>
+	        &nbsp;<a href="http://www.usawaterski.org"><font face="arial" size="2" COLOR="#FFFFFF">USA Water Ski Home</font></a><br>&nbsp;<br>
+			<br>
+            <font face="Verdana" size="1">&nbsp;<font COLOR="#FFFFFF">Powered by</font> <a href="http://www.epolk.com"><font COLOR="#FFFFFF">ePolk.com</font></a><br></font>
+
+  </td>
+
+	<td>
+
+  <table>
+      <tr> 
+         <td width="14">&nbsp;</td>
+         <td><font size="2" face="Verdana, Arial, Helvetica, sans-serif"><br>Your Pre-Registration 
+         Export workbook is now complete and ready to download.</font></td>
+      </tr>
+
+      <tr> 
+         <td>&nbsp;</td>
+      </tr>
+
+      <tr> 
+         <td>&nbsp;</td>
+         <td><font color="#FF0000" size="2" face="Verdana, Arial, Helvetica, sans-serif"><strong>
+         !! New Structure to this Template in 2010 !!</strong>&nbsp;
+         </font><font size="2" face="Verdana, Arial, Helvetica, sans-serif">
+         We have now created a separate "Participants" section in this Excel
+         workbook for your to build your participant list in, and you will
+         find that section will have initially been populated with the Chief
+         and other Appointed Officials listed in the Sanction system for your
+         Tournament.&nbsp; Further details on how to use this new framework
+         can be found in the Instructions section of your download.
+         </font></td>
+      </tr>
+
+      <tr> 
+         <td>&nbsp;</td>
+      </tr>
+
+      <tr> 
+         <td>&nbsp;</td>
+         <td><a href="excel/<% response.write filenamewithscores %>"><font face="Arial" size="2"><b>RIGHT 
+         Click Here</b></font></a>&nbsp; <font size="2" face="Verdana, Arial, Helvetica, sans-serif">to 
+         download your Registration Template, then select the "Save As" 
+         option from that menu, and then choose a suitable location to 
+         store the download in your PC. </font></td>
+      </tr>
+   
+      <tr> 
+         <td>&nbsp;</td>
+      </tr>
+
+      <tr> 
+         <td>&nbsp;</td>
+         <td><font size="2" face="Verdana, Arial, Helvetica, sans-serif">
+         After your Registration Template download has completed, then open the 
+         Excel file from that location on your PC.&nbsp; It will open automatically 
+         to an Instructions Tab.&nbsp; Please review that updated Instructions section 
+         for the latest information on contents and usage. </font></td>
+      </tr>
+
+
+      <tr> 
+         <td>&nbsp;</td>
+      </tr>
+
+      <tr> 
+         <td>&nbsp;</td>
+         <td><font size="2" face="Verdana, Arial, Helvetica, sans-serif">
+         After you've downloaded this Registration Template, you can later 
+         fold in additional selected members, one-by-one, using the lookup 
+         feature noted on the earlier screen.&nbsp; With that feature, you
+         can then just copy and paste the information for those additional 
+         participants into your template using Excel.&nbsp; Detailed 
+         instructions will appear on the lookup results window, when you 
+         get to that point.
+         </font></td>
+      </tr>
+
+      <tr> 
+         <td>&nbsp;</td>
+      </tr>
+
+ 	</table>
+
+	<TABLE ALIGN="CENTER" WIDTH=70%>
+		
+		<TR>
+
+	    <TD width=30% align=center>
+		<form action="LookupMembers.asp?FormStatus=newsearch" method="post">
+		<input type="submit" style="width:9em" value="Lookup Members"></form>
+    	</TD>
+
+	    <td width=30% align=center>     				
+		<form action="Index.asp" method="post">
+    <input type="submit" style="width:9em" value="Quit"></form>
+ 	    </td>
+  	    
+ 	  </TR>
+
+ 	</TABLE>
+
+  	  </td>
+	  </tr>
+</table>
+</body>
 </html>
