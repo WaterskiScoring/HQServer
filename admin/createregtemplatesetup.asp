@@ -183,12 +183,7 @@ If Request.Form <> "" then 	'this is a postback
 		'	Set logobject=nothing
 		'	Set tempFSO=nothing
 				
-		if request.form("FileFormat") = "without_scores" then
-			response.redirect "CreateRegTemplatewithoutscores.asp"
-		else
-'			response.redirect "CreateRegTemplateNew.asp"
-			response.redirect "CreateNonPreRegTemplate.asp"
-		end if
+        response.redirect "CreateNonPreRegTemplate.asp"
 
 	end if
 	
@@ -343,13 +338,6 @@ Set objConn1 = Nothing
          <td><input type="submit" name="NowWhat" value="Create Template"
          	title="Click here to build your template.&#13;This will take a minute or two;&#13;    So please stand by ... "></td>
          <td>&nbsp;</td>
-		     <td>
-					  <input name="FileFormat" type="radio" value="with_scores" checked>
-					  <font size="2" face="Arial, Helvetica, sans-serif">with scores</font><font size="1" face="Arial, Helvetica, sans-serif"> (needed
-					  for importing into WSTIMS)</font><br>
-					  <input name="FileFormat" type="radio" value="without_scores">
-					  <font size="2" face="Arial, Helvetica, sans-serif">without scores</font>
-      	 </td>
       </tr>
 
      <tr> 

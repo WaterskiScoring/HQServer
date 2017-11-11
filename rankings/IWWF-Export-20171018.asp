@@ -179,7 +179,7 @@ response.flush
   ' Set up output text file.
 ' ***************************************
 Set objFSO = Server.CreateObject("Scripting.FileSystemObject")
-ExportFile = PathToIWWF & "\" & left(sTourID,6) & "RS-TEST.TXT"
+ExportFile = PathToIWWF & "\" & left(sTourID,6) & "RS.TXT"
 Set objTextOut = objFSO.opentextfile(ExportFile,2,true)
 
 ' ***************************************

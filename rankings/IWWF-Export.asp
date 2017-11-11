@@ -3,34 +3,45 @@
 Response.Buffer = True
 Server.ScriptTimeout = 2400 
 
-
 Dim tempLast, tempFirst, tempPlace, tempDiv, tempSL, tempTR, tempJU, tempScore, tempAlt
-Dim tempPQ1, tempPQ2, tempSex, tempYOB, TempSlmMiss, tempSpecial, tempIWSF, tempExport
+Dim tempEvent, tempPQ1, tempPQ2, tempSex, tempYOB, TempSlmMiss, tempSpecial, tempIWSF, tempExport
 Dim sTourID, sTSanction, sTName, sTDateE, sTDPretty, sTSiteID, sTSite, sIWWFSubj
 Dim eMailTo, eMailCC, SeedRep, Owner
-Dim RecsSaved, ErrMsg, RecsNoLic, LastNoLicMem
-Dim InsertCmd
-Dim PreZBSScore
-
-' Validate TourID value for scores to be Exported.
-sTourID = SQLClean(Session("TourID"))
+Dim RecsSaved, RecBypassedNoScore, RecBypassedRampHght, RecBypassedForDiv
+Dim ErrMsg, RecsNoLic, LastNoLicMem, TraceMsg
+Dim InsertCmd, sSQL, emailBody
 
 ' Initialize a few things
 ErrMsg = ""
+TraceMsg = ""
 RecsSaved = 0
+RecBypassedNoScore = 0
+RecBypassedRampHght = 0
+RecBypassedForDiv = 0
 RecsNoLic = 0
 LastNoLicMem = "000000000"
 
-Set objFSO = Server.CreateObject("Scripting.FileSystemObject")
+' Validate TourID value for scores to be Exported.
+sTourID = SQLClean(Session("TourID"))
+IF len(sTourID) <=0 THEN
+    sTourID = Request.QueryString("TourID")
+END IF	
 
+IF len(sTourID) <=0 THEN
+    ErrMsg = ErrMsg & "<br />Tournament ID not provided.  Setting default"
+    sTourID = "17C999A"
+END IF	
+
+TraceMsg = TraceMsg & "<br />TourId=" & sTourID
+
+' ***************************************
 ' Set up Database and Record Set Connection
-OpenCon
+' ***************************************
 set rs = Server.CreateObject("ADODB.recordset")
 
-' Invoke "standard" Email Server Configuration -- defines objMessage object
-SetupEmailService
-
+' ***************************************
 ' Get Sanction Table Information for this event and store locally, if present
+' ***************************************
 sSQL = "Select top 1 ST.TSanction, ST.TName, ST.TSiteID, ST.TSite,"
 sSQL = sSQL & " Convert(char(8),ST.TDateE,112) as TDateE,"
 sSQL = sSQL & " Convert(char(12),ST.TDateE,107) as TDPretty,"
@@ -55,6 +66,9 @@ sSQL = sSQL & left(sTourID,6) & "'"
 
 ' WriteDebugSQL (sSQL)
 
+' ***************************************
+' Open and run SQL statement to retrieve sanction and contact information
+' ***************************************
 rs.open sSQL, sConnectionToSanctionTable, 3, 3
 
 IF rs.eof THEN
@@ -82,11 +96,9 @@ ELSE
 
    rs.close
    sIWWFSubj = sTName & "," & sTSanction & "," & sTSiteID & "," & Left(sTDateE,4) & "-" & Mid(sTDateE,5,2) & "-" & Right(sTDateE,2)
+    TraceMsg = TraceMsg & "<br />Title: " & sIWWFSubj
 END IF
 
-
-' WriteDebugSQL (sIWWFSubj)
-WriteDebugSQL ("EmailTo = " & eMailTo)
 
 EmailCC = """Melanie Hanson"" <mhanson@usawaterski.org>; ""Dave Clark"" <awsatechdude@comcast.net>"
 IF mid(sTourID,3,1) = "C" THEN
@@ -109,10 +121,7 @@ ELSEIF Session("Firstname") & Session("LastName") = "JudyStanford" and mid(sTour
    EmailCC = EmailCC & "; ""Judy Stanford"" <judy-don@sbcglobal.net>"	
 END IF
 
-WriteDebugSQL ("EmailCC = " & eMailCC)
-
-   %>
-   
+%>
 <html><head><title>Please Wait...</title>
 <SCRIPT LANGUAGE="JavaScript">
 // First we detect the browser type
@@ -146,67 +155,65 @@ if (ie4 || upLevel) {
 
 </SCRIPT>
 </head>
-<body>
-<DIV ID="splashScreen" STYLE="position:absolute;z-index:5;top:30%;left:35%;">
-<TABLE BGCOLOR="#000000" BORDER=1 BORDERCOLOR="#000000"	CELLPADDING=0 CELLSPACING=0 HEIGHT=200 WIDTH=300>
-<TR>
-<TD WIDTH="100%" HEIGHT="100%" BGCOLOR="#CCCCCC" ALIGN="CENTER" VALIGN="MIDDLE">
-<BR><BR>
-<FONT FACE="Helvetica,Verdana,Arial" SIZE=3 COLOR="#000066">
-<B>Processing Records for Export.<br><br>
-Please wait a moment ...<br><br>  
-</B></FONT>
-<IMG SRC="/rankings/images/buttons/wait.gif" BORDER=1 WIDTH=75 HEIGHT=15><BR><BR>
-</TD>
-</TR>
-</TABLE>
-</DIV>
+<BODY>
+    <DIV ID="splashScreen" STYLE="position:absolute;z-index:5;top:30%;left:35%;">
+        <TABLE BGCOLOR="#000000" BORDER=1 BORDERCOLOR="#000000"	CELLPADDING=0 CELLSPACING=0 HEIGHT=200 WIDTH=300>
+            <TR>
+                <TD WIDTH="100%" HEIGHT="100%" BGCOLOR="#CCCCCC" ALIGN="CENTER" VALIGN="MIDDLE">
+                    <BR><BR>
+                    <FONT FACE="Helvetica,Verdana,Arial" SIZE=3 COLOR="#000066">
+                    <B>Processing Records for Export.<br><br>
+                    Please wait a moment ...<br><br>  
+                    </B></FONT>
+                    
+                    <IMG SRC="/rankings/images/buttons/wait.gif" BORDER=1 WIDTH=75 HEIGHT=15><BR><BR>
+                </TD>
+            </TR>
+        </TABLE>
+    </DIV>
 
+<%
+response.flush
 
-
-  <%
-  response.flush
-
+' ***************************************
   ' Set up output text file.
+' ***************************************
+Set objFSO = Server.CreateObject("Scripting.FileSystemObject")
+ExportFile = PathToIWWF & "\" & left(sTourID,6) & "RS.TXT"
+Set objTextOut = objFSO.opentextfile(ExportFile,2,true)
 
-  Set objFSO = Server.CreateObject("Scripting.FileSystemObject")
-  ExportFile = PathToIWWF & "\" & left(sTourID,6) & "RS.TXT"
-  Set objTextOut = objFSO.opentextfile(ExportFile,2,true)
+' ***************************************
+' Invoke "standard" Email Server Configuration -- defines objMessage object
+' ***************************************
+SetupEmailService
 
-  'Open Raw Scores Table and Pull applicable Score Records, along with necessary Membership table derivatives
-  sSQL = "SELECT RS.FName, RS.LName, RS.MemberID, MT.Email, MT.Password, MT.FederationCode as MemberFed"
-  sSQL = sSQL & ", Convert(char(8),RS.EndDate,112) as EndDate, RS.TourID"
-  sSQL = sSQL & ", RS.Event, RS.Div, RS.Class, RS.Round, RS.Place"
-  sSQL = sSQL & ", Case when RS.Event = 'S' AND RS.AltScore < 0 AND RS.Perf_Qual1 < 1825 then 1825 else RS.Perf_Qual1 end as Perf_Qual"
-  sSQL = sSQL & ", RS.Perf_Qual2, ABS(RS.AltScore) as AltScore"
-  sSQL = sSQL & ", Case when RS.Event = 'S' then RS.Score else RS.Score end as Score"
-  sSQL = sSQL & ", MT.Sex, MT.BirthDate, MT.ForFedID, MT.FedIDLen"
-  sSQL = sSQL & ", case when MT.ForFedID = RS.MemberID then 'USAWS-#' when MT.FedIDLen = 0 then 'Missing' when FFP.ForFedPatt is null then 'Invalid' else 'Present' end as ForFedStat "
-  sSQL = sSQL & "FROM " & RawScoresTableName & " as RS "
-  sSQL = sSQL & "  LEFT JOIN " & MemberWFedIDTableName & " as MT ON cast(right(RS.MemberID,8) as integer) = MT.PersonID "
-  sSQL = sSQL & "  LEFT JOIN " & FedIDPatternTableName & " as FFP ON FFP.ForFedPatt = MT.ForFedPatt "
-  sSQL = sSQL & "  LEFT JOIN " & SkiYearTableName & " as SY ON RS.EndDate between SY.BeginDate and SY.EndDate and SY.SkiYearID <> 1 "
-  sSQL = sSQL & "  LEFT JOIN " & DivisionsTableName & " as DT ON RS.Div = DT.Div and SY.skiyearid = DT.skiyearid "
-  sSQL = sSQL & "WHERE RS.Class in ('R','L') AND RS.TourID = '" & sTourID & "' "
-  sSQL = sSQL & "ORDER BY RS.MemberID, RS.Round, RS.Event"
+' ***************************************
+'Open Raw Scores Table and Pull applicable Score Records, along with necessary Membership table derivatives
+' ***************************************
+sSQL = "SELECT RS.FName, RS.LName, RS.MemberID, MT.Email, MT.Password, MT.FederationCode as MemberFed"
+sSQL = sSQL & ", Convert(char(8),RS.EndDate,112) as EndDate, RS.TourID"
+sSQL = sSQL & ", RS.Event, RS.Div, RS.Class, RS.Round, RS.Place"
+sSQL = sSQL & ", Case when RS.Event = 'S' AND RS.AltScore < 0 AND RS.Perf_Qual1 < 1825 then 1825 else RS.Perf_Qual1 end as Perf_Qual1"
+sSQL = sSQL & ", RS.Perf_Qual2, ABS(RS.AltScore) as AltScore"
+sSQL = sSQL & ", Case when RS.Event = 'S' then RS.Score else RS.Score end as Score"
+sSQL = sSQL & ", MT.Sex, MT.BirthDate, MT.ForFedID, MT.FedIDLen"
+sSQL = sSQL & ", case when MT.ForFedID = RS.MemberID then 'USAWS-#' when MT.FedIDLen = 0 then 'Missing' when FFP.ForFedPatt is null then 'Invalid' else 'Present' end as ForFedStat "
+sSQL = sSQL & "FROM " & RawScoresTableName & " as RS "
+sSQL = sSQL & "  LEFT JOIN " & MemberWFedIDTableName & " as MT ON cast(right(RS.MemberID,8) as integer) = MT.PersonID "
+sSQL = sSQL & "  LEFT JOIN " & FedIDPatternTableName & " as FFP ON FFP.ForFedPatt = MT.ForFedPatt "
+sSQL = sSQL & "  LEFT JOIN " & SkiYearTableName & " as SY ON RS.EndDate between SY.BeginDate and SY.EndDate and SY.SkiYearID <> 1 "
+sSQL = sSQL & "  LEFT JOIN " & DivisionsTableName & " as DT ON RS.Div = DT.Div and SY.skiyearid = DT.skiyearid "
+sSQL = sSQL & "WHERE RS.Class in ('R','L') AND RS.TourID = '" & sTourID & "' "
+sSQL = sSQL & "ORDER BY RS.MemberID, RS.Round, RS.Event"
 
+'WriteDebugSQL (sSQL)
 
-'  sSQL = "Select RS.FName, RS.LName, RS.MemberID, MT.Email, MT.Password, MT.FederationCode as MemberFed, Convert(char(8),RS.EndDate,112)"
-'  sSQL = sSQL & " as EndDate, RS.TourID, RS.Event, RS.Div, RS.Class, RS.Round, RS.Place, RS.Perf_Qual1, RS.Perf_Qual2, RS.AltScore,"
-'  sSQL = sSQL & " Case when RS.Event = 'S' then RS.Score-DT.ZBSConversion else RS.Score end as Score, MT.Sex, MT.BirthDate,"
-'  sSQL = sSQL & " MT.ForFedID, MT.FedIDLen, case when MT.ForFedID = RS.MemberID then 'USAWS-#' when MT.FedIDLen = 0 then 'Missing'"
-'  sSQL = sSQL & " when FFP.ForFedPatt is null then 'Invalid' else 'Present' end as ForFedStat"
-'  sSQL = sSQL & " from " & RawScoresTableName & " as RS left join " & MemberWFedIDTableName & " as MT on cast(right(RS.MemberID,8)"
-'  sSQL = sSQL & " as integer) = MT.PersonID left join " & FedIDPatternTableName & " as FFP on FFP.ForFedPatt = MT.ForFedPatt"
-'  sSQL = sSQL & " left join " & SkiYearTableName & " as SY on RS.EndDate between SY.BeginDate and SY.EndDate and SY.SkiYearID <> 1"
-'  sSQL = sSQL & " left join " & DivisionsTableName & " as DT on RS.Div = DT.Div and SY.skiyearid = DT.skiyearid"
-'  sSQL = sSQL & " where RS.Class in ('R','L') and RS.TourID = '" & sTourID & "' order by RS.MemberID, RS.Round, RS.Event"
-
-  WriteDebugSQL (sSQL)
-
-  rs.open sSQL, SConnectionToTRATable, 3, 3
-
-  do while not rs.eof
+rs.open sSQL, SConnectionToTRATable, 3, 3
+do while not rs.eof
+    tempFirst = left(ucase(rs("FName")),1)
+    tempFirst = tempFirst + mid(lcase(rs("FName")),2)
+    tempFirst = replace(tempFirst,"'","")
+    tempLast = replace(ucase(rs("LName")),"'","")
 
     tempSex = ucase(left(rs("sex"),1))
     tempYOB = right(rs("birthdate"),4)
@@ -222,51 +229,50 @@ Please wait a moment ...<br><br>
     	END IF
     END IF
 
-    '
-    ' Formatting of Name fields.  Some names have a special character (apostrophe).  Replace it with a blank.
-    '
-
-    tempFirst = left(ucase(rs("FName")),1)
-    tempFirst = tempFirst + mid(lcase(rs("FName")),2)
-    tempFirst = replace(tempFirst,"'","")
-    tempLast = replace(ucase(rs("LName")),"'","")
-
     tempPlace = ucase(trim(rs("Place")))
     IF right(tempPlace,1) = "T" THEN tempPlace = left(tempPlace,len(tempPlace)-1)
     IF tempPlace = "" THEN tempPlace = "999"
-
+    
     tempDiv = ucase(rs("Div"))
-
-    If rs("Perf_Qual1") = 0.239 THEN tempSpecial = "S": ELSE tempSpecial = ""
-    If Instr(tempDiv,"B") > 0 or Instr(tempDiv,"G") > 0 then tempSpecial = "J"
+    tempEvent = rs("Event")
+    tempExport = "X"
 
     tempSlmMiss = ""
     tempScore = rs("Score")
 
-	  ' WriteDebugSQL (tempFirst & " " & TempLast & "," & rs("Event") & trim(rs("Round")))
+    IF rs("Perf_Qual1") = 0.239 THEN tempSpecial = "S": ELSE tempSpecial = ""
+    IF Instr(tempDiv,"B") > 0 OR Instr(tempDiv,"G") > 0 THEN tempSpecial = "J"
 
-    SELECT CASE rs("Event")
+    SELECT CASE tempEvent
 
     CASE "S"
-
+      ' ***************************************
+      ' Slalom data entry analyzed and formatted
+      ' ***************************************
       tempAlt = FormatNumber(rs("AltScore"),2)
       tempPQ1 = FormatNumber(rs("Perf_Qual1")/100,2)
       tempPQ2 = rs("Perf_Qual2")
-      If left(tempDiv,1) = "W" or tempDiv = "OW" or left(tempDiv,1) = "G" then tempScore = tempScore - 6
       tempSL = FormatNumber(tempScore,2)
       tempTR = ""
       tempJU = ""
       IF tempScore < 6 THEN tempSlmMiss = "*": ELSE tempSlmMiss = ""
 
-'     Move following line to outside Case -- now applies to all 3 events. 
-'     IF tempScore > 0 THEN tempExport = "Y": ELSE tempExport = "N"
+      IF tempScore > 0 THEN 
+          tempExport = "Y": 
+      ELSE 
+          tempExport = "N"
+          RecBypassedNoScore = RecBypassedNoScore + 1
+   	  END IF
 
-      IF tempDiv = "B1" or tempDiv = "G1" or tempDiv = "B2" or tempDiv = "G2" THEN tempExport = "N"
-      IF tempDiv = "M7" or tempDiv = "M8" or tempDiv = "M9" or tempDiv = "MA" or tempDiv = "MB" THEN tempExport = "N"
-      IF tempDiv = "W7" or tempDiv = "W8" or tempDiv = "W9" or tempDiv = "WA" or tempDiv = "WB" THEN tempExport = "N"
+      IF tempDiv = "B1" or tempDiv = "G1" or tempDiv = "B2" or tempDiv = "G2" THEN 
+          tempExport = "N"
+          RecBypassedForDiv = RecBypassedForDiv + 1
+   	  END IF
 
     CASE "J"
-
+      ' ***************************************
+      ' Jump data entry analyzed and formatted
+      ' ***************************************
       tempAlt = tempScore
       If rs("Perf_Qual1") = 0.275 THEN tempPQ1 = "0.271": ELSE IF rs("Perf_Qual1") < 0.235 then tempPQ1 = "0.235": ELSE tempPQ1 = FormatNumber(rs("Perf_Qual1"),3)
       tempPQ2 = rs("Perf_Qual2")
@@ -274,186 +280,196 @@ Please wait a moment ...<br><br>
       tempTR = ""
       tempJU = FormatNumber(rs("AltScore"),1)
       
-'			Remove following condition which imposed minimums.
-'     IF (tempSex = "M" and tempScore >= 60) or (tempSex = "F" and tempScore >= 45)  THEN tempExport = "Y": ELSE tempExport = "N"
-
-      IF tempPQ1 < "0.235" THEN tempExport = "N"
+      IF tempScore > 0 THEN 
+          tempExport = "Y": 
+      ELSE 
+          tempExport = "N"
+          RecBypassedNoScore = RecBypassedNoScore + 1
+   	  END IF
+      
+      IF tempPQ1 < "0.235" THEN
+          tempExport = "N"
+          RecBypassedRampHght = RecBypassedRampHght + 1
+   	  END IF
+      IF tempDiv = "B1" or tempDiv = "G1" or tempDiv = "B2" or tempDiv = "G2" THEN 
+          tempExport = "N"
+          RecBypassedForDiv = RecBypassedForDiv + 1
+   	  END IF
       
     CASE "T"
-
+      ' ***************************************
+      ' Trick data entry analyzed and formatted
+      ' ***************************************
       tempAlt = ""
       tempPQ1 = ""
       tempPQ2 = ""
       tempSL = ""
       tempTR = tempScore
       tempJU = ""
-
-'			Remove following condition which imposed minimums.
-'     IF (tempSex = "M" and tempScore >= 800) or (tempSex = "F" and tempScore >= 600)  THEN tempExport = "Y": ELSE tempExport = "N"
+      IF tempScore > 0 THEN 
+          tempExport = "Y": 
+      ELSE 
+          tempExport = "N"
+          RecBypassedNoScore = RecBypassedNoScore + 1
+   	  END IF
 
     END SELECT
 
-    IF tempAge < 35 and rs("Class") = "E" THEN tempExport = "N"
-
-'   Only export scores greater than zero -- this condition formerly applied only in slalom.
-    IF tempScore > 0 THEN tempExport = "Y": ELSE tempExport = "N"
+    'TraceMsg = TraceMsg & "<br />Skier: " & tempFirst & " " & tempLast & ", Age=" & tempAge& ", Div=" & tempDiv & ", IWSF=" & tempIWSF & ", Special=" & tempSpecial 
+    'TraceMsg = TraceMsg & ", Event=" & tempEvent & ", Score=" & tempScore & ", tempAlt=" & tempAlt & ", tempPQ1=" & tempPQ1 & ", tempPQ2=" & tempPQ2
+    'TraceMsg = TraceMsg & ", Export=" & tempExport & ", tempSL=" & tempSL & ", tempTR=" & tempTR & ", tempJU=" & tempJU
 
     IF tempExport = "Y" THEN
     	
-    	' WriteDebugSQL ("Begin Export for " & rs("MemberID") & " " & rs("Event") & " " & rs("Round"))
-
-      objTextOut.write ( tempLast & ";" )
-      objTextOut.write ( tempFirst & ";" )
-      objTextOut.write ( rs("MemberID") & ";;" )
-      objTextOut.write ( rs("MemberFed") & ";" )
-      objTextOut.write ( tempSex & ";" )
-      objTextOut.write ( rs("TourID") & ";" )
-      objTextOut.write ( tempSL & ";" )
-      objTextOut.write ( tempTR & ";" )
-      objTextOut.write ( tempJU & ";" )
-      objTextOut.write ( tempAlt & ";" )
-      objTextOut.write ( tempYOB & ";" )
-      objTextOut.write ( rs("Class") & ";" )
-      objTextOut.write ( trim(rs("Round")) & ";" )
-      objTextOut.write ( tempDiv & ";" )
-      objTextOut.write ( tempPQ1 & ";" )
-      objTextOut.write ( tempPQ2 & ";" )
-      objTextOut.write ( rs("EndDate") & ";" )
-      objTextOut.write ( tempSpecial & ";" )
-      objTextOut.write ( "Y;" )
-      objTextOut.write ( tempSlmMiss & ";" )
-      objTextOut.write ( tempPlace & ";" )
-      objTextOut.write ( tempIWSF & ";" )
-      objTextOut.writeline ( sTSiteID )
+        objTextOut.write ( tempLast & ";" )
+        objTextOut.write ( tempFirst & ";" )
+        objTextOut.write ( rs("MemberID") & ";;" )
+        objTextOut.write ( rs("MemberFed") & ";" )
+        objTextOut.write ( tempSex & ";" )
+        objTextOut.write ( rs("TourID") & ";" )
+        objTextOut.write ( tempSL & ";" )
+        objTextOut.write ( tempTR & ";" )
+        objTextOut.write ( tempJU & ";" )
+        objTextOut.write ( tempAlt & ";" )
+        objTextOut.write ( tempYOB & ";" )
+        objTextOut.write ( rs("Class") & ";" )
+        objTextOut.write ( trim(rs("Round")) & ";" )
+        objTextOut.write ( tempDiv & ";" )
+        objTextOut.write ( tempPQ1 & ";" )
+        objTextOut.write ( tempPQ2 & ";" )
+        objTextOut.write ( rs("EndDate") & ";" )
+        objTextOut.write ( tempSpecial & ";" )
+        objTextOut.write ( "Y;" )
+        objTextOut.write ( tempSlmMiss & ";" )
+        objTextOut.write ( tempPlace & ";" )
+        objTextOut.write ( tempIWSF & ";" )
+        objTextOut.writeline ( sTSiteID )
       
-      RecsSaved = RecsSaved + 1
+        RecsSaved = RecsSaved + 1
 
-      ' Now Generate "License Email", if Non-USA and License ID missing, and we have an email ID, and we haven't already emailed this Member
-      
-      IF rs("MemberFed") <> "USA" and rs("ForFedStat") <> "Present" and LastNoLicMem <> rs("MemberID") and InStr(rs("Email"),"@") > 0 THEN
+        IF rs("MemberFed") <> "USA" and rs("ForFedStat") <> "Present" and LastNoLicMem <> rs("MemberID") and InStr(rs("Email"),"@") > 0 THEN
 
-        LastNoLicMem = rs("MemberID")
+            LastNoLicMem = rs("MemberID")
 
-    	  ' WriteDebugSQL ("Begin License Email Setup for " & """" & rs("FName") & " " & rs("LName") & """ <" & rs("Email") & ">")
+			' Prepare and Send Notification eMail
+			objMessage.Subject = "ACTION REQUIRED !!  IWWF License ID needed to submit your scores"
+			'objMessage.From = """USA Water Ski Membership (Melanie Hanson)"" <mhanson@usawaterski.org>"
+		    objMessage.From = """Dave Allen"" <mawsa@comcast.net>"
 
-				' Prepare and Send Notification eMail
-				objMessage.Subject = "ACTION REQUIRED !!  IWWF License ID needed to submit your scores"
-				objMessage.From = """USA Water Ski Membership (Melanie Hanson)"" <mhanson@usawaterski.org>"
-
-				objMessage.To = """" & rs("FName") & " " & rs("LName") & """ <" & rs("Email") & ">"
-			'	objMessage.To = """Dave Clark"" <awsatechdude@comcast.net>"
-			'	objMessage.CC = """Dave Clark"" <AWSATechDude@comcast.net>"
-				objMessage.CC = eMailCC & "; " & eMailTo
+		    objMessage.To = """Dave Allen"" <mawsa@comcast.net>"
+			' objMessage.To = """" & rs("FName") & " " & rs("LName") & """ <" & rs("Email") & ">"
+		    ' objMessage.To = """Dave Clark"" <awsatechdude@comcast.net>"
+		    ' objMessage.CC = """Dave Clark"" <AWSATechDude@comcast.net>"
+			' objMessage.CC = eMailCC & "; " & eMailTo
 
 
-    	  ' WriteDebugSQL ("Begin License Email Body for " & """" & rs("FName") & " " & rs("LName") & """ <" & rs("Email") & ">")
 
-				sSQL = "<html><head><title>ACTION REQUIRED !!  IWWF License ID needed to submit your scores</title></head>"
-				sSQL = sSQL & "<body><basefont face=""arial,sans-serif,helvetica,verdana,tahoma"" color=""#000000"" size=""2"">"
+			emailBody = "<html><head><title>ACTION REQUIRED !!  IWWF License ID needed to submit your scores</title></head>"
+			emailBody = emailBody & "<body><basefont face=""arial,sans-serif,helvetica,verdana,tahoma"" color=""#000000"" size=""2"">"
 
-				sSQL = sSQL & "<div style=""border: double 20px #ff0505;"
-				sSQL = sSQL & " padding: 25px;"
-				sSQL = sSQL & " margin: 10;"
-	'			sSQL = sSQL & " text-align: justify;"
-				sSQL = sSQL & " line-height: 23px;"
-				sSQL = sSQL & " color: #070707;"
-				sSQL = sSQL & " font-size: 18px"">"
+			emailBody = emailBody & "<div style=""border: double 20px #ff0505;"
+			emailBody = emailBody & " padding: 25px;"
+			emailBody = emailBody & " margin: 10;"
+'			emailBody = emailBody & " text-align: justify;"
+			emailBody = emailBody & " line-height: 23px;"
+			emailBody = emailBody & " color: #070707;"
+			emailBody = emailBody & " font-size: 18px"">"
 
-				sSQL = sSQL & "<p>To:&nbsp;&nbsp;&nbsp;&nbsp; " & rs("FName") & " " & rs("LName")
-
-				sSQL = sSQL & "<br>Re:&nbsp;&nbsp;&nbsp;&nbsp; Scores from " & sTName & " on " & sTDPretty
-
-				sSQL = sSQL & "<br>Date:&nbsp; " & FormatDateTime(date(),1) & "</p>"
+			emailBody = emailBody & "<p>To:&nbsp;&nbsp;&nbsp;&nbsp; " & rs("FName") & " " & rs("LName")
+			emailBody = emailBody & "<br>Re:&nbsp;&nbsp;&nbsp;&nbsp; Scores from " & sTName & " on " & sTDPretty
+			emailBody = emailBody & "<br>Date:&nbsp; " & FormatDateTime(date(),1) & "</p>"
 
 			'	Line below is header for when running in debug mode going to developers -- this documents who email would go to.
-			'	sSQL = sSQL & "<p>HTML eMail to:  """ & rs("FName") & " " & rs("LName") & """ &lt;" & rs("Email") & "&gt;</p>"
+			'	emailBody = emailBody & "<p>HTML eMail to:  """ & rs("FName") & " " & rs("LName") & """ &lt;" & rs("Email") & "&gt;</p>"
 
-				sSQL = sSQL & "<p>Dear " & rs("FName") & ",</p>"
-			'	sSQL = sSQL & "<p>Dear " & rs("FName") & " " & rs("LName") & ",</p>"
+			emailBody = emailBody & "<p>Dear " & rs("FName") & ",</p>"
+			'	emailBody = emailBody & "<p>Dear " & rs("FName") & " " & rs("LName") & ",</p>"
 
-				sSQL = sSQL & "<p>It has come to our attention that you recently recorded class L or R scores in a competition sanctioned"
-				sSQL = sSQL & " by USA Water Ski –- " & sTName & " (" & sTSanction & "), held at " & STSite & " on " & sTDPretty & ".</p>"
+			emailBody = emailBody & "<p>It has come to our attention that you recently recorded class L or R scores in a competition sanctioned"
+			emailBody = emailBody & " by USA Water Ski –- " & sTName & " (" & sTSanction & "), held at " & STSite & " on " & sTDPretty & ".</p>"
 
-				sSQL = sSQL & "<p>As you may already be aware, an IWWF License ID number must now be submitted with all Class L or R"
-				sSQL = sSQL & " scores, in order for those scores to be properly included in the IWWF World Ranking Lists.&nbsp;"
+			emailBody = emailBody & "<p>As you may already be aware, an IWWF License ID number must now be submitted with all Class L or R"
+			emailBody = emailBody & " scores, in order for those scores to be properly included in the IWWF World Ranking Lists.&nbsp;"
 				
-				IF rs("ForFedStat") = "Missing" THEN
-
-					sSQL = sSQL & " Unfortunately, we find that you have not yet entered your " & rs("MemberFed")
-					sSQL = sSQL & " License ID number into your USA Water Ski Membership Profile.&nbsp;"
+			IF rs("ForFedStat") = "Missing" THEN
+				emailBody = emailBody & " Unfortunately, we find that you have not yet entered your " & rs("MemberFed")
+				emailBody = emailBody & " License ID number into your USA Water Ski Membership Profile.&nbsp;"
 		
-				ELSE		
+			ELSE		
+				emailBody = emailBody & " Unfortunately, we now find that the License ID number value which you entered"
+				emailBody = emailBody & " into your USA Water Ski Membership Profile -- """ & rs("ForFedID") 				
+				emailBody = emailBody & """ -- is not valid for Federation code " & rs("MemberFed") & ".&nbsp;"
 
-					sSQL = sSQL & " Unfortunately, we now find that the License ID number value which you entered"
-					sSQL = sSQL & " into your USA Water Ski Membership Profile -- """ & rs("ForFedID") 				
-					sSQL = sSQL & """ -- is not valid for Federation code " & rs("MemberFed") & ".&nbsp;"
+			END IF
+				
+			emailBody = emailBody & " As a result, we are unable to properly forward your scores from the above-referenced event to IWWF" 
+			emailBody = emailBody & " for inclusion in the World Ranking Lists.</p>"
 
-				END IF
-				
-				sSQL = sSQL & " As a result, we are unable to properly forward your scores from the above-referenced event to IWWF" 
-				sSQL = sSQL & " for inclusion in the World Ranking Lists.</p>"
+			emailBody = emailBody & "<p>Therefore, we ask you to do the following, <b><i>immediately:</i></b></p>"
 
-				sSQL = sSQL & "<p>Therefore, we ask you to do the following, <b><i>immediately:</i></b></p>"
-
-				sSQL = sSQL & "<ul>"
+			emailBody = emailBody & "<ul>"
 				
-				sSQL = sSQL & "<li>Obtain your IWWF License ID number.&nbsp; If you do not already know your License ID Number, "
-				sSQL = sSQL & "<a href=""http://www.iwsftournament.com/homologation/showskiers.php"">Click Here</a> to access the IWWF skier"
-				sSQL = sSQL & " listings.&nbsp; If your name and ID is <i><b>not</i></b> listed there, then you will need to contact your home"
-				sSQL = sSQL & " country federation (" & rs("MemberFed") & ") to obtain your License ID number from them.<br>&nbsp;</li>"
+			emailBody = emailBody & "<li>Obtain your IWWF License ID number.&nbsp; If you do not already know your License ID Number, "
+			emailBody = emailBody & "<a href=""http://www.iwsftournament.com/homologation/showskiers.php"">Click Here</a> to access the IWWF skier"
+			emailBody = emailBody & " listings.&nbsp; If your name and ID is <i><b>not</i></b> listed there, then you will need to contact your home"
+			emailBody = emailBody & " country federation (" & rs("MemberFed") & ") to obtain your License ID number from them.<br>&nbsp;</li>"
 				
-				sSQL = sSQL & "<li>Then, <a href=""http://www.usawaterski.org/members/login/index.asp?m=" & rs("MemberID") & "&p=" & rs("Password") 
-				sSQL = sSQL & """>Click Here</a> to go to your USA Water Ski ""Members-Only"" login page.&nbsp; Your membership number and password will" 
-				sSQL = sSQL & " be filled in automatically; all you have to do is click the ""<b>Sign In</b>"" button to complete your login.<br>&nbsp;</li>"
+			emailBody = emailBody & "<li>Then, <a href=""http://www.usawaterski.org/members/login/index.asp?m=" & rs("MemberID") & "&p=" & rs("Password") 
+			emailBody = emailBody & """>Click Here</a> to go to your USA Water Ski ""Members-Only"" login page.&nbsp; Your membership number and password will" 
+			emailBody = emailBody & " be filled in automatically; all you have to do is click the ""<b>Sign In</b>"" button to complete your login.<br>&nbsp;</li>"
 				
-				sSQL = sSQL & "<li>Click on the ""<b>Update my Membership Info</b>"" link, which appears on the left-hand side of the page.<br>&nbsp;</li>"
+			emailBody = emailBody & "<li>Click on the ""<b>Update my Membership Info</b>"" link, which appears on the left-hand side of the page.<br>&nbsp;</li>"
 				
-				sSQL = sSQL & "<li>When the profile page opens, scroll to the bottom of the page.<br>&nbsp;</li>"
+			emailBody = emailBody & "<li>When the profile page opens, scroll to the bottom of the page.<br>&nbsp;</li>"
 				
-				sSQL = sSQL & "<li>If necessary, correct your Home Federation Country from the drop-down selection list, based" 
-				sSQL = sSQL & " on the 3-letter country code appearing at the front of your IWWF License ID.<br>&nbsp;</li>"
+			emailBody = emailBody & "<li>If necessary, correct your Home Federation Country from the drop-down selection list, based" 
+			emailBody = emailBody & " on the 3-letter country code appearing at the front of your IWWF License ID.<br>&nbsp;</li>"
 				
-				sSQL = sSQL & "<li>Then add or correct your Home Federation ID Number, by using the remaining numbers from your IWWF License ID."
-				sSQL = sSQL & "&nbsp; <b><i>Do Not</i></b> enter the 3 letters of your country code at the front.<br>&nbsp;</li>"
+			emailBody = emailBody & "<li>Then add or correct your Home Federation ID Number, by using the remaining numbers from your IWWF License ID."
+			emailBody = emailBody & "&nbsp; <b><i>Do Not</i></b> enter the 3 letters of your country code at the front.<br>&nbsp;</li>"
 				
-				sSQL = sSQL & "<li>Then click the ""<b>Update</b>"" button, to save your changes.<br>&nbsp;</li>"
+			emailBody = emailBody & "<li>Then click the ""<b>Update</b>"" button, to save your changes.<br>&nbsp;</li>"
 				
-				sSQL = sSQL & "<li>Then finally reply to this email, confirming that you have recorded your License ID in your USA Water Ski"
-				sSQL = sSQL & " membership profile –- and we will then re-send your scores to IWWF, associated with that License ID.<br>&nbsp;</li>"
+			emailBody = emailBody & "<li>Then finally reply to this email, confirming that you have recorded your License ID in your USA Water Ski"
+			emailBody = emailBody & " membership profile –- and we will then re-send your scores to IWWF, associated with that License ID.<br>&nbsp;</li>"
  
-				sSQL = sSQL & "</ul>"
+			emailBody = emailBody & "</ul>"
 				
-				sSQL = sSQL & "<p>Thank you in advance for your cooperation.</p>"
+			emailBody = emailBody & "<p>Thank you in advance for your cooperation.</p>"
 
-				sSQL = sSQL & "<p>Melanie Hanson<br>Director of Membership Programs"
-				sSQL = sSQL & "<br>Office: 863-324-4341 Ext 115"
-				sSQL = sSQL & "<br>Direct Line: 863-508-2096</p>"
-				sSQL = sSQL & "</div></body></html>"
+			emailBody = emailBody & "<p>Melanie Hanson<br>Director of Membership Programs"
+			emailBody = emailBody & "<br>Office: 863-324-4341 Ext 115"
+			emailBody = emailBody & "<br>Direct Line: 863-508-2096</p>"
+			emailBody = emailBody & "</div></body></html>"
 
-				WriteDebugSQL (sSQL)
+			'WriteDebugSQL (emailBody)
+        	'WriteDebugSQL ("End License Email Body for " & """" & rs("FName") & " " & rs("LName") & """ <" & rs("Email") & ">")
 
-    	  WriteDebugSQL ("End License Email Body for " & """" & rs("FName") & " " & rs("LName") & """ <" & rs("Email") & ">")
+            ' ***************************************
+            ' DLA: Send email regarding something, not quite sure what 
+            ' ***************************************
+			'objMessage.HTMLBody = sSQL
+			'objMessage.Send
 
-				objMessage.HTMLBody = sSQL
-
-				objMessage.Send
-				RecsNoLic = RecsNoLic + 1
-
-      END IF      
-
+    		RecsNoLic = RecsNoLic + 1
+        
+        END IF
+    
     END IF
 
+    ' ***************************************
+    ' Read next available record
+    ' ***************************************
     rs.movenext
 
-  loop
+loop
 
-  rs.close
-  set rs = nothing
-  objTextOut.close
-  set objTextOut = nothing
+rs.close
+set rs = nothing
+objTextOut.close
+set objTextOut = nothing
 
-
-   %>
+ %>
    <SCRIPT LANGUAGE="JavaScript">
    if(upLevel) {
       var splash = document.getElementById("splashScreen");
@@ -468,64 +484,80 @@ Please wait a moment ...<br><br>
    hideObject(splash);
    </SCRIPT>  
 
-   <%
-       WriteIndexPageHeader
+ <%
+   WriteIndexPageHeader
 
-   ' WriteDebugSQL (RecsSaved & " Records Saved")
+    IF RecsSaved > 999999 Then
+        ' ***************************************
+        ' Prepare and Send Notification eMail
+        ' ***************************************
+        objMessage.Subject = sIWWFSubj
+        ' objMessage.From = """USA Water Ski"" <dclark@usawaterski.org>"
+		' objMessage.To = """Dave Clark"" <AWSATechDude@comcast.net>"
+		' objMessage.To = """IWWF Ranking Data"" <rankingdata@iwsftournament.com>"
+		' objMessage.CC = """Dave Clark"" <AWSATechDude@comcast.net>; ""IWWF-EA"" <competitions@iwwfed-ea.org"
+	    objMessage.From = """Dave Allen"" <mawsa@comcast.net>"
+	    objMessage.To = """Dave Allen"" <mawsa@comcast.net>"
 
-  
-   IF RecsSaved > 0 Then
+		objMessage.AddAttachment PathtoIWWF & "\" & left(sTourID,6) & "RS.TXT"
 
-			' Prepare and Send Notification eMail
-			objMessage.Subject = sIWWFSubj
-			objMessage.From = """USA Water Ski"" <dclark@usawaterski.org>"
+		objMessage.HTMLBody = ""
+		objMessage.TextBody = sIWWFSubj
 
-			' objMessage.To = """Dave Clark"" <AWSATechDude@comcast.net>"
-			objMessage.To = """IWWF Ranking Data"" <rankingdata@iwsftournament.com>"
-			objMessage.CC = """Dave Clark"" <AWSATechDude@comcast.net>; ""IWWF-EA"" <competitions@iwwfed-ea.org"
+		'objMessage.Send
 
-			objMessage.AddAttachment PathtoIWWF & "\" & left(sTourID,6) & "RS.TXT"
+        objFSO.CopyFile PathtoIWWF & "\" & left(sTourID,6) & "RS.TXT", PathtoIWWF & "\Archived\", TRUE
+        objFSO.DeleteFile (PathtoIWWF & "\" & left(sTourID,6) & "RS.TXT")
 
-			objMessage.HTMLBody = ""
-			objMessage.TextBody = sIWWFSubj
+        %>
+        <br><br>
+        <center><h2>File export complete.</h2><br>
+        <%=RecsSaved%> Class R/L records were exported to file <%=left(sTourID,6)%>RS.TXT.<br><br>    
 
-			objMessage.Send
+        <%
+        IF RecsNoLic > 0 THEN 
+            %>
+    	    <%=RecsNoLic%> "Need IWWF License ID" Email notices generated and sent.<br><br>
+            <% 
+        END IF
 
-      ' IF objFSO.FileExists (PathtoIWWF & "\Archived\" & left(sTourID,6) & "RS.TXT") THEN
-      '    objFSO.DeleteFile (PathtoIWWF & "\Archived\" & left(sTourID,6) & "RS.TXT")
-      ' END IF
-      objFSO.CopyFile PathtoIWWF & "\" & left(sTourID,6) & "RS.TXT", PathtoIWWF & "\Archived\", TRUE
-      objFSO.DeleteFile (PathtoIWWF & "\" & left(sTourID,6) & "RS.TXT")
+    ELSE
+        %>
+        <br><br><center><h2>File export complete.</h2><br><br><br>
+        <h4>No R/L Records were exported for&nbsp; <b><%=sTourID%><b>.</h4><br><br>
+        <%
+    END IF
 
     %>
-    <br><br>
-    <center><h2>File export complete.</h2><br>
-    <%=RecsSaved%> Class R/L records were exported to file <%=left(sTourID,6)%>RS.TXT.<br><br>    
-    <%
-    
-    IF RecsNoLic > 0 THEN 
-    	%>
-	    <%=RecsNoLic%> "Need IWWF License ID" Email notices generated and sent.<br><br>
-  	  <% 
-  	  END IF
-
-   ELSE
-   %>
-     <br><br><center><h2>File export complete.</h2><br><br><br>
-     <h4>No R/L Records were exported for&nbsp; <b><%=sTourID%><b>.</h4><br><br>
-   <%
-   END IF
-
-
-%>
-        <form method=post action="DefaultHQ.asp?process=uploadany" method="post">
-              <input type="submit" style="width:13em" value="Finished"
-               title="Return to the Upload Control Page">
-        </form>
+    <form method=post action="DefaultHQ.asp?process=uploadany" method="post">
+        <input type="submit" style="width:13em" value="Finished"  title="Return to the Upload Control Page">
+    </form>
 <%
 
-set objMessage=nothing
-set objFSO = nothing
-WriteIndexPageFooter    
+    set objMessage=nothing
+    set objFSO = nothing
+    WriteIndexPageFooter    
 
 %>
+    <DIV>
+        <br />Message<br />
+        <%=TraceMsg %>
+
+        <br /><br />Error Messages<br />
+        <%=ErrMsg %>
+        <br /><br />RecsSaved = <%=RecsSaved %>
+        <br />RecBypassedNoScore = <%=RecBypassedNoScore %>
+        <br />RecBypassedRampHght = <%=RecBypassedRampHght %>
+        <br />RecBypassedForDiv = <%=RecBypassedForDiv %>
+        <br />RecsNoLic = <%=RecsNoLic %>
+
+    </DIV>
+
+    <DIV>
+    <br /><br />
+    <center><h2>File export complete.</h2><br>
+    <%=RecsSaved%> Class R/L records were exported to file <%=left(sTourID,6)%>RS.TXT.<br><br>    
+    </DIV>
+
+</BODY>
+

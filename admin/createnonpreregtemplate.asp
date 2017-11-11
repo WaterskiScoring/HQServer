@@ -23,7 +23,7 @@ Server.ScriptTimeout = 300
     	var ie4 = true;
     	}
     
-    function showObject(obj) {
+    function showObject(obj) QfyNu
     if (ns4) {
     	obj.visibility = "show";
     	}
