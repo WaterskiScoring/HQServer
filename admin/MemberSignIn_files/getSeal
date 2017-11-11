@@ -1,0 +1,202 @@
+
+
+
+
+
+
+
+<!--
+	var dn = "*.usawaterski.org";
+	var o = "*.usawaterski.org";
+	var baseURL = "https://seal.godaddy.com:443";
+	var flashinstalled = 0;
+	var flashversion = 0;
+	var EV = "false";
+	MSDetect = "false";
+	
+	if (navigator.plugins && navigator.plugins.length)
+	{
+		x = navigator.plugins["Shockwave Flash"];
+		if (x)
+		{
+			flashinstalled = 2;
+			if (x.description)
+			{
+				y = x.description;			
+				flashversion = y.charAt(y.indexOf('.')-1);
+			}
+		}
+		else
+			flashinstalled = 1;
+		if (navigator.plugins["Shockwave Flash 2.0"])
+		{
+			flashinstalled = 2;
+			flashversion = 2;
+		}
+	}
+	else if (navigator.mimeTypes && navigator.mimeTypes.length)
+	{
+		x = navigator.mimeTypes['application/x-shockwave-flash'];
+		if (x && x.enabledPlugin)
+			flashinstalled = 2;
+		else
+			flashinstalled = 1;
+	}
+	else
+		MSDetect = "true";
+
+	document.write('<SCR' + 'IPT LANGUAGE="VBScript"> \n');
+	document.write('on error resume next \n');
+	document.write('If MSDetect = "true" Then \n');
+	document.write('For ivar = 2 to 6 \n');
+	document.write('If Not(IsObject(CreateObject("ShockwaveFlash.ShockwaveFlash." & ivar))) Then \n');
+	document.write('Else \n');
+	document.write('flashinstalled = 2 \n');
+	document.write('flashversion = ivar \n');
+	document.write('End If \n');
+	document.write('Next \n');
+	document.write('End If \n');
+	document.write('If flashinstalled = 0 Then \n');
+	document.write('flashinstalled = 1 \n');
+	document.write('End If \n');	
+	document.write('</SCR' + 'IPT> \n');
+
+	if ((flashinstalled == 2) && (flashversion >= 5) && (self == top))
+	{
+		document.write('<object classid="clsid:d27cdb6e-ae6d-11cf-96b8-444553540000" codebase="https://fpdownload.macromedia.com/pub/shockwave/cabs/flash/swflash.cab#version=7,0,0,0" width="120" height="75" id="sitesealgd_t_medium" align="middle">');
+document.write('<param name="movie" value="' + baseURL + '/flash/sitesealgd_t_medium.swf?domainName=' + dn + '&color=000000' + '" />');
+document.write('<param name="quality" value="high" />');
+document.write('<param name="wmode" value="transparent" />');
+document.write('<embed src="' + baseURL + '/flash/sitesealgd_t_medium.swf?domainName=' + dn + '&color=000000' + '"wmode="transparent" quality="high" width="120" height="75" name="sitesealgd_t_medium" align="middle" type="application/x-shockwave-flash" pluginspage="https://www.macromedia.com/go/getflashplayer" />');
+document.write('</object>');
+
+	
+	}
+	else
+	{
+		document.write('<img style="cursor:pointer;cursor:hand" src="' + baseURL + '/images/GDTM.gif" onclick="verifySeal();">');
+	}
+	
+	function verifySeal()
+	{
+		var url = baseURL + '/verifySeal?sealID=128839542804d8cf0c5127119a721137217cbf02924725981981992604';		
+		window.open(url,'SealVerfication','location=yes,status=yes,resizable=yes,scrollbars=yes,width=650,height=550');
+	}
+	
+	var BrowserDetect = {
+		init: function () {
+			this.browser = this.searchString(this.dataBrowser) || "An unknown browser";
+			this.version = this.searchVersion(navigator.userAgent) || this.searchVersion(navigator.appVersion) || "an unknown version";
+			this.OS = this.searchString(this.dataOS) || "an unknown OS";
+		},
+		searchString: function (data) {
+			for (var ivar2 = 0; ivar2 < data.length; ivar2++)	{
+				var dataString = data[ivar2].string;
+				var dataProp = data[ivar2].prop;
+				this.versionSearchString = data[ivar2].versionSearch || data[ivar2].identity;
+				if (dataString) {
+					if (dataString.indexOf(data[ivar2].subString) != -1)
+						return data[ivar2].identity;
+				}
+				else if (dataProp)
+					return data[ivar2].identity;
+			}
+		},
+		searchVersion: function (dataString) {
+			var index = dataString.indexOf(this.versionSearchString);
+			if (index == -1) return;
+			return parseFloat(dataString.substring(index+this.versionSearchString.length + 1));
+		},
+		dataBrowser: [
+			{ 	string: navigator.userAgent,
+				subString: "OmniWeb",
+				versionSearch: "OmniWeb/",
+				identity: "OmniWeb"
+			},
+			{
+				string: navigator.vendor,
+				subString: "Apple",
+				identity: "Safari"
+			},
+			{
+				prop: window.opera,
+				identity: "Opera"
+			},
+			{
+				string: navigator.vendor,
+				subString: "iCab",
+				identity: "iCab"
+			},
+			{
+				string: navigator.vendor,
+				subString: "KDE",
+				identity: "Konqueror"
+			},
+			{
+				string: navigator.userAgent,
+				subString: "Firefox",
+				identity: "Firefox"
+			},
+			{
+				string: navigator.vendor,
+				subString: "Camino",
+				identity: "Camino"
+			},
+			{		// for newer Netscapes (6+)
+				string: navigator.userAgent,
+				subString: "Netscape",
+				identity: "Netscape"
+			},
+			{
+				string: navigator.userAgent,
+				subString: "MSIE",
+				identity: "Explorer",
+				versionSearch: "MSIE"
+			},
+			{
+				string: navigator.userAgent,
+				subString: "Gecko",
+				identity: "Mozilla",
+				versionSearch: "rv"
+			},
+			{ 		// for older Netscapes (4-)
+				string: navigator.userAgent,
+				subString: "Mozilla",
+				identity: "Netscape",
+				versionSearch: "Mozilla"
+			}
+		],
+		dataOS : [
+			{
+				string: navigator.platform,
+				subString: "Win",
+				identity: "Windows"
+			},
+			{
+				string: navigator.platform,
+				subString: "Mac",
+				identity: "Mac"
+			},
+			{
+				string: navigator.platform,
+				subString: "Linux",
+				identity: "Linux"
+			}
+		]
+	
+	};
+	BrowserDetect.init();
+
+	if (EV == "true") {
+		if (BrowserDetect.browser == 'Explorer' && BrowserDetect.version >= '7') {
+		
+			// use the following line to get the new root certificate for Godaddy
+			document.write('<img src="https:\\\\evbeacon.godaddy.com\\images\\spacer.gif"/>');
+		
+			// use the following line to get the new root certificate for Starfield
+			document.write('<img src="https:\\\\evbeacon.starfieldtech.com\\images\\spacer.gif"/>');
+		}	
+	}
+	
+// -->
+
