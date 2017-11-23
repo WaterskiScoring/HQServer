@@ -77,21 +77,10 @@ objConn.Open Application("WaterSkiConn")
 If Request.Form <> "" then 	'this is a postback
 
 'Count the number of states
-	Dim StateCount
 	if len(request.form("States")) > 0 then
-		'Get a state count
-		StateCount = GetStateCount(request.form("States"))
-		if StateCount > 5 then
-			ErroronPage = True
-			ErrorMessage = "You can only select up to 5 states."
-		else 
 			'assign this to a session var to be used on the next page
-
 			Session("StateSQL") = BuildStateSQL(request.form("States"))
 			Session("StateList") = BuildStateList(request.form("States"))
-
-		end if
-	
 	end if
 
 	if Request.Form("IncludeForeign") = "True" then
@@ -252,8 +241,7 @@ end if
  
       <tr> 
          <td>&nbsp;</td>
-         <td><font size="2" face="Verdana, Arial, Helvetica, sans-serif">Select 
-              up to 5 States</font></td>
+         <td>&nbsp;</td>
       </tr>
 
       <form action="CreateRegTemplateSetup.asp" method="post">
@@ -294,11 +282,11 @@ Set objConn1 = Nothing
          	 <font size="2" face="Verdana, Arial, Helvetica, sans-serif"> 
            Indicate the set of members you wish to retrieve into a 
            Registration Template, using the options which appear to 
-           the left.&nbsp; You may select up to five states, and/or 
+           the left.&nbsp; You may select states, and/or 
            check one or both of the special selection option boxes which 
            appear below that state selection window.&nbsp; To specify two
            or more states, hold down the Ctrl Key and click on each 
-           state (up to 5 total) that you desire.&nbsp; Then click the 
+           state that you desire.&nbsp; Then click the 
            &#8220;Create Template&#8221; button, and I will then build an 
            Excel template containing those members for you to download.
            </font></td>
@@ -324,14 +312,12 @@ Set objConn1 = Nothing
 
 	      </tr>
 
-
-			<tr>
+		<tr>
          <td>&nbsp;</td>
          <td>&nbsp;</td>
          <td>&nbsp;</td>
-         <td><font size="2" face="Verdana, Arial, Helvetica, sans-serif">
-         File format version:</font> </td>
-   	  </tr>
+         <td>&nbsp;</td>
+       	  </tr>
 
 			<tr>
          <td>&nbsp;</td>

@@ -64,7 +64,7 @@ sSQL = sSQL & " WHERE TournAppID = '" & left(sTourID,6) & "' and isnumeric(CScor
 sSQL = sSQL & " CC on CC.TournAppID = ST.TournAppID where upper(ST.TournAppID) = '"
 sSQL = sSQL & left(sTourID,6) & "'"
 
-' WriteDebugSQL (sSQL)
+TraceMsg = TraceMsg & "<br /><br />Sanction Query:<br />" & sSQL
 
 ' ***************************************
 ' Open and run SQL statement to retrieve sanction and contact information
@@ -96,11 +96,11 @@ ELSE
 
    rs.close
    sIWWFSubj = sTName & "," & sTSanction & "," & sTSiteID & "," & Left(sTDateE,4) & "-" & Mid(sTDateE,5,2) & "-" & Right(sTDateE,2)
-    TraceMsg = TraceMsg & "<br />Title: " & sIWWFSubj
+    TraceMsg = TraceMsg & "<br /><br />Title: " & sIWWFSubj
 END IF
 
 
-EmailCC = """Melanie Hanson"" <mhanson@usawaterski.org>; ""Dave Clark"" <awsatechdude@comcast.net>"
+EmailCC = """Melanie Hanson"" <mhanson@usawaterski.org>; ""Dave Clark"" <awsatechdude@comcast.net>; ""David Allen"" <mawsa@comcast.net>"
 IF mid(sTourID,3,1) = "C" THEN
    EmailCC = EmailCC & "; ""Danny LeBourgeois"" <dleboo@gmail.com>"
 ELSEIF mid(sTourID,3,1) = "E" THEN
@@ -154,6 +154,20 @@ if (ie4 || upLevel) {
 }
 
 </SCRIPT>
+
+<style>
+.Message {
+	Width: 100%; 
+	Text-Align:Left; 
+	margin-left: 0; 
+	margin-right: auto; 
+	FONT-SIZE:1.0em; 
+	FONT-WEIGHT:normal;
+    color: red;
+}
+</style>
+
+
 </head>
 <BODY>
     <DIV ID="splashScreen" STYLE="position:absolute;z-index:5;top:30%;left:35%;">
@@ -206,7 +220,7 @@ sSQL = sSQL & "  LEFT JOIN " & DivisionsTableName & " as DT ON RS.Div = DT.Div a
 sSQL = sSQL & "WHERE RS.Class in ('R','L') AND RS.TourID = '" & sTourID & "' "
 sSQL = sSQL & "ORDER BY RS.MemberID, RS.Round, RS.Event"
 
-'WriteDebugSQL (sSQL)
+TraceMsg = TraceMsg & "<br /><br />Scores Query:<br />" & sSQL
 
 rs.open sSQL, SConnectionToTRATable, 3, 3
 do while not rs.eof
@@ -347,27 +361,23 @@ do while not rs.eof
       
         RecsSaved = RecsSaved + 1
 
-        IF rs("MemberFed") <> "USA" and rs("ForFedStat") <> "Present" and LastNoLicMem <> rs("MemberID") and InStr(rs("Email"),"@") > 0 THEN
+        IF 1 = 2 and rs("MemberFed") <> "USA" and rs("ForFedStat") <> "Present" and LastNoLicMem <> rs("MemberID") and InStr(rs("Email"),"@") > 0 THEN
 
             LastNoLicMem = rs("MemberID")
 
 			' Prepare and Send Notification eMail
 			objMessage.Subject = "ACTION REQUIRED !!  IWWF License ID needed to submit your scores"
-			'objMessage.From = """USA Water Ski Membership (Melanie Hanson)"" <mhanson@usawaterski.org>"
-		    objMessage.From = """Dave Allen"" <mawsa@comcast.net>"
-
-		    objMessage.To = """Dave Allen"" <mawsa@comcast.net>"
-			' objMessage.To = """" & rs("FName") & " " & rs("LName") & """ <" & rs("Email") & ">"
-		    ' objMessage.To = """Dave Clark"" <awsatechdude@comcast.net>"
-		    ' objMessage.CC = """Dave Clark"" <AWSATechDude@comcast.net>"
-			' objMessage.CC = eMailCC & "; " & eMailTo
-
-
+			objMessage.From = """USA Water Ski Membership (Melanie Hanson)"" <mhanson@usawaterski.org>"
+			objMessage.To = """" & rs("FName") & " " & rs("LName") & """ <" & rs("Email") & ">"
+		    objMessage.To = """Dave Clark"" <awsatechdude@comcast.net>"
+		    objMessage.CC = """Dave Clark"" <AWSATechDude@comcast.net>"
+		    objMessage.CC = """Dave Allen"" <mawsa@comcast.net>"
+			objMessage.CC = eMailCC & "; " & eMailTo
 
 			emailBody = "<html><head><title>ACTION REQUIRED !!  IWWF License ID needed to submit your scores</title></head>"
 			emailBody = emailBody & "<body><basefont face=""arial,sans-serif,helvetica,verdana,tahoma"" color=""#000000"" size=""2"">"
 
-			emailBody = emailBody & "<div style=""border: double 20px #ff0505;"
+			emailBody = emailBody & "<div style=""border: double 20px #ff0505;"""
 			emailBody = emailBody & " padding: 25px;"
 			emailBody = emailBody & " margin: 10;"
 '			emailBody = emailBody & " text-align: justify;"
@@ -442,14 +452,11 @@ do while not rs.eof
 			emailBody = emailBody & "<br>Direct Line: 863-508-2096</p>"
 			emailBody = emailBody & "</div></body></html>"
 
-			'WriteDebugSQL (emailBody)
-        	'WriteDebugSQL ("End License Email Body for " & """" & rs("FName") & " " & rs("LName") & """ <" & rs("Email") & ">")
-
             ' ***************************************
             ' DLA: Send email regarding something, not quite sure what 
             ' ***************************************
-			'objMessage.HTMLBody = sSQL
-			'objMessage.Send
+			objMessage.HTMLBody = emailBody
+			objMessage.Send
 
     		RecsNoLic = RecsNoLic + 1
         
@@ -487,31 +494,39 @@ set objTextOut = nothing
  <%
    WriteIndexPageHeader
 
-    IF RecsSaved > 999999 Then
+    IF RecsSaved > 0 Then
         ' ***************************************
         ' Prepare and Send Notification eMail
         ' ***************************************
         objMessage.Subject = sIWWFSubj
-        ' objMessage.From = """USA Water Ski"" <dclark@usawaterski.org>"
-		' objMessage.To = """Dave Clark"" <AWSATechDude@comcast.net>"
-		' objMessage.To = """IWWF Ranking Data"" <rankingdata@iwsftournament.com>"
-		' objMessage.CC = """Dave Clark"" <AWSATechDude@comcast.net>; ""IWWF-EA"" <competitions@iwwfed-ea.org"
-	    objMessage.From = """Dave Allen"" <mawsa@comcast.net>"
-	    objMessage.To = """Dave Allen"" <mawsa@comcast.net>"
+        objMessage.From = """USA Water Ski"" <dclark@usawaterski.org>"
+		objMessage.To = """Dave Clark"" <AWSATechDude@comcast.net>; ""IWWF Ranking Data"" <rankingdata@iwsftournament.com>"
+		objMessage.CC = """David Allen"" <mawsa@comcast.net>; ""Dave Clark"" <AWSATechDude@comcast.net>; ""IWWF-EA"" <competitions@iwwfed-ea.org"
 
 		objMessage.AddAttachment PathtoIWWF & "\" & left(sTourID,6) & "RS.TXT"
 
 		objMessage.HTMLBody = ""
 		objMessage.TextBody = sIWWFSubj
 
-		'objMessage.Send
+        On Error Resume Next
+		objMessage.Send
+        If Err.Number <> 0 Then
+            %>
+                <DIV ID="debugMsg">
+                    <br />Err.Number=<%=Err.Number %>
+                    <br />Err.Description=<%=Err.Description %>
+                    <br />
+                </DIV>
+            <%
+            On Error Goto 0 ' But don't let other errors hide!
+        End If
 
         objFSO.CopyFile PathtoIWWF & "\" & left(sTourID,6) & "RS.TXT", PathtoIWWF & "\Archived\", TRUE
         objFSO.DeleteFile (PathtoIWWF & "\" & left(sTourID,6) & "RS.TXT")
 
         %>
         <br><br>
-        <center><h2>File export complete.</h2><br>
+        <center><h2>File export complete</h2><br>
         <%=RecsSaved%> Class R/L records were exported to file <%=left(sTourID,6)%>RS.TXT.<br><br>    
 
         <%
@@ -523,15 +538,31 @@ set objTextOut = nothing
 
     ELSE
         %>
-        <br><br><center><h2>File export complete.</h2><br><br><br>
+        <br><br><center><h2>File export complete</h2><br><br><br>
         <h4>No R/L Records were exported for&nbsp; <b><%=sTourID%><b>.</h4><br><br>
         <%
     END IF
-
+TraceMsg = ""
     %>
     <form method=post action="DefaultHQ.asp?process=uploadany" method="post">
         <input type="submit" style="width:13em" value="Finished"  title="Return to the Upload Control Page">
     </form>
+
+    <DIV id="Message" style="Message">
+        <br />Message<br />
+
+        <br /><br />RecsSaved = <%=RecsSaved %>
+        <br />RecBypassedNoScore = <%=RecBypassedNoScore %>
+        <br />RecBypassedRampHght = <%=RecBypassedRampHght %>
+        <br />RecBypassedForDiv = <%=RecBypassedForDiv %>
+        <br />RecsNoLic = <%=RecsNoLic %>
+    </DIV>
+
+    <DIV style="width: 100%; Text-Align:Left; margin-left: 0; margin-right: auto; FONT-SIZE:1.0em; FONT-WEIGHT:normal;">
+        <br /><br />Messages<br /><%=ErrMsg %>
+        <br /><br /><%=TraceMsg %>
+    </DIV>
+
 <%
 
     set objMessage=nothing
@@ -539,25 +570,5 @@ set objTextOut = nothing
     WriteIndexPageFooter    
 
 %>
-    <DIV>
-        <br />Message<br />
-        <%=TraceMsg %>
-
-        <br /><br />Error Messages<br />
-        <%=ErrMsg %>
-        <br /><br />RecsSaved = <%=RecsSaved %>
-        <br />RecBypassedNoScore = <%=RecBypassedNoScore %>
-        <br />RecBypassedRampHght = <%=RecBypassedRampHght %>
-        <br />RecBypassedForDiv = <%=RecBypassedForDiv %>
-        <br />RecsNoLic = <%=RecsNoLic %>
-
-    </DIV>
-
-    <DIV>
-    <br /><br />
-    <center><h2>File export complete.</h2><br>
-    <%=RecsSaved%> Class R/L records were exported to file <%=left(sTourID,6)%>RS.TXT.<br><br>    
-    </DIV>
-
 </BODY>
 

@@ -1,73 +1,38 @@
-<!--#include virtual="/epl/functions.asp" -->
-
 <% 
 
 If not Session("aauth") then response.redirect "Login.asp"
 
 Server.ScriptTimeout = 300
 
-' The following lines of HTML display the "opening please wait" banner.
+Dim curTraceMsg, sTourID, sTourYear, sTourDate, sStateSQL, sTourName, sStateList, sUserName
 
-%>
-    
-<html><head><title>USA Water Ski Registration Template</title>
-    <SCRIPT LANGUAGE="JavaScript">
-    // First we detect the browser type
-    if(document.getElementById) { // IE 5 and up, NS 6 and up
-    	var upLevel = true;
-    	}
-    else if(document.layers) { // Netscape 4
-    	var ns4 = true;
-    	}
-    else if(document.all) { // IE 4
-    	var ie4 = true;
-    	}
-    
-    function showObject(obj) QfyNu
-    if (ns4) {
-    	obj.visibility = "show";
-    	}
-    else if (ie4 || upLevel) {
-    	obj.style.visibility = "visible";
-    	}
-    }
-    
-    function hideObject(obj) {
-    if (ns4) {
-    	obj.visibility = "hide";
-    	}
-    if (ie4 || upLevel) {
-    	obj.style.visibility = "hidden";
-    	}
-    }
-    
-    </SCRIPT>
-    </head>
-    <body>
-    <DIV ID="splashScreen" STYLE="position:absolute;z-index:5;top:30%;left:35%;">
-    <TABLE BGCOLOR="#000000" BORDER=1 BORDERCOLOR="#000000"	CELLPADDING=0 CELLSPACING=0 HEIGHT=150 WIDTH=300>
-    <TR>
-    <TD WIDTH="100%" HEIGHT="100%" BGCOLOR="#CCCCCC" ALIGN="CENTER" VALIGN="MIDDLE">
-    <BR>
-    <FONT FACE="Helvetica,Verdana,Arial" SIZE=2 COLOR="#000066">
-    <B>Preparing your Registration Template.<br><br>
-    This may take a minute or so ...<br><br><br>  
-    </B></FONT>
-    <IMG SRC="includes/wait.gif" BORDER=1 WIDTH=150 HEIGHT=15><BR><BR>
-    </TD>
-    </TR>
-    </TABLE>
-    </DIV>
-    
-<%
+'	-----------------------------------------------------------------------
+' Validate TourID value for scores to be Exported.
+'	-----------------------------------------------------------------------
+sTourDate = ""
+sStateSQL = "State IN ('')"
+sStateList = ""
+sTourName = ""
+curTraceMsg = "<br />Process Begin"
 
-' Once the above "please wait" banner is written to HTML, we flush the response
-' buffer to make the page appear to the users browser.  That sits on their display
-' while the rest of the template preparation script processing takes place.
-    
-response.flush
+sUserName = session("UserName")
+sTourID = Session("TournamentID")
+IF len(sTourID) > 0 THEN
+    sTourID = Session("TournamentID")
+    sTourDate = session("tournamentdate")
+    sStateSQL = Session("StateSQL")
+    sStateList = Session("StateList")
+    sTourName = sTourName
+ELSE 
+    sTourID = Request.QueryString("TourID")
+END IF	
 
+sTourYear = 2000 + left(sTourID,2)
+curTraceMsg = curTraceMsg & "<br />TourId=" & sTourID & ", sTourYear=" & sTourYear & ", sTourDate=" & sTourDate & ", sStateList=" & sStateList & ", sStateSQL=" & sStateSQL
 
+'	-----------------------------------------------------------------------
+'	Utility function defintion
+'	-----------------------------------------------------------------------
 Function RemoveInvalidChars(strInput)
     dim workingstring
 	On Error Resume Next
@@ -89,82 +54,194 @@ Function RemoveInvalidChars(strInput)
 	
 End Function
 
-'	-----------------------------------------------------------------------
-'	Start by sucking Membership Pricing Info from HQ Table into local Array
-'	-----------------------------------------------------------------------
 
+'	-----------------------------------------------------------------------
+' The following lines of HTML display the "opening please wait" banner.
+'	-----------------------------------------------------------------------
+%>
+    
+<html>
+    <head>
+        <title>USA Water Ski Registration Template Using OLR</title>
+        <SCRIPT LANGUAGE="JavaScript">
+        // First we detect the browser type
+        if(document.getElementById) { // IE 5 and up, NS 6 and up
+    	    var upLevel = true;
+    	    }
+        else if(document.layers) { // Netscape 4
+    	    var ns4 = true;
+    	    }
+        else if(document.all) { // IE 4
+    	    var ie4 = true;
+    	    }
+    
+        function showObject(obj) {
+        if (ns4) {
+    	    obj.visibility = "show";
+    	    }
+        else if (ie4 || upLevel) {
+    	    obj.style.visibility = "visible";
+    	    }
+        }
+    
+        function hideObject(obj) {
+        if (ns4) {
+    	    obj.visibility = "hide";
+    	    }
+        if (ie4 || upLevel) {
+    	    obj.style.visibility = "hidden";
+    	    }
+        }
+    
+        </SCRIPT>
+
+    </head>
+
+    <body>
+
+        <DIV ID="splashScreen" STYLE="position:absolute;z-index:5;top:30%;left:35%;">
+            <TABLE BGCOLOR="#000000" BORDER=1 BORDERCOLOR="#000000"	CELLPADDING=0 CELLSPACING=0 HEIGHT=150 WIDTH=300>
+                <TR>
+                    <TD WIDTH="100%" HEIGHT="100%" BGCOLOR="#CCCCCC" ALIGN="CENTER" VALIGN="MIDDLE">
+                        <BR>
+                        <FONT FACE="Helvetica,Verdana,Arial" SIZE=2 COLOR="#000066">
+                        <B>Preparing your Registration Template.<br><br>
+                        This may take a minute or so ...<br><br><br>  
+                        </B></FONT>
+                        <IMG SRC="includes/wait.gif" BORDER=1 WIDTH=150 HEIGHT=15><BR><BR>
+                    </TD>
+                </TR>
+            </TABLE>
+        </DIV>
+<% 
+' Once the above "please wait" banner is written to HTML, we flush the response
+' buffer to make the page appear to the users browser.  That sits on their display
+' while the rest of the template preparation script processing takes place.
+    
+response.flush
+
+'	-----------------------------------------------------------------------
+'Open connection to Sanction Database
+'Get tournament attributes from TSchedul table
+'	-----------------------------------------------------------------------
+Set WaterskiConnect = Server.CreateObject("ADODB.Connection")
+WaterskiConnect.Open Application("WaterSkiConn")
+Dim rsWaterski
+Set rsWaterski = Server.CreateObject("ADODB.RecordSet")
+rsWaterski.ActiveConnection = WaterskiConnect
+
+Dim curSqlStmt, strTStatus, strTSanction, strTourName, strTourDate
+curSqlStmt = "Select Top 1 TSanction, TStatus, TournAppID, TDateE, TName, TCity, TState from Sanctions.dbo.TSchedul where TournAppID = '" & left(sTourID,6) & "'"
+rsWaterski.Open curSqlStmt
+If rsWaterski.EOF THEN
+	strTStatus = -1
+    strTSanction = sTourID
+    strTourName = sTourId
+ELSE 
+	strTStatus = rsWaterski("TStatus")
+    strTSanction = rsWaterski("TSanction")
+    strTourDate = rsWaterski("TDateE")
+    sTourDate = strTourDate
+    strTourName = rsWaterski("TName")
+    sTourName = strTourName
+
+	IF left(strTSanction,6) <> left(sTourID,6) THEN
+		strTSanction = sTourID
+	END IF
+END IF
+
+rsWaterski.Close
+Set rsWaterski = Nothing
+WaterskiConnect.Close
+
+'	-----------------------------------------------------------------------
+'	Read applicable Membership Pricing Info from HQ Table into local Array
+'	-----------------------------------------------------------------------
+curTraceMsg = curTraceMsg & "<br /><br />Membership Types with pricing"
 Dim MT, MemPrice(200), MemUpgrd(200)
 FOR MT = 1 to 200: MemPrice(MT) = 0: MemUpgrd(MT) = 0: NEXT
 
-Set SQLConnect = CreateObject("ADODB.Connection")
-SQLConnect.Open Application("HQSQLConn")
+'Open connection to HQ Database
+Set HQConnect = CreateObject("ADODB.Connection")
+HQConnect.Open Application("HQSQLConn")
 
-strSql = "SELECT * FROM [Membership Types with pricing]" 
-strSql = strSql & " WHERE EffectiveFrom <= CONVERT(DATETIME, '" & session("tournamentdate") & " 00:00:00', 102)"
-strSql = strSql & " AND EffectiveTo >= CONVERT(DATETIME, '" & session("tournamentdate") & " 00:00:00', 102)"
-Set HQRS = SQLConnect.Execute(strSql)
-DO UNTIL HQRS.EOF
-	MT = HQRS("Membership Type Code")
-	MemPrice(MT) = HQRS("MemberShipTypeRates")
-	MemUpgrd(MT) = HQRS("CostToUpgrade")
-	HQRS.MoveNext
+curSqlStmt = "SELECT * FROM [Membership Types with pricing]" 
+curSqlStmt = curSqlStmt & " WHERE EffectiveFrom <= CONVERT(DATETIME, '" & sTourDate & " 00:00:00', 102)"
+curSqlStmt = curSqlStmt & " AND EffectiveTo >= CONVERT(DATETIME, '" & sTourDate & " 00:00:00', 102)"
+Set rsMemType = HQConnect.Execute(curSqlStmt)
+DO UNTIL rsMemType.EOF
+	MT = rsMemType("Membership Type Code")
+	MemPrice(MT) = rsMemType("MemberShipTypeRates")
+	MemUpgrd(MT) = rsMemType("CostToUpgrade")
+
+	rsMemType.MoveNext
 LOOP
 
-HQRS.Close
-Set HQRS = Nothing
+rsMemType.Close
+Set rsMemType = Nothing
+HQConnect.Close
 
+'	-----------------------------------------------------------------------
+'Open database connection 
+'Check to determine if there are any qualification entries
+'Then check to determine if there are qualifications for this tournamnet
+'	-----------------------------------------------------------------------
+Set WaterskiConnect = Server.CreateObject("ADODB.Connection")
+WaterskiConnect.Open Application("WaterSkiConn")
+Set rsWaterski = Server.CreateObject("ADODB.RecordSet")
+rsWaterski.ActiveConnection = WaterskiConnect
 
-Dim objConn
-Set objConn = Server.CreateObject("ADODB.Connection")
-objConn.Open Application("WaterSkiConn")
-            
-
-Dim objFSO
-Set objFSO = Server.CreateObject("Scripting.FileSystemObject")
-Dim path
-path = Server.MapPath("Excel/")
-'Randomize()
-'Dim num
-
-Dim DateRaw, DateFmt, I1, I2
+Dim QfyNum, DateRaw, DateFmt, I1, I2, RowNo
 DateRaw = Date(): I1 = instr(DateRaw,"/"): I2 = instr(I1+1,DateRaw,"/")
 DateFmt = Mid(DateRaw,I2+1): ' Start with Year value
 IF I1=2 THEN DateFmt = DateFmt + "-0" + Left(DateRaw,1): ELSE DateFmt = DateFmt + "-" + Left(DateRaw,2)
 IF I2-I1=2 THEN DateFmt = DateFmt + "-0" + Mid(DateRaw,I1+1,1): ELSE DateFmt = DateFmt + "-" + Mid(DateRaw,I1+1,2)
 
-Dim objRS
-Set objRS = Server.CreateObject("ADODB.RecordSet")
-objRS.ActiveConnection = objConn
+curSqlStmt = "Select count(*) as QfyNum From Cobra00025.USAWSRank.RegisterQualify_TEST Where left(TourID,6) = '" & left(sTourID,6) & "';"
+rsWaterski.Open curSqlStmt
+QfyNum = rsWaterski("QfyNum")
 
-'Get TStatus and TSanction from TSchedul table
-Dim strTStatus, strTSanction
-sSQL = "Select Top 1 TSanction, TStatus from Sanctions.dbo.TSchedul where TournAppID = '"
-sSQL = sSQL & left(Session("TournamentID"),6) & "'"
-objRS.Open sSQL
-If objRS.EOF THEN
-	strTStatus = -1: strTSanction = Session("TournamentID")
-ELSE 
-	strTStatus = objRS("TStatus"): strTSanction = objRS("TSanction")
-	IF left(strTSanction,6) <> left(Session("TournamentID"),6) THEN
-		strTSanction = Session("TournamentID")
-	END IF
-END IF
-objRS.Close
+rsWaterski.Close
+Set rsWaterski = Nothing
+WaterskiConnect.Close
 
-
-'""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
-'"""""""""""""" With Scores and Ratings """""""""""""""""""""""
-'""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
-
-
-'objFSO.CopyFile path & "/Templates/NonPreRegTemplateBlank.xls", path & "/template_with_scores.xls" , True
-objFSO.CopyFile path & "/Templates/NonPreRegTemplateBlank.xls", path & "/template.xls" , True
-
+'	-----------------------------------------------------------------------
 'Now open a connection to the new XLS file
+'Setup to reference blank registration template file
+'	-----------------------------------------------------------------------
+Dim fileRegXls
+Set fileRegXls = Server.CreateObject("Scripting.FileSystemObject")
+Dim pathExcelFiles
+pathExcelFiles = Server.MapPath("Excel/")
+dim copyFileSour, copyFileDest
+curTraceMsg = curTraceMsg & "<br /><br />pathExcelFiles=" & pathExcelFiles
 
+copyFileSour = pathExcelFiles & "/Templates/NonPreRegTemplateBlank.xls"
+copyFileDest = pathExcelFiles & "/template.xls"
+curTraceMsg = curTraceMsg & "<br />copyFileSour=" & copyFileSour & "<br />copyFileDest=" & copyFileDest
+
+fileRegXls.CopyFile copyFileSour, copyFileDest , True
+
+'	-----------------------------------------------------------------------
+'Now open a connection to the new XLS file
+'	-----------------------------------------------------------------------
 Set objExcelConn = Server.CreateObject("ADODB.Connection")
-'objExcelConn.Open "ExcelDSNwithScores"
-objExcelConn.Open "Driver={Microsoft Excel Driver (*.xls)};DBQ=" & path & "\template.xls;ReadOnly=0;"
+objExcelConn.Provider = "Microsoft.ACE.OLEDB.12.0"
+objExcelConn.ConnectionString = "Data Source=" & copyFileDest & ";Extended Properties=""Excel 8.0;"""
+    On Error Resume Next
+objExcelConn.Open
+    If Err.Number <> 0 Then
+        %>
+            <DIV ID="debugMsg">
+                <br />Error creating registration template file
+                <br />Err.Number=<%=Err.Number %>
+                <br />Err.Description=<%=Err.Description %>
+                <br />
+            </DIV>
+        <%
+        On Error Goto 0 ' But don't let other errors hide!
+    End If
+curTraceMsg = curTraceMsg & "<br />Open Excel file=" & copyFileDest
 
 Set objExcelSingleFields = Server.CreateObject("ADODB.Recordset")
 objExcelSingleFields.ActiveConnection = objExcelConn 
@@ -173,7 +250,7 @@ objExcelSingleFields.LockType = 2                      'Pessimistic Lock.
 
 objExcelSingleFields.Source = "Select * from PreRegTournamentName"
 objExcelSingleFields.Open
-objExcelSingleFields.Fields(0).Value = session("TournamentName")
+objExcelSingleFields.Fields(0).Value = sTourName
 objExcelSingleFields.update
 objExcelSingleFields.close
 		
@@ -191,7 +268,7 @@ objExcelSingleFields.close
 		
 objExcelSingleFields.Source = "Select * from ActiveTournamentName"
 objExcelSingleFields.Open
-objExcelSingleFields.Fields(0).Value = session("TournamentName")
+objExcelSingleFields.Fields(0).Value = sTourName
 objExcelSingleFields.update
 objExcelSingleFields.close
 		
@@ -209,7 +286,7 @@ objExcelSingleFields.close
 		
 objExcelSingleFields.Source = "Select * from InActiveTournamentName"
 objExcelSingleFields.Open
-objExcelSingleFields.Fields(0).Value = session("TournamentName")
+objExcelSingleFields.Fields(0).Value = sTourName
 objExcelSingleFields.update
 objExcelSingleFields.close
 		
@@ -232,12 +309,16 @@ objExcelPreReg.LockType = 2                      'Pessimistic Lock.
 objExcelPreReg.Source = "Select * from PreRegRange"
 objExcelPreReg.Open
 
+curTraceMsg = curTraceMsg & "<br />Create PreReg sheet"
+
 Set objExcelActive = Server.CreateObject("ADODB.Recordset")
 objExcelActive.ActiveConnection = objExcelConn 
 objExcelActive.CursorType = 3                    'Static cursor.
 objExcelActive.LockType = 2                      'Pessimistic Lock.
 objExcelActive.Source = "Select * from ActiveRange"
 objExcelActive.Open
+
+curTraceMsg = curTraceMsg & "<br />Create Active sheet"
 
 Set objExcelInActive = Server.CreateObject("ADODB.Recordset")
 objExcelInActive.ActiveConnection = objExcelConn 
@@ -246,7 +327,7 @@ objExcelInActive.LockType = 2                      'Pessimistic Lock.
 objExcelInActive.Source = "Select * from InActiveRange"
 objExcelInActive.Open
 
-
+curTraceMsg = curTraceMsg & "<br />Create InActive sheet"
 
 ''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''
 ''' Next we insert Chief and Appointed official Person ID's for the 
@@ -254,299 +335,403 @@ objExcelInActive.Open
 ''' a work table, along with Applicable Chief Codes.  But first we
 ''' need to do a delete of any existing rows for that TournAppID.
 ''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''
+Set WaterskiConnect = Server.CreateObject("ADODB.Connection")
+WaterskiConnect.Open Application("WaterSkiConn")
+Set rsWaterski = Server.CreateObject("ADODB.RecordSet")
+rsWaterski.ActiveConnection = WaterskiConnect
 
-Dim sSQL, sSQL1, sSQL2, sSQL3
+curSqlStmt = "Delete from USAWaterski.dbo.TempApptdOfcls where TournAppID = '" & left(sTourID,6) & "' OR DateAdd(Day,30,WhenAdded) < GetDate()"
+WaterskiConnect.Execute (curSqlStmt)
 
+curSqlStmt = "Insert into USAWaterski.dbo.TempApptdOfcls (PersonID, TournAppID, OffCode, WhenAdded) "
+curSqlStmt = curSqlStmt & "SELECT PersonID, '" & left(sTourID,6) & "', Max(OffCode), GetDate() "
+curSqlStmt = curSqlStmt & "FROM ( "
+curSqlStmt = curSqlStmt & "    SELECT Cast(CASE When len(CJudgePID)<9 THEN CJudgePID ELSE right(CJudgePID,8) END as integer) AS PersonID, 'CJ' AS OffCode "
+curSqlStmt = curSqlStmt & "    FROM sanctions.dbo.registration WHERE TournAppID = '" & left(sTourID,6) & "' and isnumeric(CJudgePID) = 1 "
+curSqlStmt = curSqlStmt & "    UNION"
+curSqlStmt = curSqlStmt & "    SELECT Cast(CASE When len(CDriverPID)<9 Then CDriverPID Else right(CDriverPID,8) END as integer) AS PersonID, 'CD' AS OffCode"
+curSqlStmt = curSqlStmt & "    FROM sanctions.dbo.registration WHERE TournAppID = '" & left(sTourID,6) & "' and isnumeric(CDriverPID) = 1 "
+curSqlStmt = curSqlStmt & "    UNION"
+curSqlStmt = curSqlStmt & "    SELECT Cast(CASE When len(CScorePID)<9 Then CScorePID Else right(CScorePID,8) END as integer) AS PersonID, 'CC' AS OffCode "
+curSqlStmt = curSqlStmt & "    FROM sanctions.dbo.registration WHERE TournAppID = '" & left(sTourID,6) & "' and isnumeric(CScorePID) = 1 "
+curSqlStmt = curSqlStmt & "    UNION"
+curSqlStmt = curSqlStmt & "    SELECT Cast(CASE When len(CSafPID)<9 Then CSafPID Else right(CSafPID,8) END as integer) AS PersonID, 'CS' AS OffCode"
+curSqlStmt = curSqlStmt & "    FROM sanctions.dbo.registration WHERE TournAppID = '" & left(sTourID,6) & "' and isnumeric(CSafPID) = 1 "
+curSqlStmt = curSqlStmt & "    UNION"
+curSqlStmt = curSqlStmt & "    SELECT Cast(CASE When len(TechCPID)<9 Then TechCPID Else right(TechCPID,8) END as integer) AS PersonID, 'CT' AS OffCode"
+curSqlStmt = curSqlStmt & "    FROM sanctions.dbo.registration WHERE TournAppID = '" & left(sTourID,6) & "' and isnumeric(TechCPID) = 1 "
+curSqlStmt = curSqlStmt & "    UNION"
+curSqlStmt = curSqlStmt & "    SELECT Cast(CASE When len(Ap1JPID)<9 Then Ap1JPID Else right(Ap1JPID,8) END as integer) AS PersonID, 'APTJ' AS OffCode"
+curSqlStmt = curSqlStmt & "    FROM sanctions.dbo.registration WHERE TournAppID = '" & left(sTourID,6) & "' and isnumeric(Ap1JPID) = 1 "
+curSqlStmt = curSqlStmt & "    UNION"
+curSqlStmt = curSqlStmt & "    SELECT Cast(CASE When len(Ap2JPID)<9 Then Ap2JPID Else right(Ap2JPID,8) END as integer) AS PersonID, 'APTJ' AS OffCode"
+curSqlStmt = curSqlStmt & "    FROM sanctions.dbo.registration WHERE TournAppID = '" & left(sTourID,6) & "' and isnumeric(Ap2JPID) = 1 "
+curSqlStmt = curSqlStmt & "    UNION"
+curSqlStmt = curSqlStmt & "    SELECT Cast(CASE when len(Ap3JPID)<9 Then Ap3JPID Else right(Ap3JPID,8) END as integer) AS PersonID, 'APTJ' AS OffCode"
+curSqlStmt = curSqlStmt & "    FROM sanctions.dbo.registration WHERE TournAppID = '" & left(sTourID,6) & "' and isnumeric(Ap3JPID) = 1 "
+curSqlStmt = curSqlStmt & "    UNION"
+curSqlStmt = curSqlStmt & "    SELECT Cast(CASE when len(Ap4JPID)<9 Then Ap4JPID Else right(Ap4JPID,8) END as integer) AS PersonID, 'APTJ' AS OffCode"
+curSqlStmt = curSqlStmt & "    FROM sanctions.dbo.registration WHERE TournAppID = '" & left(sTourID,6) & "' and isnumeric(Ap4JPID) = 1 "
+curSqlStmt = curSqlStmt & "    UNION"
+curSqlStmt = curSqlStmt & "    SELECT Cast(CASE when len(Ap5JPID)<9 Then Ap5JPID Else right(Ap5JPID,8) END as integer) AS PersonID, 'APTJ' AS OffCode"
+curSqlStmt = curSqlStmt & "    FROM sanctions.dbo.registration WHERE TournAppID = '" & left(sTourID,6) & "' and isnumeric(Ap5JPID) = 1 "
+curSqlStmt = curSqlStmt & "    UNION"
+curSqlStmt = curSqlStmt & "    SELECT Cast(CASE when len(Ap1SPID)<9 Then Ap1SPID Else right(Ap1SPID,8) END as integer) AS PersonID, 'APTS' AS OffCode"
+curSqlStmt = curSqlStmt & "    FROM sanctions.dbo.registration WHERE TournAppID = '" & left(sTourID,6) & "' and isnumeric(Ap1SPID) = 1 "
+curSqlStmt = curSqlStmt & "    UNION"
+curSqlStmt = curSqlStmt & "    SELECT Cast(CASE when len(Ap2SPID)<9 Then Ap2SPID Else right(Ap2SPID,8) END as integer) AS PersonID, 'APTS' AS OffCode"
+curSqlStmt = curSqlStmt & "    FROM sanctions.dbo.registration WHERE TournAppID = '" & left(sTourID,6) & "' and isnumeric(Ap2SPID) = 1 "
+curSqlStmt = curSqlStmt & "    UNION"
+curSqlStmt = curSqlStmt & "    SELECT Cast(CASE when len(Ap3SPID)<9 Then Ap3SPID Else right(Ap3SPID,8) END as integer) AS PersonID, 'APTS' AS OffCode"
+curSqlStmt = curSqlStmt & "    FROM sanctions.dbo.registration WHERE TournAppID = '" & left(sTourID,6) & "' and isnumeric(Ap3SPID) = 1 "
+curSqlStmt = curSqlStmt & "    UNION"
+curSqlStmt = curSqlStmt & "    SELECT Cast(CASE when len(Ap1DrPID)<9 Then Ap1DrPID Else right(Ap1DrPID,8) END as integer) AS PersonID, 'APTD' AS OffCode"
+curSqlStmt = curSqlStmt & "    FROM sanctions.dbo.registration WHERE TournAppID = '" & left(sTourID,6) & "' and isnumeric(Ap1DrPID) = 1 "
+curSqlStmt = curSqlStmt & "    UNION"
+curSqlStmt = curSqlStmt & "    SELECT Cast(CASE when len(PanAmPID)<9 Then PanAmPID Else right(PanAmPID,8) END as integer) AS PersonID, 'APTJ' AS OffCode"
+curSqlStmt = curSqlStmt & "    FROM sanctions.dbo.registration WHERE TournAppID = '" & left(sTourID,6) & "' and isnumeric(PanAmPID) = 1)"
+curSqlStmt = curSqlStmt & " SOX Group by PersonID"
+WaterskiConnect.Execute (curSqlStmt)
 
-sSQL = "Delete from USAWaterski.dbo.TempApptdOfcls where TournAppID = '" 
-sSQL = sSQL & left(Session("TournamentID"),6) & "' OR DateAdd(Day,30,WhenAdded) < GetDate()"
-objConn.Execute (sSQL)
-
-sSQL = "Insert into USAWaterski.dbo.TempApptdOfcls (PersonID, TournAppID, OffCode, WhenAdded)"
-sSQL = sSQL & " Select PersonID, '"& left(Session("TournamentID"),6)
-sSQL = sSQL & "', Max(OffCode), GetDate() from ("
-
-sSQL = sSQL & " Select Cast(case when len(CJudgePID)<9 then CJudgePID else"
-sSQL = sSQL & " right(CJudgePID,8) end as integer) AS PersonID, 'CJ' AS OffCode"
-sSQL = sSQL & " FROM sanctions.dbo.registration WHERE TournAppID = '"
-sSQL = sSQL & left(Session("TournamentID"),6) & "' and isnumeric(CJudgePID) = 1 UNION"
-
-sSQL = sSQL & " Select Cast(case when len(CDriverPID)<9 then CDriverPID else"
-sSQL = sSQL & " right(CDriverPID,8) end as integer) AS PersonID, 'CD' AS OffCode"
-sSQL = sSQL & " FROM sanctions.dbo.registration WHERE TournAppID = '"
-sSQL = sSQL & left(Session("TournamentID"),6) & "' and isnumeric(CDriverPID) = 1 UNION"
-
-sSQL = sSQL & " Select Cast(case when len(CScorePID)<9 then CScorePID else"
-sSQL = sSQL & " right(CScorePID,8) end as integer) AS PersonID, 'CC' AS OffCode"
-sSQL = sSQL & " FROM sanctions.dbo.registration WHERE TournAppID = '"
-sSQL = sSQL & left(Session("TournamentID"),6) & "' and isnumeric(CScorePID) = 1 UNION"
-
-sSQL = sSQL & " Select Cast(case when len(CSafPID)<9 then CSafPID else"
-sSQL = sSQL & " right(CSafPID,8) end as integer) AS PersonID, 'CS' AS OffCode"
-sSQL = sSQL & " FROM sanctions.dbo.registration WHERE TournAppID = '"
-sSQL = sSQL & left(Session("TournamentID"),6) & "' and isnumeric(CSafPID) = 1 UNION"
-
-sSQL = sSQL & " Select Cast(case when len(TechCPID)<9 then TechCPID else"
-sSQL = sSQL & " right(TechCPID,8) end as integer) AS PersonID, 'CT' AS OffCode"
-sSQL = sSQL & " FROM sanctions.dbo.registration WHERE TournAppID = '"
-sSQL = sSQL & left(Session("TournamentID"),6) & "' and isnumeric(TechCPID) = 1 UNION"
-
-sSQL = sSQL & " Select Cast(case when len(Ap1JPID)<9 then Ap1JPID else"
-sSQL = sSQL & " right(Ap1JPID,8) end as integer) AS PersonID, 'APTJ' AS OffCode"
-sSQL = sSQL & " FROM sanctions.dbo.registration WHERE TournAppID = '"
-sSQL = sSQL & left(Session("TournamentID"),6) & "' and isnumeric(Ap1JPID) = 1 UNION"
-
-sSQL = sSQL & " Select Cast(case when len(Ap2JPID)<9 then Ap2JPID else"
-sSQL = sSQL & " right(Ap2JPID,8) end as integer) AS PersonID, 'APTJ' AS OffCode"
-sSQL = sSQL & " FROM sanctions.dbo.registration WHERE TournAppID = '"
-sSQL = sSQL & left(Session("TournamentID"),6) & "' and isnumeric(Ap2JPID) = 1 UNION"
-
-sSQL = sSQL & " Select Cast(case when len(Ap3JPID)<9 then Ap3JPID else"
-sSQL = sSQL & " right(Ap3JPID,8) end as integer) AS PersonID, 'APTJ' AS OffCode"
-sSQL = sSQL & " FROM sanctions.dbo.registration WHERE TournAppID = '"
-sSQL = sSQL & left(Session("TournamentID"),6) & "' and isnumeric(Ap3JPID) = 1 UNION"
-
-sSQL = sSQL & " Select Cast(case when len(Ap4JPID)<9 then Ap4JPID else"
-sSQL = sSQL & " right(Ap4JPID,8) end as integer) AS PersonID, 'APTJ' AS OffCode"
-sSQL = sSQL & " FROM sanctions.dbo.registration WHERE TournAppID = '"
-sSQL = sSQL & left(Session("TournamentID"),6) & "' and isnumeric(Ap4JPID) = 1 UNION"
-
-sSQL = sSQL & " Select Cast(case when len(Ap5JPID)<9 then Ap5JPID else"
-sSQL = sSQL & " right(Ap5JPID,8) end as integer) AS PersonID, 'APTJ' AS OffCode"
-sSQL = sSQL & " FROM sanctions.dbo.registration WHERE TournAppID = '"
-sSQL = sSQL & left(Session("TournamentID"),6) & "' and isnumeric(Ap5JPID) = 1 UNION"
-
-sSQL = sSQL & " Select Cast(case when len(Ap1SPID)<9 then Ap1SPID else"
-sSQL = sSQL & " right(Ap1SPID,8) end as integer) AS PersonID, 'APTS' AS OffCode"
-sSQL = sSQL & " FROM sanctions.dbo.registration WHERE TournAppID = '"
-sSQL = sSQL & left(Session("TournamentID"),6) & "' and isnumeric(Ap1SPID) = 1 UNION"
-
-sSQL = sSQL & " Select Cast(case when len(Ap2SPID)<9 then Ap2SPID else"
-sSQL = sSQL & " right(Ap2SPID,8) end as integer) AS PersonID, 'APTS' AS OffCode"
-sSQL = sSQL & " FROM sanctions.dbo.registration WHERE TournAppID = '"
-sSQL = sSQL & left(Session("TournamentID"),6) & "' and isnumeric(Ap2SPID) = 1 UNION"
-
-sSQL = sSQL & " Select Cast(case when len(Ap3SPID)<9 then Ap3SPID else"
-sSQL = sSQL & " right(Ap3SPID,8) end as integer) AS PersonID, 'APTS' AS OffCode"
-sSQL = sSQL & " FROM sanctions.dbo.registration WHERE TournAppID = '"
-sSQL = sSQL & left(Session("TournamentID"),6) & "' and isnumeric(Ap3SPID) = 1 UNION"
-
-sSQL = sSQL & " Select Cast(case when len(Ap1DrPID)<9 then Ap1DrPID else"
-sSQL = sSQL & " right(Ap1DrPID,8) end as integer) AS PersonID, 'APTD' AS OffCode"
-sSQL = sSQL & " FROM sanctions.dbo.registration WHERE TournAppID = '"
-sSQL = sSQL & left(Session("TournamentID"),6) & "' and isnumeric(Ap1DrPID) = 1 UNION"
-
-sSQL = sSQL & " Select Cast(case when len(PanAmPID)<9 then PanAmPID else"
-sSQL = sSQL & " right(PanAmPID,8) end as integer) AS PersonID, 'APTJ' AS OffCode"
-sSQL = sSQL & " FROM sanctions.dbo.registration WHERE TournAppID = '"
-sSQL = sSQL & left(Session("TournamentID"),6) & "' and isnumeric(PanAmPID) = 1)"
-
-sSQL = sSQL & " SOX Group by PersonID"
-objConn.Execute (sSQL)
-
-
+curTraceMsg = curTraceMsg & "<br />Updated chief official"
 
 ''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''
-''' Now build a Query to Extract the Desired Members, joining in data 
-''' from the Rankings and Officials and Membership Type tables.
+' Now build a Query to Extract the Desired Members, joining in data 
+' from the Rankings and Officials and Membership Type tables.
 ''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''
+Dim curSqlStmt1, curSqlStmt2, curSqlStmt3, curSqlStmt4, curSqlStmt5
 
-sSQL = "Select Substring(MX.MemberID,1,3) + '-' + Substring(MX.MemberID,4,2) + '-' +" 
-sSQL = sSQL & " Substring(MX.MemberID,6,4) as MemID, MX.LastName, MX.FirstName,"
+'Member Number and name
+curSqlStmt1 = "SELECT Substring(MX.MemberID,1,3) + '-' + Substring(MX.MemberID,4,2) + '-' + Substring(MX.MemberID,6,4) as MemID"
+curSqlStmt1 = curSqlStmt1 & ", MX.LastName, MX.FirstName"
 
-sSQL = sSQL & " Coalesce(RD.Div, Case when MX.Age <= 17 and MX.Sex = 'F' Then 'G'"
-sSQL = sSQL & " when MX.Age <= 17 then 'B' when MX.Sex = 'F' then 'W' else 'M' end + Case"
-sSQL = sSQL & " when MX.Age <= 9 then '1' when MX.Age <= 13 then '2' when MX.Age <= 17 then '3'"
-sSQL = sSQL & " when MX.Age <= 24 then '1' when MX.Age <= 34 then '2' when MX.Age <= 44 then '3'"
-sSQL = sSQL & " when MX.Age <= 52 then '4' when MX.Age <= 59 then '5' when MX.Age <= 64 then '6'"
-sSQL = sSQL & " when MX.Age <= 69 then '7' when MX.Age <= 74 then '8' when MX.Age <= 79 then '9'"
-sSQL = sSQL & " when MX.Age <= 84 then 'A' else 'B' end) as Div,"
+'Skier division
+curSqlStmt1 = curSqlStmt1 & ", Coalesce(RD.Div, Case when MX.Age <= 17 and MX.Sex = 'F' Then 'G'"
+curSqlStmt1 = curSqlStmt1 & " when MX.Age <= 17 then 'B' when MX.Sex = 'F' then 'W' else 'M' end + Case"
+curSqlStmt1 = curSqlStmt1 & " when MX.Age <= 9 then '1' when MX.Age <= 13 then '2' when MX.Age <= 17 then '3'"
+curSqlStmt1 = curSqlStmt1 & " when MX.Age <= 24 then '1' when MX.Age <= 34 then '2' when MX.Age <= 44 then '3'"
+curSqlStmt1 = curSqlStmt1 & " when MX.Age <= 52 then '4' when MX.Age <= 59 then '5' when MX.Age <= 64 then '6'"
+curSqlStmt1 = curSqlStmt1 & " when MX.Age <= 69 then '7' when MX.Age <= 74 then '8' when MX.Age <= 79 then '9'"
+curSqlStmt1 = curSqlStmt1 & " when MX.Age <= 84 then 'A' else 'B' end) as Div"
 		
-sSQL = sSQL & " MX.Age, MX.City, MX.State, MX.Waiver,"
+'Skier information
+curSqlStmt1 = curSqlStmt1 & ", MX.Age, MX.City, MX.State, MX.Waiver"
 
-sSQL = sSQL & " Case when OD.PersonID is Null then '-' else Right(OD.RtgLvl,1) end +"
-sSQL = sSQL & " Case when OJ.PersonID is Null then '-' else Right(OJ.RtgLvl,1) end +"
-sSQL = sSQL & " Case when OC.PersonID is Null then '-' else Right(OC.RtgLvl,1) end +"
-sSQL = sSQL & " Case when OS.PersonID is Null then '-' else Right(OS.RtgLvl,1) end as OffRat,"
+'Skier official ratings
+curSqlStmt1 = curSqlStmt1 & ", Case when OD.PersonID is Null then '-' else Right(OD.RtgLvl,1) end +"
+curSqlStmt1 = curSqlStmt1 & " Case when OJ.PersonID is Null then '-' else Right(OJ.RtgLvl,1) end +"
+curSqlStmt1 = curSqlStmt1 & " Case when OC.PersonID is Null then '-' else Right(OC.RtgLvl,1) end +"
+curSqlStmt1 = curSqlStmt1 & " Case when OS.PersonID is Null then '-' else Right(OS.RtgLvl,1) end as OffRat"
 
-sSQL = sSQL & " Coalesce(SO.OffCode,'') as OffCode,"
+curSqlStmt1 = curSqlStmt1 & ", Coalesce(SO.OffCode,'') as OffCode"
 
-sSQL = sSQL & " Coalesce(SX.SlmSco,'') as SlmSco,"
-sSQL = sSQL & " Coalesce(TX.TrkSco,'') as TrkSco,"
-sSQL = sSQL & " Coalesce(JX.JmpSco,'') as JmpSco,"
+'Event Ratings
+curSqlStmt1 = curSqlStmt1 & ", Coalesce(SX.SlmSco,'') as SlmSco"
+curSqlStmt1 = curSqlStmt1 & ", Coalesce(TX.TrkSco,'') as TrkSco"
+curSqlStmt1 = curSqlStmt1 & ", Coalesce(JX.JmpSco,'') as JmpSco"
 
-sSQL = sSQL & " Coalesce(SE.SlmEli,SX.SlmRat,'') as SlmRat,"
-sSQL = sSQL & " Coalesce(TE.TrkEli,TX.TrkRat,'') as TrkRat,"
-sSQL = sSQL & " Coalesce(JE.JmpEli,JX.JmpRat,'') as JmpRat,"
-sSQL = sSQL & " Coalesce(OE.OvrEli,OX.OvrRat,'') as OvrRat,"
+curSqlStmt1 = curSqlStmt1 & ", Coalesce(SE.SlmEli,SX.SlmRat,'') as SlmRat"
+curSqlStmt1 = curSqlStmt1 & ", Coalesce(TE.TrkEli,TX.TrkRat,'') as TrkRat"
+curSqlStmt1 = curSqlStmt1 & ", Coalesce(JE.JmpEli,JX.JmpRat,'') as JmpRat"
+curSqlStmt1 = curSqlStmt1 & ", Coalesce(OE.OvrEli,OX.OvrRat,'') as OvrRat"
 
-sSQL = sSQL & " MX.EffTo, MX.Memtype, MX.MemCode, MX.CanSki, MX.CanSkiGR"
+'Other member stuff
+curSqlStmt1 = curSqlStmt1 & " ,MX.EffTo, MX.Memtype, MX.MemCode, MX.CanSki, MX.CanSkiGR "
 		
-sSQL = sSQL & " From (Select MT.PersonIDWithCheckDigit as MemberID, MT.PersonID,"
-sSQL = sSQL & " Left(MT.LastName,12) as LastName, Left(MT.FirstName,10) as FirstName, "
-sSQL = sSQL & Session("TournamentYear") & "-Year(MT.BirthDate)-1 as Age,"
-sSQL = sSQL & " Upper(Left(MT.Sex,1)) as Sex, MT.WaiverStatusID as Waiver,"
-sSQL = sSQL & " Left(MT.City,12) as City, Left(MT.State,2) as State,"
-sSQL = sSQL & " MT.EffectiveTo as EffTo, MT.MembershipTypeCode as MemType,"
-sSQL = sSQL & " Typ.TypeCode as MemCode, Typ.CanSkiInTournaments as CanSki,"
-sSQL = sSQL & " Typ.CanSkiInGRTournaments as CanSkiGR"
-sSQL = sSQL & " from USAWaterski.dbo.Members as MT Inner Join"
-sSQL = sSQL & " USAWaterski.dbo.MembershipTypes as Typ"
-sSQL = sSQL & " ON MT.MembershipTypeCode = Typ.MemberShipTypeID"
+'	-----------------------------------------------------------------------
+'FROM Statement
+'	-----------------------------------------------------------------------
+curSqlStmt2 = ""
+curSqlStmt2 = curSqlStmt2 & "FROM ("
 
-sSQL = sSQL & " Where Typ.ExporttoTouramentRegistrationTemplate = 1"
-sSQL = sSQL & " AND DateAdd(mm,18,MT.EffectiveTo) > GetDate()"
-sSQL = sSQL & " AND MT.Deceased = 0 AND (" & Session("StateSQL") & " OR PersonID"
-sSQL = sSQL & " in (Select PersonID from USAWaterski.dbo.TempApptdOfcls"
-sSQL = sSQL & " Where TournAppID = '" & left(Session("TournamentID"),6)
-sSQL = sSQL & "') ) ) as MX"
+'	-----------------------------------------------------------------------
+'Use select as a data source for member data
+'	-----------------------------------------------------------------------
+curSqlStmt2 = curSqlStmt2 & "    SELECT MT.PersonIDWithCheckDigit as MemberID, MT.PersonID"
+curSqlStmt2 = curSqlStmt2 & "        , Left(MT.LastName,12) as LastName, Left(MT.FirstName,10) as FirstName"
+curSqlStmt2 = curSqlStmt2 & "        , " & sTourYear & " - Year(MT.BirthDate) - 1 as Age"
+curSqlStmt2 = curSqlStmt2 & "        , Upper(Left(MT.Sex,1)) as Sex, MT.WaiverStatusID as Waiver"
+curSqlStmt2 = curSqlStmt2 & "        , Left(MT.City,12) as City, Left(MT.State,2) as State"
+curSqlStmt2 = curSqlStmt2 & "        , MT.EffectiveTo as EffTo, MT.MembershipTypeCode as MemType"
+curSqlStmt2 = curSqlStmt2 & "        , Typ.TypeCode as MemCode, Typ.CanSkiInTournaments as CanSki"
+curSqlStmt2 = curSqlStmt2 & "        , Typ.CanSkiInGRTournaments as CanSkiGR"
+curSqlStmt2 = curSqlStmt2 & "    FROM USAWaterski.dbo.Members as MT "
+curSqlStmt2 = curSqlStmt2 & "      INNER JOIN USAWaterski.dbo.MembershipTypes as Typ ON MT.MembershipTypeCode = Typ.MemberShipTypeID "
+curSqlStmt2 = curSqlStmt2 & "    WHERE Typ.ExporttoTouramentRegistrationTemplate = 1"
+curSqlStmt2 = curSqlStmt2 & "      AND DateAdd(mm,18,MT.EffectiveTo) > GetDate()"
+curSqlStmt2 = curSqlStmt2 & "      AND MT.Deceased = 0 "
+curSqlStmt2 = curSqlStmt2 & "      AND (" & sStateSQL
+curSqlStmt2 = curSqlStmt2 & "           OR PersonID in (Select PersonID from USAWaterski.dbo.TempApptdOfcls WHERE TournAppID = '" & left(sTourID,6) & "' )"
+curSqlStmt2 = curSqlStmt2 & "           )"
+curSqlStmt2 = curSqlStmt2 & "    ) as MX"
 
+'	-----------------------------------------------------------------------
+' Use select as a data source for officials information 
+' (DLA: retrieving type 3 officials info but not sure what type 3 is but think it is for drivers ????)
+'	-----------------------------------------------------------------------
+curSqlStmt3 = ""
+curSqlStmt3 = curSqlStmt3 & "  LEFT JOIN ("
+curSqlStmt3 = curSqlStmt3 & "      SELECT OT.PersonID, Max(convert(char(1), LV.LevelOrderforTemplate) + LV.LevelAbbreviationforTemplate) AS RtgLvl"
+curSqlStmt3 = curSqlStmt3 & "      FROM USAWaterski.dbo.Officials OT"
+curSqlStmt3 = curSqlStmt3 & "        INNER JOIN USAWaterski.dbo.Level LV ON OT.Level_ID = LV.Level_ID"
+curSqlStmt3 = curSqlStmt3 & "      WHERE OT.DivisionCode in ('AWS','USA')"
+curSqlStmt3 = curSqlStmt3 & "        AND LV.LevelOrderforTemplate IS NOT NULL"
+curSqlStmt3 = curSqlStmt3 & "        AND OT.RatingType_ID = 3"
+curSqlStmt3 = curSqlStmt3 & "      GROUP BY OT.PersonID)"
+curSqlStmt3 = curSqlStmt3 & "      AS OD"
+curSqlStmt3 = curSqlStmt3 & "      ON OD.PersonID = MX.PersonID"
 
-sSQL1 = " Left Join	(Select OT.PersonID,"
-sSQL1 = sSQL1 & " Max(convert(char(1),LV.LevelOrderforTemplate)"
-sSQL1 = sSQL1 & " + LV.LevelAbbreviationforTemplate) AS RtgLvl"
-sSQL1 = sSQL1 & " FROM USAWaterski.dbo.Officials OT INNER JOIN"
-sSQL1 = sSQL1 & " USAWaterski.dbo.Level LV ON OT.Level_ID = LV.Level_ID"
-sSQL1 = sSQL1 & " WHERE OT.DivisionCode in ('AWS','USA')"
-sSQL1 = sSQL1 & " AND LV.LevelOrderforTemplate IS NOT NULL"
-sSQL1 = sSQL1 & " AND OT.RatingType_ID = 3 GROUP BY OT.PersonID) as OD"
-sSQL1 = sSQL1 & " on OD.PersonID = MX.PersonID"
+'	-----------------------------------------------------------------------
+' Use select as a data source for officials information 
+' (DLA: retrieving type 1 officials info but not sure what type 1 is but think it is for judges????)
+'	-----------------------------------------------------------------------
+curSqlStmt3 = curSqlStmt3 & "  LEFT JOIN ("
+curSqlStmt3 = curSqlStmt3 & "      SELECT OT.PersonID, Max(convert(char(1), LV.LevelOrderforTemplate) + LV.LevelAbbreviationforTemplate) AS RtgLvl"
+curSqlStmt3 = curSqlStmt3 & "      FROM USAWaterski.dbo.Officials OT"
+curSqlStmt3 = curSqlStmt3 & "        INNER JOIN USAWaterski.dbo.Level LV ON OT.Level_ID = LV.Level_ID"
+curSqlStmt3 = curSqlStmt3 & "      WHERE OT.DivisionCode in ('AWS','USA')"
+curSqlStmt3 = curSqlStmt3 & "        AND LV.LevelOrderforTemplate IS NOT NULL"
+curSqlStmt3 = curSqlStmt3 & "        AND OT.RatingType_ID = 1"
+curSqlStmt3 = curSqlStmt3 & "      GROUP BY OT.PersonID)"
+curSqlStmt3 = curSqlStmt3 & "      AS OJ"
+curSqlStmt3 = curSqlStmt3 & "      ON OJ.PersonID = MX.PersonID"
 
-sSQL1 = sSQL1 & " Left Join	(Select OT.PersonID,"
-sSQL1 = sSQL1 & " Max(convert(char(1),LV.LevelOrderforTemplate)"
-sSQL1 = sSQL1 & " + LV.LevelAbbreviationforTemplate) AS RtgLvl"
-sSQL1 = sSQL1 & " FROM USAWaterski.dbo.Officials OT INNER JOIN"
-sSQL1 = sSQL1 & " USAWaterski.dbo.Level LV ON OT.Level_ID = LV.Level_ID"
-sSQL1 = sSQL1 & " WHERE OT.DivisionCode in ('AWS','USA')"
-sSQL1 = sSQL1 & " AND LV.LevelOrderforTemplate IS NOT NULL"
-sSQL1 = sSQL1 & " AND OT.RatingType_ID = 1 GROUP BY OT.PersonID) as OJ"
-sSQL1 = sSQL1 & " on OJ.PersonID = MX.PersonID"
+'	-----------------------------------------------------------------------
+' Use select as a data source for officials information 
+' (DLA: retrieving type 2 officials info but not sure what type 2 is but think it is for scorers????)
+'	-----------------------------------------------------------------------
+curSqlStmt3 = curSqlStmt3 & "  LEFT JOIN ("
+curSqlStmt3 = curSqlStmt3 & "      SELECT OT.PersonID, Max(convert(char(1), LV.LevelOrderforTemplate) + LV.LevelAbbreviationforTemplate) AS RtgLvl"
+curSqlStmt3 = curSqlStmt3 & "      FROM USAWaterski.dbo.Officials OT"
+curSqlStmt3 = curSqlStmt3 & "        INNER JOIN USAWaterski.dbo.Level LV ON OT.Level_ID = LV.Level_ID"
+curSqlStmt3 = curSqlStmt3 & "      WHERE OT.DivisionCode in ('AWS','USA')"
+curSqlStmt3 = curSqlStmt3 & "        AND LV.LevelOrderforTemplate IS NOT NULL"
+curSqlStmt3 = curSqlStmt3 & "        AND OT.RatingType_ID = 2"
+curSqlStmt3 = curSqlStmt3 & "      GROUP BY OT.PersonID)"
+curSqlStmt3 = curSqlStmt3 & "      AS OC"
+curSqlStmt3 = curSqlStmt3 & "      ON OC.PersonID = MX.PersonID"
 
-sSQL1 = sSQL1 & " Left Join	(Select OT.PersonID,"
-sSQL1 = sSQL1 & " Max(convert(char(1),LV.LevelOrderforTemplate)"
-sSQL1 = sSQL1 & " + LV.LevelAbbreviationforTemplate) AS RtgLvl"
-sSQL1 = sSQL1 & " FROM USAWaterski.dbo.Officials OT INNER JOIN"
-sSQL1 = sSQL1 & " USAWaterski.dbo.Level LV ON OT.Level_ID = LV.Level_ID"
-sSQL1 = sSQL1 & " WHERE OT.DivisionCode in ('AWS','USA')"
-sSQL1 = sSQL1 & " AND LV.LevelOrderforTemplate IS NOT NULL"
-sSQL1 = sSQL1 & " AND OT.RatingType_ID = 2 GROUP BY OT.PersonID) as OC"
-sSQL1 = sSQL1 & " on OC.PersonID = MX.PersonID"
+'	-----------------------------------------------------------------------
+' Use select as a data source for officials information 
+' (DLA: retrieving type 9 officials info but not sure what type 9 is but think it is for safety????)
+'	-----------------------------------------------------------------------
+curSqlStmt3 = curSqlStmt3 & "  LEFT JOIN ("
+curSqlStmt3 = curSqlStmt3 & "      SELECT OT.PersonID, Max(convert(char(1), LV.LevelOrderforTemplate) + LV.LevelAbbreviationforTemplate) AS RtgLvl"
+curSqlStmt3 = curSqlStmt3 & "      FROM USAWaterski.dbo.Officials OT"
+curSqlStmt3 = curSqlStmt3 & "        INNER JOIN USAWaterski.dbo.Level LV ON OT.Level_ID = LV.Level_ID"
+curSqlStmt3 = curSqlStmt3 & "      WHERE OT.DivisionCode in ('AWS','USA')"
+curSqlStmt3 = curSqlStmt3 & "        AND LV.LevelOrderforTemplate IS NOT NULL"
+curSqlStmt3 = curSqlStmt3 & "        AND OT.RatingType_ID = 9"
+curSqlStmt3 = curSqlStmt3 & "      GROUP BY OT.PersonID)"
+curSqlStmt3 = curSqlStmt3 & "      AS OS"
+curSqlStmt3 = curSqlStmt3 & "      ON OS.PersonID = MX.PersonID"
 
-sSQL1 = sSQL1 & " Left Join	(Select OT.PersonID,"
-sSQL1 = sSQL1 & " Max(convert(char(1),LV.LevelOrderforTemplate)"
-sSQL1 = sSQL1 & " + LV.LevelAbbreviationforTemplate) AS RtgLvl"
-sSQL1 = sSQL1 & " FROM USAWaterski.dbo.Officials OT INNER JOIN"
-sSQL1 = sSQL1 & " USAWaterski.dbo.Level LV ON OT.Level_ID = LV.Level_ID"
-sSQL1 = sSQL1 & " WHERE OT.DivisionCode in ('AWS','USA')"
-sSQL1 = sSQL1 & " AND LV.LevelOrderforTemplate IS NOT NULL"
-sSQL1 = sSQL1 & " AND OT.RatingType_ID = 9 GROUP BY OT.PersonID) as OS"
-sSQL1 = sSQL1 & " on OS.PersonID = MX.PersonID"
+'	-----------------------------------------------------------------------
+' Use select as a data source for chief officials
+'	-----------------------------------------------------------------------
+curSqlStmt3 = curSqlStmt3 & "  LEFT JOIN ("
+curSqlStmt3 = curSqlStmt3 & "      SELECT PersonID, OffCode"
+curSqlStmt3 = curSqlStmt3 & "      FROM USAWaterski.dbo.TempApptdOfcls"
+curSqlStmt3 = curSqlStmt3 & "      WHERE TournAppID = '" & left(sTourID,6) & "')"
+curSqlStmt3 = curSqlStmt3 & "      AS SO"
+curSqlStmt3 = curSqlStmt3 & "      ON SO.PersonID = MX.PersonID"
 
-sSQL1 = sSQL1 & " Left Join	(Select PersonID, OffCode from USAWaterski.dbo.TempApptdOfcls"
-sSQL1 = sSQL1 & " Where TournAppID = '" & left(Session("TournamentID"),6) & "')"
-sSQL1 = sSQL1 & " as SO on SO.PersonID = MX.PersonID"
+'	-----------------------------------------------------------------------
+' Use select as a data source for skier ranking data
+' The RD subquery below UNIONS selects from Rankings PLUS RegisterEvents, to
+' ensure that EVERY entered skier will show up SOMEWHERE in the template.
+'	-----------------------------------------------------------------------
+curSqlStmt4 = ""
+curSqlStmt4 = curSqlStmt4 & "  LEFT JOIN ("
+curSqlStmt4 = curSqlStmt4 & "      SELECT MemberID, Div"
+curSqlStmt4 = curSqlStmt4 & "      FROM Cobra00025.USAWSRank.Rankings"
+curSqlStmt4 = curSqlStmt4 & "      WHERE SkiYearID = 1 and RankScore is not Null"
+curSqlStmt4 = curSqlStmt4 & "        AND Left(Div,1) in ('B','G','M','W','O')"
+curSqlStmt4 = curSqlStmt4 & "      GROUP BY MemberID, Div)"
+curSqlStmt4 = curSqlStmt4 & "      AS RD"
+curSqlStmt4 = curSqlStmt4 & "      ON RD.MemberID = MX.MemberID"
 
-sSQL1 = sSQL1 & " Left Join	(Select MemberID, Div from Cobra00025.USAWSRank.Rankings"
-sSQL1 = sSQL1 & " where SkiYearID = 1 and RankScore is not Null"
-sSQL1 = sSQL1 & " and Left(Div,1) in ('B','G','M','W','O')"
-sSQL1 = sSQL1 & " group by MemberID, Div) as RD on RD.MemberID = MX.MemberID"
+'	-----------------------------------------------------------------------
+' Slalom ratings
+'	-----------------------------------------------------------------------
+curSqlStmt4 = curSqlStmt4 & "  LEFT JOIN ("
+curSqlStmt4 = curSqlStmt4 & "      SELECT MemberID, Div, Reg_Ski, AWSA_Rat as SlmRat"
+curSqlStmt4 = curSqlStmt4 & "             , Left(Cast(Cast(RankScore as Decimal(7,2)) as Varchar(8)),6) as SlmSco"
+curSqlStmt4 = curSqlStmt4 & "      FROM Cobra00025.USAWSRank.Rankings"
+curSqlStmt4 = curSqlStmt4 & "      WHERE SkiYearID = 1"
+curSqlStmt4 = curSqlStmt4 & "        AND Left(Div,1) in ('B','G','M','W','O')"
+curSqlStmt4 = curSqlStmt4 & "        AND Event = 'S'"
+curSqlStmt4 = curSqlStmt4 & "        AND RankScore is not null)"
+curSqlStmt4 = curSqlStmt4 & "      AS SX"
+curSqlStmt4 = curSqlStmt4 & "      ON RD.MemberID = SX.MemberID AND RD.Div = SX.Div"
 
+'	-----------------------------------------------------------------------
+' Trick ratings
+'	-----------------------------------------------------------------------
+curSqlStmt4 = curSqlStmt4 & "  LEFT JOIN ("
+curSqlStmt4 = curSqlStmt4 & "      SELECT MemberID, Div, Reg_Ski, AWSA_Rat as TrkRat"
+curSqlStmt4 = curSqlStmt4 & "             , Left(Cast(Cast(RankScore as Decimal(7,1)) as Varchar(8)),6) as TrkSco"
+curSqlStmt4 = curSqlStmt4 & "      FROM Cobra00025.USAWSRank.Rankings"
+curSqlStmt4 = curSqlStmt4 & "      WHERE SkiYearID = 1"
+curSqlStmt4 = curSqlStmt4 & "        AND Left(Div,1) in ('B','G','M','W','O')"
+curSqlStmt4 = curSqlStmt4 & "        AND Event = 'T'"
+curSqlStmt4 = curSqlStmt4 & "        AND RankScore is not null)"
+curSqlStmt4 = curSqlStmt4 & "      AS TX"
+curSqlStmt4 = curSqlStmt4 & "      ON RD.MemberID = TX.MemberID AND RD.Div = TX.Div"
 
-sSQL2 = " Left Join	(Select MemberID, Div, Reg_Ski, AWSA_Rat as SlmRat,"
-sSQL2 = sSQL2 & " Left(Cast(Cast(RankScore as Decimal(7,2)) as Varchar(8)),6) as SlmSco"
-sSQL2 = sSQL2 & " From Cobra00025.USAWSRank.Rankings Where SkiYearID = 1"
-sSQL2 = sSQL2 & " and Left(Div,1) in ('B','G','M','W','O')"
-sSQL2 = sSQL2 & " and Event = 'S' and RankScore is not null) as SX"
-sSQL2 = sSQL2 & " on RD.MemberID = SX.MemberID and RD.Div = SX.Div"
+'	-----------------------------------------------------------------------
+' Jump ratings
+'	-----------------------------------------------------------------------
+curSqlStmt4 = curSqlStmt4 & "  LEFT JOIN ("
+curSqlStmt4 = curSqlStmt4 & "      SELECT MemberID, Div, Reg_Ski, AWSA_Rat as JmpRat"
+curSqlStmt4 = curSqlStmt4 & "             , Left(Cast(Cast(RankScore as Decimal(6,2)) as Varchar(8)),6) as JmpSco"
+curSqlStmt4 = curSqlStmt4 & "      FROM Cobra00025.USAWSRank.Rankings"
+curSqlStmt4 = curSqlStmt4 & "      WHERE SkiYearID = 1"
+curSqlStmt4 = curSqlStmt4 & "        AND Left(Div,1) in ('B','G','M','W','O')"
+curSqlStmt4 = curSqlStmt4 & "        AND Event = 'J'"
+curSqlStmt4 = curSqlStmt4 & "        AND RankScore is not null)"
+curSqlStmt4 = curSqlStmt4 & "      AS JX"
+curSqlStmt4 = curSqlStmt4 & "     ON RD.MemberID = JX.MemberID AND RD.Div = JX.Div"
 
-sSQL2 = sSQL2 & " Left Join	(Select MemberID, Div, Reg_Ski, AWSA_Rat as TrkRat,"
-sSQL2 = sSQL2 & " Left(Cast(Cast(RankScore as Decimal(7,1)) as Varchar(8)),6) as TrkSco"
-sSQL2 = sSQL2 & " From Cobra00025.USAWSRank.Rankings Where SkiYearID = 1"
-sSQL2 = sSQL2 & " and Left(Div,1) in ('B','G','M','W','O')"
-sSQL2 = sSQL2 & " and Event = 'T' and RankScore is not null) as TX"
-sSQL2 = sSQL2 & " on RD.MemberID = TX.MemberID and RD.Div = TX.Div"
+'	-----------------------------------------------------------------------
+' Overall ratings
+'	-----------------------------------------------------------------------
+curSqlStmt4 = curSqlStmt4 & "  LEFT JOIN ("
+curSqlStmt4 = curSqlStmt4 & "      SELECT MemberID, Div,  AWSA_Rat as OvrRat"
+curSqlStmt4 = curSqlStmt4 & "             , Left(Cast(Cast(RankScore as Decimal(7,1)) as Varchar(8)),6) as OvrSco"
+curSqlStmt4 = curSqlStmt4 & "      FROM Cobra00025.USAWSRank.Rankings"
+curSqlStmt4 = curSqlStmt4 & "      WHERE SkiYearID = 1"
+curSqlStmt4 = curSqlStmt4 & "        AND Left(Div,1) in ('B','G','M','W','O')"
+curSqlStmt4 = curSqlStmt4 & "        AND Event = 'O'"
+curSqlStmt4 = curSqlStmt4 & "        AND RankScore is not null)"
+curSqlStmt4 = curSqlStmt4 & "      AS OX"
+curSqlStmt4 = curSqlStmt4 & "      ON RD.MemberID = OX.MemberID AND RD.Div = OX.Div"
 
-sSQL2 = sSQL2 & " Left Join	(Select MemberID, Div, Reg_Ski, AWSA_Rat as JmpRat,"
-sSQL2 = sSQL2 & " Left(Cast(Cast(RankScore as Decimal(6,2)) as Varchar(8)),6) as JmpSco"
-sSQL2 = sSQL2 & " From Cobra00025.USAWSRank.Rankings Where SkiYearID = 1"
-sSQL2 = sSQL2 & " and Left(Div,1) in ('B','G','M','W','O')"
-sSQL2 = sSQL2 & " and Event = 'J' and RankScore is not null) as JX"
-sSQL2 = sSQL2 & " on RD.MemberID = JX.MemberID and RD.Div = JX.Div"
+'	-----------------------------------------------------------------------
+' Slalom something to with elite dates 
+'	-----------------------------------------------------------------------
+curSqlStmt5 = ""
+curSqlStmt5 = curSqlStmt5 & "  LEFT JOIN ("
+curSqlStmt5 = curSqlStmt5 & "      SELECT MemberID, max(DivElite) as SlmEli"
+curSqlStmt5 = curSqlStmt5 & "      FROM Cobra00025.USAWSRank.EliteDates"
+curSqlStmt5 = curSqlStmt5 & "      WHERE SkiYearID = 1"
+curSqlStmt5 = curSqlStmt5 & "        AND Event = 'S'"
+curSqlStmt5 = curSqlStmt5 & "        AND QualThru >= '" & sTourDate & "'"
+curSqlStmt5 = curSqlStmt5 & "      GROUP BY MemberID)"
+curSqlStmt5 = curSqlStmt5 & "      AS SE"
+curSqlStmt5 = curSqlStmt5 & "      ON RD.MemberID = SE.MemberID"
 
-sSQL2 = sSQL2 & " Left Join	(Select MemberID, Div,  AWSA_Rat as OvrRat,"
-sSQL2 = sSQL2 & " Left(Cast(Cast(RankScore as Decimal(7,1)) as Varchar(8)),6) as OvrSco"
-sSQL2 = sSQL2 & " From Cobra00025.USAWSRank.Rankings Where SkiYearID = 1"
-sSQL2 = sSQL2 & " and Left(Div,1) in ('B','G','M','W','O')"
-sSQL2 = sSQL2 & " and Event = 'O' and RankScore is not null) as OX"
-sSQL2 = sSQL2 & " on RD.MemberID = OX.MemberID and RD.Div = OX.Div"
+'	-----------------------------------------------------------------------
+' Trick something to with elite dates 
+'	-----------------------------------------------------------------------
+curSqlStmt5 = curSqlStmt5 & "  LEFT JOIN ("
+curSqlStmt5 = curSqlStmt5 & "      SELECT MemberID, max(DivElite) as TrkEli"
+curSqlStmt5 = curSqlStmt5 & "      FROM Cobra00025.USAWSRank.EliteDates"
+curSqlStmt5 = curSqlStmt5 & "      WHERE SkiYearID = 1"
+curSqlStmt5 = curSqlStmt5 & "        AND Event = 'T'"
+curSqlStmt5 = curSqlStmt5 & "        AND QualThru >= '" & sTourDate & "'"
+curSqlStmt5 = curSqlStmt5 & "      GROUP BY MemberID)"
+curSqlStmt5 = curSqlStmt5 & "      AS TE"
+curSqlStmt5 = curSqlStmt5 & "      ON RD.MemberID = TE.MemberID"
 
-sSQL2 = sSQL2 & " Left Join	(Select MemberID, max(DivElite) as SlmEli"
-sSQL2 = sSQL2 & " From Cobra00025.USAWSRank.EliteDates Where SkiYearID = 1"
-sSQL2 = sSQL2 & " and Event = 'S' and QualThru >= '" & session("TournamentDate")
-sSQL2 = sSQL2 & "' Group by MemberID) as SE on RD.MemberID = SE.MemberID"
+'	-----------------------------------------------------------------------
+' Jump something to with elite dates 
+'	-----------------------------------------------------------------------
+curSqlStmt5 = curSqlStmt5 & "  LEFT JOIN ("
+curSqlStmt5 = curSqlStmt5 & "      SELECT MemberID, max(DivElite) as JmpEli"
+curSqlStmt5 = curSqlStmt5 & "      FROM Cobra00025.USAWSRank.EliteDates"
+curSqlStmt5 = curSqlStmt5 & "      WHERE SkiYearID = 1"
+curSqlStmt5 = curSqlStmt5 & "        AND Event = 'J'"
+curSqlStmt5 = curSqlStmt5 & "        AND QualThru >= '" & sTourDate & "'"
+curSqlStmt5 = curSqlStmt5 & "      GROUP BY MemberID)"
+curSqlStmt5 = curSqlStmt5 & "      AS JE"
+curSqlStmt5 = curSqlStmt5 & "      ON RD.MemberID = JE.MemberID"
 
-sSQL2 = sSQL2 & " Left Join	(Select MemberID, max(DivElite) as TrkEli"
-sSQL2 = sSQL2 & " From Cobra00025.USAWSRank.EliteDates Where SkiYearID = 1"
-sSQL2 = sSQL2 & " and Event = 'T' and QualThru >= '" & session("TournamentDate")
-sSQL2 = sSQL2 & "' Group by MemberID) as TE on RD.MemberID = TE.MemberID"
+'	-----------------------------------------------------------------------
+' Overall something to with elite dates 
+'	-----------------------------------------------------------------------
+curSqlStmt5 = curSqlStmt5 & "  LEFT JOIN ("
+curSqlStmt5 = curSqlStmt5 & "      SELECT MemberID, max(DivElite) as OvrEli"
+curSqlStmt5 = curSqlStmt5 & "      FROM Cobra00025.USAWSRank.EliteDates"
+curSqlStmt5 = curSqlStmt5 & "      WHERE SkiYearID = 1"
+curSqlStmt5 = curSqlStmt5 & "        AND Event = 'O'"
+curSqlStmt5 = curSqlStmt5 & "        AND QualThru >= '" & sTourDate & "'"
+curSqlStmt5 = curSqlStmt5 & "      GROUP BY MemberID)"
+curSqlStmt5 = curSqlStmt5 & "      AS OE"
+curSqlStmt5 = curSqlStmt5 & "      ON RD.MemberID = OE.MemberID"
 
-sSQL2 = sSQL2 & " Left Join	(Select MemberID, max(DivElite) as JmpEli"
-sSQL2 = sSQL2 & " From Cobra00025.USAWSRank.EliteDates Where SkiYearID = 1"
-sSQL2 = sSQL2 & " and Event = 'J' and QualThru >= '" & session("TournamentDate")
-sSQL2 = sSQL2 & "' Group by MemberID) as JE on RD.MemberID = JE.MemberID"
+'	-----------------------------------------------------------------------
+' Order by statement
+'	-----------------------------------------------------------------------
+curSqlStmt5 = curSqlStmt5 & " Order By MX.LastName, MX.FirstName, RD.MemberID, RD.Div"
 
-sSQL2 = sSQL2 & " Left Join	(Select MemberID, max(DivElite) as OvrEli"
-sSQL2 = sSQL2 & " From Cobra00025.USAWSRank.EliteDates Where SkiYearID = 1"
-sSQL2 = sSQL2 & " and Event = 'O' and QualThru >= '" & session("TournamentDate")
-sSQL2 = sSQL2 & "' Group by MemberID) as OE on RD.MemberID = OE.MemberID"
+'	-----------------------------------------------------------------------
+' Execute SQL statement to retrieve skier information and load to registration template
+'	-----------------------------------------------------------------------
+curSqlStmt = curSqlStmt1 & curSqlStmt2 & curSqlStmt3 & curSqlStmt4 & curSqlStmt5
+curTraceMsg = curTraceMsg & "<br /><br />Skiers retrieved<br />"
 
-sSQL2 = sSQL2 & " Order By MX.LastName, MX.FirstName, RD.MemberID, RD.Div"
+Set WaterskiConnect = Server.CreateObject("ADODB.Connection")
+WaterskiConnect.Open Application("WaterSkiConn")
 
+Dim Counter0, Counter1, Counter2, Counter3
+Dim rsMember
+Set rsMember = Server.CreateObject("ADODB.RecordSet")
+rsMember.ActiveConnection = WaterskiConnect
 
-objRS.Open sSQL & sSQL1 & sSQL2
+    On Error Resume Next
+rsMember.Open curSqlStmt
+    If Err.Number <> 0 Then
+        %>
+            <DIV ID="debugMsg">
+                <br />Error opening SQL to retrieve skier list
+                <br />Err.Number=<%=Err.Number %>
+                <br />Err.Description=<%=Err.Description %>
+                <br />
+            </DIV>
+        <%
+        On Error Goto 0 ' But don't let other errors hide!
+    End If
+Do until rsMember.EOF
+	Counter0 = Counter0 + 1
 
-Dim Counter0, Counter1, Counter2
-Dim SDiv, TDiv, JDiv, SPaid, TPaid, JPaid
+	IF len(rsMember("OffCode")) > 0 THEN
 
-Do until objRS.EOF
-
-	IF len(objRS("OffCode")) > 0 THEN
-
-		Counter0 = Counter0 + 1
+		Counter1 = Counter1 + 1
 		objExcelPreReg.addnew
-		objExcelPreReg.Fields(0).Value = objRS("MemID")
-		objExcelPreReg.Fields(1).Value = objRS("LastName")
-		objExcelPreReg.Fields(2).Value = objRS("FirstName")
+		objExcelPreReg.Fields(0).Value = rsMember("MemID")
+		objExcelPreReg.Fields(1).Value = rsMember("LastName")
+		objExcelPreReg.Fields(2).Value = rsMember("FirstName")
 		
-		objExcelPreReg.Fields(4).Value = objRS("Div")
-		objExcelPreReg.Fields(5).Value = objRS("Age")
-		objExcelPreReg.Fields(6).Value = objRS("City")
-		objExcelPreReg.Fields(7).Value = objRS("State")
+		objExcelPreReg.Fields(4).Value = rsMember("Div")
+		objExcelPreReg.Fields(5).Value = rsMember("Age")
+		objExcelPreReg.Fields(6).Value = rsMember("City")
+		objExcelPreReg.Fields(7).Value = rsMember("State")
 	
-		IF left(objRS("OffCode"),1) = "C" THEN
-			objExcelPreReg.Fields(11).Value = objRS("OffCode")
+		IF left(rsMember("OffCode"),1) = "C" THEN
+			objExcelPreReg.Fields(11).Value = rsMember("OffCode")
 		ELSE
-			objExcelPreReg.Fields(11).Value = objRS("OffRat")
+			objExcelPreReg.Fields(11).Value = rsMember("OffRat")
 		END IF
 
-		objExcelPreReg.Fields(12).Value = objRS("SlmSco")
-		objExcelPreReg.Fields(13).Value = objRS("TrkSco")
-		objExcelPreReg.Fields(14).Value = objRS("JmpSco")
-		objExcelPreReg.Fields(15).Value = objRS("SlmRat")
-		objExcelPreReg.Fields(16).Value = objRS("TrkRat")
-		objExcelPreReg.Fields(17).Value = objRS("JmpRat")
-		objExcelPreReg.Fields(18).Value = objRS("OvrRat")
+		objExcelPreReg.Fields(12).Value = rsMember("SlmSco")
+		objExcelPreReg.Fields(13).Value = rsMember("TrkSco")
+		objExcelPreReg.Fields(14).Value = rsMember("JmpSco")
+		objExcelPreReg.Fields(15).Value = rsMember("SlmRat")
+		objExcelPreReg.Fields(16).Value = rsMember("TrkRat")
+		objExcelPreReg.Fields(17).Value = rsMember("JmpRat")
+		objExcelPreReg.Fields(18).Value = rsMember("OvrRat")
 
-		IF objRS("EffTo") >= cdate(session("TournamentDate")) and objRS("CanSki") = True and objRS("Waiver") > 0 THEN	
+		IF rsMember("EffTo") >= cdate(sTourDate) and rsMember("CanSki") = True and rsMember("Waiver") > 0 THEN	
 			objExcelPreReg.Fields(26).Value = "Yes"
 			objExcelPreReg.Fields(27).Value = "Pre-Regist"
 		ELSE
 			objExcelPreReg.Fields(26).Value = "    No"
 			' Figure applicable Renewal / Upgrade Amount based on MemType & Status
-			MT = objRS("MemType")
+			MT = rsMember("MemType")
 			IF MT < 1 OR MT > 200 THEN MT = 1
-			IF objRS("EffTo") < cdate(session("TournamentDate")) THEN 
-				IF objRS("CanSki") = False THEN
+			IF rsMember("EffTo") < cdate(sTourDate) THEN 
+				IF rsMember("CanSki") = False THEN
 					objExcelPreReg.Fields(27).Value = "Nds Rnw/Upg" 
 					objExcelPreReg.Fields(28).Value = FormatNumber(MemPrice(MT)+MemUpgrd(MT),2)
 				ELSE
@@ -554,10 +739,10 @@ Do until objRS.EOF
 					objExcelPreReg.Fields(28).Value = FormatNumber(MemPrice(MT),2)
 				END IF
 			ELSE 
-				IF objRS("CanSkiGR") = True THEN
+				IF rsMember("CanSkiGR") = True THEN
 					objExcelPreReg.Fields(27).Value = "** G/R Only" 
 					objExcelPreReg.Fields(28).Value = FormatNumber(MemUpgrd(MT),2)
-				ELSEIF objRS("CanSki") = False THEN
+				ELSEIF rsMember("CanSki") = False THEN
 					objExcelPreReg.Fields(27).Value = "Needs Upgrd" 
 					objExcelPreReg.Fields(28).Value = FormatNumber(MemUpgrd(MT),2)
 				ELSE
@@ -569,69 +754,69 @@ Do until objRS.EOF
 
 		objExcelPreReg.Update
 
-	ELSEIF objRS("EffTo") >= cdate(session("TournamentDate")) and objRS("CanSki") = True and objRS("Waiver") > 0 THEN
-		Counter1 = Counter1 + 1
+	ELSEIF rsMember("EffTo") >= cdate(sTourDate) and rsMember("CanSki") = True and rsMember("Waiver") > 0 THEN
+		Counter2 = Counter2 + 1
 		objExcelActive.addnew
-		objExcelActive.Fields(0).Value = objRS("MemID")
-		objExcelActive.Fields(1).Value = objRS("LastName")
-		objExcelActive.Fields(2).Value = objRS("FirstName")
+		objExcelActive.Fields(0).Value = rsMember("MemID")
+		objExcelActive.Fields(1).Value = rsMember("LastName")
+		objExcelActive.Fields(2).Value = rsMember("FirstName")
 
-		IF Mid(Session("TournamentID"),4,3) = "999" THEN
-			objExcelActive.Fields(3).Value = objRS("Reg_Ski")
+		IF Mid(sTourID,4,3) = "999" THEN
+			objExcelActive.Fields(3).Value = rsMember("Reg_Ski")
 		END IF				
 
-		objExcelActive.Fields(4).Value = objRS("Div")
-		objExcelActive.Fields(5).Value = objRS("Age")
-		objExcelActive.Fields(6).Value = objRS("City")
-		objExcelActive.Fields(7).Value = objRS("State")
+		objExcelActive.Fields(4).Value = rsMember("Div")
+		objExcelActive.Fields(5).Value = rsMember("Age")
+		objExcelActive.Fields(6).Value = rsMember("City")
+		objExcelActive.Fields(7).Value = rsMember("State")
 		
-		objExcelActive.Fields(11).Value = objRS("OffRat")
-		objExcelActive.Fields(12).Value = objRS("SlmSco")
-		objExcelActive.Fields(13).Value = objRS("TrkSco")
-		objExcelActive.Fields(14).Value = objRS("JmpSco")
-		objExcelActive.Fields(15).Value = objRS("SlmRat")
-		objExcelActive.Fields(16).Value = objRS("TrkRat")
-		objExcelActive.Fields(17).Value = objRS("JmpRat")
-		objExcelActive.Fields(18).Value = objRS("OvrRat")
+		objExcelActive.Fields(11).Value = rsMember("OffRat")
+		objExcelActive.Fields(12).Value = rsMember("SlmSco")
+		objExcelActive.Fields(13).Value = rsMember("TrkSco")
+		objExcelActive.Fields(14).Value = rsMember("JmpSco")
+		objExcelActive.Fields(15).Value = rsMember("SlmRat")
+		objExcelActive.Fields(16).Value = rsMember("TrkRat")
+		objExcelActive.Fields(17).Value = rsMember("JmpRat")
+		objExcelActive.Fields(18).Value = rsMember("OvrRat")
 		
 	    objExcelActive.Fields(26).Value = "Yes"
 		objExcelActive.Update
 
 	ELSE
-		Counter2 = Counter2 + 1
+		Counter3 = Counter3 + 1
 		objExcelInActive.addnew
-		objExcelInActive.Fields(0).Value = objRS("MemID")
-		objExcelInActive.Fields(1).Value = objRS("LastName")
-		objExcelInActive.Fields(2).Value = objRS("FirstName")
+		objExcelInActive.Fields(0).Value = rsMember("MemID")
+		objExcelInActive.Fields(1).Value = rsMember("LastName")
+		objExcelInActive.Fields(2).Value = rsMember("FirstName")
 
-		IF Mid(Session("TournamentID"),4,3) = "999" THEN
-			objExcelInActive.Fields(3).Value = objRS("Reg_Ski")
+		IF Mid(sTourID,4,3) = "999" THEN
+			objExcelInActive.Fields(3).Value = rsMember("Reg_Ski")
 		END IF				
 
-		objExcelInActive.Fields(4).Value = objRS("Div")
-		objExcelInActive.Fields(5).Value = objRS("Age")
-		objExcelInActive.Fields(6).Value = objRS("City")
-		objExcelInActive.Fields(7).Value = objRS("State")
+		objExcelInActive.Fields(4).Value = rsMember("Div")
+		objExcelInActive.Fields(5).Value = rsMember("Age")
+		objExcelInActive.Fields(6).Value = rsMember("City")
+		objExcelInActive.Fields(7).Value = rsMember("State")
 		
 		'added 4-11-2007 MOK
-		objExcelInActive.Fields(11).Value = objRS("OffRat")
-		objExcelInActive.Fields(12).Value = objRS("SlmSco")
-		objExcelInActive.Fields(13).Value = objRS("TrkSco")
-		objExcelInActive.Fields(14).Value = objRS("JmpSco")
-		objExcelInActive.Fields(15).Value = objRS("SlmRat")
-		objExcelInActive.Fields(16).Value = objRS("TrkRat")
-		objExcelInActive.Fields(17).Value = objRS("JmpRat")
-		objExcelInActive.Fields(18).Value = objRS("OvrRat")
+		objExcelInActive.Fields(11).Value = rsMember("OffRat")
+		objExcelInActive.Fields(12).Value = rsMember("SlmSco")
+		objExcelInActive.Fields(13).Value = rsMember("TrkSco")
+		objExcelInActive.Fields(14).Value = rsMember("JmpSco")
+		objExcelInActive.Fields(15).Value = rsMember("SlmRat")
+		objExcelInActive.Fields(16).Value = rsMember("TrkRat")
+		objExcelInActive.Fields(17).Value = rsMember("JmpRat")
+		objExcelInActive.Fields(18).Value = rsMember("OvrRat")
 
 		objExcelInActive.Fields(26).Value = "    No"
 
 		' Figure applicable Renewal / Upgrade Amount based on MemType & Status
 
-		MT = objRS("MemType")
+		MT = rsMember("MemType")
 		IF MT < 1 OR MT > 200 THEN MT = 1
 
-		IF objRS("EffTo") < cdate(session("TournamentDate")) THEN 
-			IF objRS("CanSki") = False THEN
+		IF rsMember("EffTo") < cdate(sTourDate) THEN 
+			IF rsMember("CanSki") = False THEN
 				objExcelInActive.Fields(27).Value = "Nds Rnw/Upg" 
 				objExcelInActive.Fields(28).Value = FormatNumber(MemPrice(MT)+MemUpgrd(MT),2)
 			ELSE
@@ -639,10 +824,10 @@ Do until objRS.EOF
 				objExcelInActive.Fields(28).Value = FormatNumber(MemPrice(MT),2)
 			END IF
 		ELSE 
-			IF objRS("CanSkiGR") = True THEN
+			IF rsMember("CanSkiGR") = True THEN
 				objExcelInActive.Fields(27).Value = "** G/R Only" 
 				objExcelInActive.Fields(28).Value = FormatNumber(MemUpgrd(MT),2)
-			ELSEIF objRS("CanSki") = False THEN
+			ELSEIF rsMember("CanSki") = False THEN
 				objExcelInActive.Fields(27).Value = "Needs Upgrd" 
 				objExcelInActive.Fields(28).Value = FormatNumber(MemUpgrd(MT),2)
 			ELSE
@@ -655,84 +840,70 @@ Do until objRS.EOF
 
 	END IF
 	
-	objRS.MoveNext
+	rsMember.MoveNext
 Loop
 
+curTraceMsg = curTraceMsg & "<br />Retrieve skier list complete: Counter0=" & Counter0 & ", Counter1=" & Counter1  & ", Counter2=" & Counter2
 
-'"""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
-
-
+'	-----------------------------------------------------------------------
+'	-----------------------------------------------------------------------
 objExcelActive.close
 set objExcelActive = nothing
 objExcelInActive.close
 set objExcelInActive = nothing
 objExcelConn.close
 set objExcelConn = nothing
-'
-objRS.Close
-Set objRS = Nothing
 
+rsMember.Close
+Set rsMember = Nothing
+
+'	-----------------------------------------------------------------------
 'Now copy the file from Template to a file with the tournamentid
-Dim filename
-Dim filenamewithscores
+'	-----------------------------------------------------------------------
+Dim regTemplateFilename
 '"06M123-Entries-SSSSSS-YYYYMMDD", 
-filenamewithscores = "Entries-" & Session("StateList") & "-" & DateFmt
+regTemplateFilename = "Entries-" & sStateList & "-" & DateFmt
 
+'	-----------------------------------------------------------------------
 'Add the Tournament Name to the start of the file name
-'session("TournamentName")
-if len(session("TournamentName")) > 0 then
-	'filename = "TournamentRegistrationFile-" & session("UserName") & ".xls"
-	filenamewithscores = session("TournamentName") & "-" & filenamewithscores
+'	-----------------------------------------------------------------------
+if len(sTourName) > 0 then
+	regTemplateFilename = RemoveInvalidChars(sTourName) & "-" & regTemplateFilename
 end if
 
-'5-18-2006 Remove any strange characters from the TournamentName
-filenamewithscores = RemoveInvalidChars(filenamewithscores)
-
+'	-----------------------------------------------------------------------
 'Append the username
-if len(session("UserName")) > 0 then
-	'filename = "TournamentRegistrationFile-" & session("UserName") & ".xls"
-	filenamewithscores = filenamewithscores & "-" & strTSanction & ".xls"
+'	-----------------------------------------------------------------------
+if len(sUserName) > 0 then
+	regTemplateFilename = regTemplateFilename & "-" & strTSanction & ".xls"
 else
-	'filename = "TournamentRegistrationFile.xls"
-	filenamewithscores = filenamewithscores & ".xls"
+	regTemplateFilename = regTemplateFilename & ".xls"
 end if
 
-'objFSO.CopyFile path & "/template.xls", path & "/" & filename , True
-'objFSO.CopyFile path & "/template_with_scores.xls", path & "/" & filenamewithscores , True
-objFSO.CopyFile path & "/template.xls", path & "/" & filenamewithscores , True
+fileRegXls.CopyFile copyFileDest, pathExcelFiles & "/" & regTemplateFilename , True
 
+'	-----------------------------------------------------------------------
+' Clean up old files
+'	-----------------------------------------------------------------------
 'Clean up old files
-'Set f = objFSO.GetFolder("d:\webs\usawaterski.org\admin\excel\")  
-Set f = objFSO.GetFolder(path & "\")  
-Set fc = f.Files 
+Set dataFolder = objFSO.GetFolder(pathExcelFiles)  
+Set folderFileList = dataFolder.Files 
 Response.Write "<br>"
-For Each f1 in fc
-	'Response.Write f1.name 
-	Set myfile = objFSO.GetFile(path & "\" & f1.name)
-	'Response.Write  "Date:"  & myfile.DateCreated 
-	'Response.Write  "Age:"  & datediff("d",myfile.DateCreated,date()) & "<br>"
+For Each curFile in folderFileList
+	Set myfile = objFSO.GetFile(pathExcelFiles & "/" & curFile.name)
 	if datediff("d",myfile.DateCreated,date()) > 2 and left(myfile.name,8) <> "Template" then
 		myfile.delete
 	end if
-	
 Next  
 
-Set f = nothing
-Set fc = nothing
-
+Set dataFolder = nothing
+Set folderFileList = nothing
 Set objFSO = Nothing
+Set fileRegXls = Nothing
 
-'Clean up old records in temp table
-
-
-    
-Response.Flush
-      
-' This final bit of HTML is written after processing is successfully completed
-' to tell the user how to download their template, and where to go from here.
-      
+'	-----------------------------------------------------------------------
+'	-----------------------------------------------------------------------
 %>
-    
     <SCRIPT LANGUAGE="JavaScript">
     if(upLevel) {
       var splash = document.getElementById("splashScreen");
@@ -747,11 +918,21 @@ Response.Flush
     hideObject(splash);
     </SCRIPT>  
 
+    </body>
+
+</html>
+
+<%
+' This final bit of HTML is written after processing is successfully completed
+' to tell the user how to download their template, and where to go from here.
+      
+Response.Flush
+%>
 
 <html>
 
 <head>
-<title>Create Pre-Registration Export v1.5</title>
+<title>Create Registration Export</title>
 
 <meta http-equiv="Content-Type" content="text/html; charset=iso-8859-1">
 </head>
@@ -765,7 +946,7 @@ Response.Flush
       <p align="center"><font face="Verdana" size="6" color="#FFFFFF">
       	USA Water Ski Pre-Registration Export</font></p>
       <p align="center"><font face="Verdana" size="4" color="#FFFFFF">
-      	Registration Support for -- <%=session("TournamentName")%></font></p>
+      	Registration Support for -- <%=sTourName%></font></p>
       <p>&nbsp;</p>
     </td>
   </tr>
@@ -776,8 +957,8 @@ Response.Flush
     <td width="185" valign="top" bgcolor="#42639F">
 
 	<font face="Verdana" size="2" COLOR="#FFFFFF"><br>&nbsp;Currently Logged in as: </font><br>
-	<font face="Verdana" size="2" COLOR="#FFFFFF">&nbsp;<%=Session("UserName")%>&nbsp;&nbsp;
-		<%=session("TournamentDate")%></font><br>
+	<font face="Verdana" size="2" COLOR="#FFFFFF">&nbsp;<%=sUserName%>&nbsp;&nbsp;
+		<%=sTourDate%></font><br>
 	<br>
 	
 			<font face="Verdana" size="2"> 
@@ -824,7 +1005,7 @@ Response.Flush
 
       <tr> 
          <td>&nbsp;</td>
-         <td><a href="excel/<% response.write filenamewithscores %>"><font face="Arial" size="2"><b>RIGHT 
+         <td><a href="excel/<% response.write regTemplateFilename %>"><font face="Arial" size="2"><b>RIGHT 
          Click Here</b></font></a>&nbsp; <font size="2" face="Verdana, Arial, Helvetica, sans-serif">to 
          download your Registration Template, then select the "Save As" 
          option from that menu, and then choose a suitable location to 
@@ -889,12 +1070,18 @@ Response.Flush
   	  </td>
 	  </tr>
 </table>
+
+<%
+curTraceMsg = curTraceMsg & "<br /><br />Process Complete"
+''''% >
+''''    <DIV style="width: 100%; Text-Align:Left; margin-left: 0; margin-right: auto; FONT-SIZE:1.0em; FONT-WEIGHT:normal;">
+''''        <br /><br />< %=curTraceMsg % ><br />
+''''    </DIV>
+''''% >
+
+curTraceMsg = ""
+
+%>
 </body>
 </html>
-
-
-
-
-
-
-a                                                                                                                       
+                                                                                                                       

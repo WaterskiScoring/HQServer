@@ -158,25 +158,30 @@ ELSE
 END IF
 objRS.Close
 
-
-
 '""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
 '"""""""""""""" With Scores and Ratings """""""""""""""""""""""
 '""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
-
-
-'objFSO.CopyFile path & "/Templates/NCWSATemplateBlank.xls", path & "/template_with_scores.xls" , True
-'objFSO.CopyFile path & "/Templates/NCWSATemplate2012.xls", path & "/template_with_scores.xls" , True
-'MOK 4-15-2013  Had to remove the underscores from the filename to prevent read only exception
 objFSO.CopyFile path & "/Templates/NCWSATemplate2014.xls", path & "/template.xls" , True
 
+'	-----------------------------------------------------------------------
 'Now open a connection to the new XLS file
-
+'	-----------------------------------------------------------------------
 Set objExcelConn = Server.CreateObject("ADODB.Connection")
-'objExcelConn.Open "ExcelDSNwithScores"
-'MOK 4-15-2013 DSNless connection to Excel!!
-'objExcelConn.Open "Driver={Microsoft Excel Driver (*.xls)};DBQ=C:\webs\usawaterski.org\admin\excel\template.xls;ReadOnly=0;"
-objExcelConn.Open "Driver={Microsoft Excel Driver (*.xls)};DBQ=" & path & "\template.xls;ReadOnly=0;"
+objExcelConn.Provider = "Microsoft.ACE.OLEDB.12.0"
+objExcelConn.ConnectionString = "Data Source=" & copyFileDest & ";Extended Properties=""Excel 8.0;"""
+    On Error Resume Next
+objExcelConn.Open
+    If Err.Number <> 0 Then
+        %>
+            <DIV ID="debugMsg">
+                <br />Error creating registration template file
+                <br />Err.Number=<%=Err.Number %>
+                <br />Err.Description=<%=Err.Description %>
+                <br />
+            </DIV>
+        <%
+        On Error Goto 0 ' But don't let other errors hide!
+    End If
 
 Set objExcelSingleFields = Server.CreateObject("ADODB.Recordset")
 objExcelSingleFields.ActiveConnection = objExcelConn 
