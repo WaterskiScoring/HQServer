@@ -1,9 +1,9 @@
 <%
-  
+
   'Version 1.02
   'Added On Resume Next around the part that display form data so this page
   'wint puke if the form data is binary (on upload pages)
-  
+
   'Version 1.03
   'Added Session.Contents to error email.
 
@@ -20,12 +20,12 @@
   End If
 
   Set objASPError = Server.GetLastError
-	
+
 	noImages = 9
 	Randomize
 	randomNumber = Int(Rnd * noImages) + 1
 	'randomNumber = 1
-	
+
 	Select Case randomNumber
 		Case 1, 5
 			fontColor = "#fff"
@@ -84,7 +84,7 @@
 	  bakCodepage = Session.Codepage
 	  Session.Codepage = 1252
 
-If ErrNumber <> 0 then  
+If ErrNumber <> 0 then
     Dim strBody
     strBody = "An error was raised on " & Request.ServerVariables("SERVER_NAME") & " while doing a " & Request.ServerVariables("REQUEST_METHOD")
     strBody = strBody & " to " & Request.ServerVariables("SCRIPT_NAME") & " at " & Now() & "." & VbCrLf
@@ -102,7 +102,7 @@ If ErrNumber <> 0 then
     strBody = strBody & "Here is the Form/Querystring/Session data:" & VbCrLf
     strBody = strBody & "REQUEST.QUERYSTRING   -" & VbCrLf
     Dim QS
-    For each QS in Request.QueryString 
+    For each QS in Request.QueryString
 	    strBody = strBody & "  " & Request.QueryString.Key(QS) & "=" & Request.QueryString.Item(Request.QueryString.Key(QS)) & VbCrLf
     Next
     strBody = strBody & "REQUEST.FORM          -" & VbCrLf
@@ -164,13 +164,14 @@ If ErrNumber <> 0 then
     objMessage.Configuration.Fields.Update
     '==End remote SMTP server configuration section==
 
-    objMessage.Send
+    ''''objMessage.Send
 
 end if
 
 '''' Use this to show the error information on the page
 ''''<div><br /><br />Debug Info:<br /><%=strBody %></div>
 %>
+<div><br /><br />Debug Info:<br /><%=strBody %></div>
 
 </body>
 </html>
