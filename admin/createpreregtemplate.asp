@@ -326,27 +326,27 @@ Counter3 = 0
 Do until rsMember.EOF
     Counter0 = Counter0 + 1
 
-	IF rsMember("PreReg") = "YES" OR len(rsMember("OffCode")) > 0 THEN
+	IF rsMember("PreReg") = "YES" OR len(rsMember("ApptdOfficial")) > 0 THEN
 
-		IF rsMember("SDiv") = rsMember("Div") THEN
-			SDiv = rsMember("SDiv"): SPaid = rsMember("SPaid")
+		IF rsMember("EventSlalom") = rsMember("Div") THEN
+			EventSlalom = rsMember("EventSlalom"): SlalomPaid = rsMember("SlalomPaid")
 		ELSE
-			SDiv = "": SPaid = ""
+			EventSlalom = "": SlalomPaid = ""
 		END IF
 
-		IF rsMember("TDiv") = rsMember("Div") THEN
-			TDiv = rsMember("TDiv"): TPaid = rsMember("TPaid")
+		IF rsMember("EventTrick") = rsMember("Div") THEN
+			EventTrick = rsMember("EventTrick"): TrickPaid = rsMember("TrickPaid")
 		ELSE
-			TDiv = "": TPaid = ""
+			EventTrick = "": TrickPaid = ""
 		END IF
 
-		IF rsMember("JDiv") = rsMember("Div") THEN
-			JDiv = rsMember("JDiv"): JPaid = rsMember("JPaid")
+		IF rsMember("EventJump") = rsMember("Div") THEN
+			EventJump = rsMember("EventJump"): JumpPaid = rsMember("JumpPaid")
 		ELSE
-			JDiv = "": JPaid = ""
+			EventJump = "": JumpPaid = ""
 		END IF
 
-		IF SDiv <> "" OR TDiv <> "" OR JDiv <> "" OR len(rsMember("OffCode")) > 0 THEN
+		IF EventSlalom <> "" OR EventTrick <> "" OR EventJump <> "" OR len(rsMember("ApptdOfficial")) > 0 THEN
 			Counter1 = Counter1 + 1: RowNo = FormatNumber(Counter1 + 5,0)
 
             objExcelPreReg.addnew
@@ -363,36 +363,36 @@ Do until rsMember.EOF
 			objExcelPreReg.Fields(6).Value = rsMember("City")
 			objExcelPreReg.Fields(7).Value = rsMember("State")
 
-			objExcelPreReg.Fields(8).Value = SDiv
-			objExcelPreReg.Fields(9).Value = TDiv
-			objExcelPreReg.Fields(10).Value = JDiv
+			objExcelPreReg.Fields(8).Value = EventSlalom
+			objExcelPreReg.Fields(9).Value = EventTrick
+			objExcelPreReg.Fields(10).Value = EventJump
 
-			objExcelPreReg.Fields(11).Value = rsMember("OffCode")
+			objExcelPreReg.Fields(11).Value = rsMember("ApptdOfficial")
 
-			objExcelPreReg.Fields(12).Value = rsMember("SlmSco")
-			objExcelPreReg.Fields(13).Value = rsMember("TrkSco")
-			objExcelPreReg.Fields(14).Value = rsMember("JmpSco")
+			objExcelPreReg.Fields(12).Value = rsMember("SlalomRank")
+			objExcelPreReg.Fields(13).Value = rsMember("TrickRank")
+			objExcelPreReg.Fields(14).Value = rsMember("JumpRank")
 
 '			Insert Qualified Flags if Qualifications present, otherwise
 '			Otherwise insert Ranking Levels by Events.
 
 			IF QfyNum > 0 THEN
-				objExcelPreReg.Fields(15).Value = rsMember("SlmQfy")
-				objExcelPreReg.Fields(16).Value = rsMember("TrkQfy")
-				objExcelPreReg.Fields(17).Value = rsMember("JmpQfy")
+				objExcelPreReg.Fields(15).Value = rsMember("SlalomQfy")
+				objExcelPreReg.Fields(16).Value = rsMember("TrickQfy")
+				objExcelPreReg.Fields(17).Value = rsMember("JumpQfy")
 			ELSE
-				objExcelPreReg.Fields(15).Value = rsMember("SlmRat")
-				objExcelPreReg.Fields(16).Value = rsMember("TrkRat")
-				objExcelPreReg.Fields(17).Value = rsMember("JmpRat")
+				objExcelPreReg.Fields(15).Value = rsMember("SlalomRating")
+				objExcelPreReg.Fields(16).Value = rsMember("TrickRating")
+				objExcelPreReg.Fields(17).Value = rsMember("JumpRating")
 			END IF
-			objExcelPreReg.Fields(18).Value = rsMember("OvrRat")
+			objExcelPreReg.Fields(18).Value = rsMember("OverallRating")
 
-			objExcelPreReg.Fields(19).Value = rsMember("TBoat")
-			objExcelPreReg.Fields(20).Value = rsMember("JRamp")
+			objExcelPreReg.Fields(19).Value = rsMember("TrickBoat")
+			objExcelPreReg.Fields(20).Value = rsMember("JumpHeight")
 
-			objExcelPreReg.Fields(21).Value = SPaid
-			objExcelPreReg.Fields(22).Value = TPaid
-			objExcelPreReg.Fields(23).Value = JPaid
+			objExcelPreReg.Fields(21).Value = SlalomPaid
+			objExcelPreReg.Fields(22).Value = TrickPaid
+			objExcelPreReg.Fields(23).Value = JumpPaid
 
             objExcelPreReg.Fields(27).Value = rsMember("EffTo")
             
@@ -408,7 +408,7 @@ Do until rsMember.EOF
 				' Figure applicable Renewal / Upgrade Amount based on MemType & Status
 				IF rsMember("EffTo") < cdate(sTourDate) THEN
 					IF rsMember("CanSki") = False THEN
-						objExcelPreReg.Fields(25).Value = "Nds Rnw/Upg"
+						objExcelPreReg.Fields(25).Value = "Needs Renew/Upgrade"
 						objExcelPreReg.Fields(26).Value = rsMember("MembershipRate")
 					ELSE
 						objExcelPreReg.Fields(25).Value = "Needs Renew"
@@ -416,13 +416,13 @@ Do until rsMember.EOF
 					END IF
 				ELSE
 					IF rsMember("CanSkiGR") = True THEN
-						objExcelPreReg.Fields(25).Value = "** G/R Only"
+						objExcelPreReg.Fields(25).Value = "** Grass Roots Only"
                         objExcelPreReg.Fields(26).Value = rsMember("CostToUpgrade")
 					ELSEIF rsMember("CanSki") = False THEN
-						objExcelPreReg.Fields(25).Value = "Needs Upgrd"
+						objExcelPreReg.Fields(25).Value = "Needs Upgrade"
 						objExcelPreReg.Fields(26).Value = rsMember("MembershipRate")
 					ELSE
-						objExcelPreReg.Fields(25).Value = "Nds Ann Wvr"
+						objExcelPreReg.Fields(25).Value = "Needs Annual Waiver"
 						objExcelPreReg.Fields(26).Value = FormatNumber(0,2)
 					END IF
 				END IF
@@ -461,13 +461,13 @@ Do until rsMember.EOF
 		objExcelActive.Fields(6).Value = rsMember("City")
 		objExcelActive.Fields(7).Value = rsMember("State")
 
-		objExcelActive.Fields(12).Value = rsMember("SlmSco")
-		objExcelActive.Fields(13).Value = rsMember("TrkSco")
-		objExcelActive.Fields(14).Value = rsMember("JmpSco")
-		objExcelActive.Fields(15).Value = rsMember("SlmRat")
-		objExcelActive.Fields(16).Value = rsMember("TrkRat")
-		objExcelActive.Fields(17).Value = rsMember("JmpRat")
-		objExcelActive.Fields(18).Value = rsMember("OvrRat")
+		objExcelActive.Fields(12).Value = rsMember("SlalomRank")
+		objExcelActive.Fields(13).Value = rsMember("TrickRank")
+		objExcelActive.Fields(14).Value = rsMember("JumpRank")
+		objExcelActive.Fields(15).Value = rsMember("SlalomRating")
+		objExcelActive.Fields(16).Value = rsMember("TrickRating")
+		objExcelActive.Fields(17).Value = rsMember("JumpRating")
+		objExcelActive.Fields(18).Value = rsMember("OverallRating")
 
 	    objExcelActive.Fields(24).Value = "Yes"
         objExcelActive.Fields(25).Value = rsMember("MemTypeDesc")
@@ -505,13 +505,13 @@ Do until rsMember.EOF
 		objExcelInActive.Fields(7).Value = rsMember("State")
 
 		'added 4-11-2007 MOK
-		objExcelInActive.Fields(12).Value = rsMember("SlmSco")
-		objExcelInActive.Fields(13).Value = rsMember("TrkSco")
-		objExcelInActive.Fields(14).Value = rsMember("JmpSco")
-		objExcelInActive.Fields(15).Value = rsMember("SlmRat")
-		objExcelInActive.Fields(16).Value = rsMember("TrkRat")
-		objExcelInActive.Fields(17).Value = rsMember("JmpRat")
-		objExcelInActive.Fields(18).Value = rsMember("OvrRat")
+		objExcelInActive.Fields(12).Value = rsMember("SlalomRank")
+		objExcelInActive.Fields(13).Value = rsMember("TrickRank")
+		objExcelInActive.Fields(14).Value = rsMember("JumpRank")
+		objExcelInActive.Fields(15).Value = rsMember("SlalomRating")
+		objExcelInActive.Fields(16).Value = rsMember("TrickRating")
+		objExcelInActive.Fields(17).Value = rsMember("JumpRating")
+		objExcelInActive.Fields(18).Value = rsMember("OverallRating")
 
 		objExcelInActive.Fields(24).Value = "    No"
 
@@ -535,7 +535,7 @@ Do until rsMember.EOF
 		' Figure applicable Renewal / Upgrade Amount based on MemType & Status
 		IF rsMember("EffTo") < cdate(sTourDate) THEN
 			IF rsMember("CanSki") = False THEN
-				objExcelInActive.Fields(25).Value = "Nds Rnw/Upg"
+				objExcelInActive.Fields(25).Value = "Needs Renew/Upgrade"
 				objExcelInActive.Fields(26).Value = rsMember("MembershipRate")
 			ELSE
 				objExcelInActive.Fields(25).Value = "Needs Renew"
@@ -543,13 +543,13 @@ Do until rsMember.EOF
 			END IF
 		ELSE
 			IF rsMember("CanSkiGR") = True THEN
-				objExcelInActive.Fields(25).Value = "** G/R Only"
+				objExcelInActive.Fields(25).Value = "** Grass Roots Only"
                 objExcelInActive.Fields(26).Value = rsMember("CostToUpgrade")
 			ELSEIF rsMember("CanSki") = False THEN
-				objExcelInActive.Fields(25).Value = "Needs Upgrd"
+				objExcelInActive.Fields(25).Value = "Needs Upgrade"
 				objExcelInActive.Fields(26).Value = rsMember("MembershipRate")
 			ELSE
-				objExcelInActive.Fields(25).Value = "Nds Ann Wvr"
+				objExcelInActive.Fields(25).Value = "Needs Annual Waiver"
 				objExcelInActive.Fields(26).Value = FormatNumber(0,2)
 			END IF
 		END IF

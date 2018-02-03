@@ -31,6 +31,7 @@ IF len(curState) > 0 THEN
     curStateSQL = "State = '" & curState & "'"
 END IF
 
+''''response.write "<br />curSanctionId=" & curSanctionId & ", Mid(curSanctionId, 3, 1)=" & Mid(curSanctionId, 3, 1) & ", sTourName=" & ", curState=" & curState
 
 '	-----------------------------------------------------------------------
 'Open connection to Sanction Database
@@ -74,7 +75,15 @@ Dim rsMember
 Set WaterskiConnect = Server.CreateObject("ADODB.Connection")
 WaterskiConnect.Open Application("WaterSkiConn")
 curSqlStmt = ""
-curSqlStmt = buildQueryMemberRegEntries(curSanctionId, curTourDate, curStateSQL, curMemberId, curMemberFirstName, curMemberLastName)
+IF len(curMemberId) > 0 OR len(curMemberFirstName) > 0  OR len(curMemberLastName) > 0 OR len(curStateSQL) > 0 THEN
+    curSqlStmt = buildQueryMemberRegEntries(curSanctionId, curTourDate, curStateSQL, curMemberId, curMemberFirstName, curMemberLastName)
+
+ELSEIF Mid(curSanctionId, 3, 1) = "U" THEN
+    curSqlStmt = buildQueryMemberRegNcwsaEntries(curSanctionId, curTourDate)
+
+ELSE
+    curSqlStmt = buildQueryMemberRegEntries(curSanctionId, curTourDate, curStateSQL, curMemberId, curMemberFirstName, curMemberLastName)
+END IF
 
 '	-----------------------------------------------------------------------
 ' Execute SQL statement to retrieve skier information and load to registration template

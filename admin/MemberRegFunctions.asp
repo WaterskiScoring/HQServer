@@ -169,6 +169,7 @@ Function RemoveInvalidChars(strInput)
 
 End Function
 
+
 '	-----------------------------------------------------------------------
 ' Build a query to extract member entries for tournament registrations
 ' Include data from rankings, qualifications, membership status, and official ratings
@@ -207,31 +208,35 @@ Function buildQueryMemberRegEntries(curSanctionId, curTourDate, curStateSQL, cur
     curSqlStmt1 = curSqlStmt1 & ", MX.Age, MX.Sex as Gender, MX.City, MX.State, Coalesce(MX.Federation, '') as Federation, MX.Waiver"
 
     'Skier official ratings
-    curSqlStmt1 = curSqlStmt1 & ", Coalesce(SO.OffCode,'') as OffCode"
+    curSqlStmt1 = curSqlStmt1 & ", Coalesce(SO.OffCode,'') as ApptdOfficial"
 
-    curSqlStmt1 = curSqlStmt1 & ", Coalesce(SX.SlmSco,'') as SlmSco"
-    curSqlStmt1 = curSqlStmt1 & ", Coalesce(TX.TrkSco,'') as TrkSco"
-    curSqlStmt1 = curSqlStmt1 & ", Coalesce(JX.JmpSco,'') as JmpSco"
+    curSqlStmt1 = curSqlStmt1 & ", Coalesce(SX.SlalomRank,'') as SlalomRank"
+    curSqlStmt1 = curSqlStmt1 & ", Coalesce(TX.TrickRank,'') as TrickRank"
+    curSqlStmt1 = curSqlStmt1 & ", Coalesce(JX.JumpRank,'') as JumpRank"
 
     'Event Ratings and qualifications
-    curSqlStmt1 = curSqlStmt1 & ", Coalesce(SE.SlmEli,SX.SlmRat,'') as SlmRat"
-    curSqlStmt1 = curSqlStmt1 & ", Coalesce(TE.TrkEli,TX.TrkRat,'') as TrkRat"
-    curSqlStmt1 = curSqlStmt1 & ", Coalesce(JE.JmpEli,JX.JmpRat,'') as JmpRat"
-    curSqlStmt1 = curSqlStmt1 & ", Coalesce(OE.OvrEli,OX.OvrRat,'') as OvrRat"
+    curSqlStmt1 = curSqlStmt1 & ", Coalesce(SE.SlmEli,SX.SlalomRating,'') as SlalomRating"
+    curSqlStmt1 = curSqlStmt1 & ", Coalesce(TE.TrkEli,TX.TrickRating,'') as TrickRating"
+    curSqlStmt1 = curSqlStmt1 & ", Coalesce(JE.JmpEli,JX.JumpRating,'') as JumpRating"
+    curSqlStmt1 = curSqlStmt1 & ", Coalesce(OE.OvrEli,OX.OverallRating,'') as OverallRating"
 
-    curSqlStmt1 = curSqlStmt1 & ", Case when PS.SQfyOvr > '   ' then 'Y' else QS.SQfy end as SlmQfy"
-    curSqlStmt1 = curSqlStmt1 & ", Case when PT.TQfyOvr > '   ' then 'Y' else QT.TQfy end as TrkQfy"
-    curSqlStmt1 = curSqlStmt1 & ", Case when PJ.JQfyOvr > '   ' then 'Y' else QJ.JQfy end as JmpQfy"
+    curSqlStmt1 = curSqlStmt1 & ", Case when PS.SQfyOvr > '   ' then 'Y' else QS.SQfy end as SlalomQfy"
+    curSqlStmt1 = curSqlStmt1 & ", Case when PT.TQfyOvr > '   ' then 'Y' else QT.TQfy end as TrickQfy"
+    curSqlStmt1 = curSqlStmt1 & ", Case when PJ.JQfyOvr > '   ' then 'Y' else QJ.JQfy end as JumpQfy"
 
     'Skier event attributes and payments
     curSqlStmt1 = curSqlStmt1 & ", Coalesce(PR.Weight,'') as Weight"
-    curSqlStmt1 = curSqlStmt1 & ", Coalesce(PT.TBoat,'') as TBoat"
-    curSqlStmt1 = curSqlStmt1 & ", Coalesce(PR.JRamp,'') as JRamp"
-    curSqlStmt1 = curSqlStmt1 & ", PR.Prereg, PS.SDiv, PT.TDiv, PJ.JDiv"
+    curSqlStmt1 = curSqlStmt1 & ", Coalesce(PT.TrickBoat,'') as TrickBoat"
+    curSqlStmt1 = curSqlStmt1 & ", Coalesce(PR.JRamp,'') as JumpHeight"
+    curSqlStmt1 = curSqlStmt1 & ", PR.Prereg"
 
-    curSqlStmt1 = curSqlStmt1 & ", Coalesce(PS.SfeeCls,'') + Coalesce(PS.SFeeRds,'') as SPaid"
-    curSqlStmt1 = curSqlStmt1 & ", Coalesce(PT.TfeeCls,'') + Coalesce(PT.TFeeRds,'') as TPaid"
-    curSqlStmt1 = curSqlStmt1 & ", Coalesce(PJ.JfeeCls,'') + Coalesce(PJ.JFeeRds,'') as JPaid"
+	curSqlStmt1 = curSqlStmt1 & ", Case When PS.EventSlalom = null THEN '' WHEN RD.Div = null THEN PS.EventSlalom When PS.EventSlalom = RD.Div THEN PS.EventSlalom ELSE '' END as EventSlalom"
+	curSqlStmt1 = curSqlStmt1 & ", Case When PT.EventTrick = null THEN '' WHEN RD.Div = null THEN PT.EventTrick When PT.EventTrick = RD.Div THEN PT.EventTrick ELSE '' END as EventTrick"
+	curSqlStmt1 = curSqlStmt1 & ", Case When PJ.EventJump = null THEN '' WHEN RD.Div = null THEN PJ.EventJump When PJ.EventJump = RD.Div THEN PJ.EventJump ELSE '' END as EventJump"
+
+    curSqlStmt1 = curSqlStmt1 & ", Coalesce(PS.SfeeCls,'') + Coalesce(PS.SFeeRds,'') as SlalomPaid"
+    curSqlStmt1 = curSqlStmt1 & ", Coalesce(PT.TfeeCls,'') + Coalesce(PT.TFeeRds,'') as TrickPaid"
+    curSqlStmt1 = curSqlStmt1 & ", Coalesce(PJ.JfeeCls,'') + Coalesce(PJ.JFeeRds,'') as JumpPaid"
 
     'Other member stuff
     curSqlStmt1 = curSqlStmt1 & ", MX.EffTo, MX.Memtype, MX.MemCode, MX.ActiveMember, MX.MemTypeDesc, MX.CanSki, MX.CanSkiGR, MX.SptsDiv, MembershipRate, CostToUpgrade"
@@ -291,7 +296,7 @@ Function buildQueryMemberRegEntries(curSanctionId, curTourDate, curStateSQL, cur
     ' Slalom ratings
     '	-----------------------------------------------------------------------
     curSqlStmt4 = curSqlStmt4 & "  LEFT JOIN ("
-    curSqlStmt4 = curSqlStmt4 & "      SELECT MemberID, Div, Reg_Ski, AWSA_Rat as SlmRat, Left(Cast(Cast(RankScore as Decimal(7,2)) as Varchar(8)),6) as SlmSco"
+    curSqlStmt4 = curSqlStmt4 & "      SELECT MemberID, Div, Reg_Ski, AWSA_Rat as SlalomRating, Left(Cast(Cast(RankScore as Decimal(7,2)) as Varchar(8)),6) as SlalomRank"
     curSqlStmt4 = curSqlStmt4 & "      FROM " & RankingsTableName
     curSqlStmt4 = curSqlStmt4 & "      WHERE SkiYearID = 1"
     curSqlStmt4 = curSqlStmt4 & "        AND Left(Div,1) in ('B','G','M','W','O')"
@@ -303,7 +308,7 @@ Function buildQueryMemberRegEntries(curSanctionId, curTourDate, curStateSQL, cur
     ' Trick ratings
     '	-----------------------------------------------------------------------
     curSqlStmt4 = curSqlStmt4 & "  LEFT JOIN ("
-    curSqlStmt4 = curSqlStmt4 & "      SELECT MemberID, Div, Reg_Ski, AWSA_Rat as TrkRat, Left(Cast(Cast(RankScore as Decimal(7,1)) as Varchar(8)),6) as TrkSco"
+    curSqlStmt4 = curSqlStmt4 & "      SELECT MemberID, Div, Reg_Ski, AWSA_Rat as TrickRating, Left(Cast(Cast(RankScore as Decimal(7,1)) as Varchar(8)),6) as TrickRank"
     curSqlStmt4 = curSqlStmt4 & "      FROM " & RankingsTableName
     curSqlStmt4 = curSqlStmt4 & "      WHERE SkiYearID = 1"
     curSqlStmt4 = curSqlStmt4 & "        AND Left(Div,1) in ('B','G','M','W','O')"
@@ -315,7 +320,7 @@ Function buildQueryMemberRegEntries(curSanctionId, curTourDate, curStateSQL, cur
     ' Jump ratings
     '	-----------------------------------------------------------------------
     curSqlStmt4 = curSqlStmt4 & "  LEFT JOIN ("
-    curSqlStmt4 = curSqlStmt4 & "      SELECT MemberID, Div, Reg_Ski, AWSA_Rat as JmpRat, Left(Cast(Cast(RankScore as Decimal(6,2)) as Varchar(8)),6) as JmpSco"
+    curSqlStmt4 = curSqlStmt4 & "      SELECT MemberID, Div, Reg_Ski, AWSA_Rat as JumpRating, Left(Cast(Cast(RankScore as Decimal(6,2)) as Varchar(8)),6) as JumpRank"
     curSqlStmt4 = curSqlStmt4 & "      FROM " & RankingsTableName
     curSqlStmt4 = curSqlStmt4 & "      WHERE SkiYearID = 1"
     curSqlStmt4 = curSqlStmt4 & "        AND Left(Div,1) in ('B','G','M','W','O')"
@@ -327,7 +332,7 @@ Function buildQueryMemberRegEntries(curSanctionId, curTourDate, curStateSQL, cur
     ' Overall ratings
     '	-----------------------------------------------------------------------
     curSqlStmt4 = curSqlStmt4 & "  LEFT JOIN ("
-    curSqlStmt4 = curSqlStmt4 & "      SELECT MemberID, Div,  AWSA_Rat as OvrRat, Left(Cast(Cast(RankScore as Decimal(7,1)) as Varchar(8)),6) as OvrSco"
+    curSqlStmt4 = curSqlStmt4 & "      SELECT MemberID, Div,  AWSA_Rat as OverallRating, Left(Cast(Cast(RankScore as Decimal(7,1)) as Varchar(8)),6) as OvrSco"
     curSqlStmt4 = curSqlStmt4 & "      FROM " & RankingsTableName
     curSqlStmt4 = curSqlStmt4 & "      WHERE SkiYearID = 1"
     curSqlStmt4 = curSqlStmt4 & "        AND Left(Div,1) in ('B','G','M','W','O')"
@@ -396,7 +401,7 @@ Function buildQueryMemberRegEntries(curSanctionId, curTourDate, curStateSQL, cur
     curSqlStmt6 = curSqlStmt6 & "      AS PR ON MX.MemberID = PR.MemberID"
 
     curSqlStmt6 = curSqlStmt6 & "  LEFT JOIN ("
-    curSqlStmt6 = curSqlStmt6 & "      SELECT MemberID, Div as SDiv"
+    curSqlStmt6 = curSqlStmt6 & "      SELECT MemberID, Div as EventSlalom"
     curSqlStmt6 = curSqlStmt6 & "             , CASE when FeeClass='G' Then 'F' When FeeClass='S' Then 'C' Else FeeClass END as SFeeCls"
     curSqlStmt6 = curSqlStmt6 & "             , right(Cast(FeeRounds as Varchar(3)),1) as SFeeRds"
     curSqlStmt6 = curSqlStmt6 & "             , QfyOverride as SQfyOvr"
@@ -405,17 +410,17 @@ Function buildQueryMemberRegEntries(curSanctionId, curTourDate, curStateSQL, cur
     curSqlStmt6 = curSqlStmt6 & "      AS PS ON MX.MemberID = PS.MemberID"
 
     curSqlStmt6 = curSqlStmt6 & "  LEFT JOIN ("
-    curSqlStmt6 = curSqlStmt6 & "      SELECT MemberID, Div as TDiv"
+    curSqlStmt6 = curSqlStmt6 & "      SELECT MemberID, Div as EventTrick"
     curSqlStmt6 = curSqlStmt6 & "             , CASE when FeeClass='G' Then 'F' When FeeClass='S' Then 'C' Else FeeClass END as TFeeCls"
     curSqlStmt6 = curSqlStmt6 & "             , right(Cast(FeeRounds as Varchar(3)),1) as TFeeRds"
-    curSqlStmt6 = curSqlStmt6 & "             , QfyOverride as TQfyOvr, Boat as TBoat"
+    curSqlStmt6 = curSqlStmt6 & "             , QfyOverride as TQfyOvr, Boat as TrickBoat"
     curSqlStmt6 = curSqlStmt6 & "      FROM " & RegEventsTableName
     curSqlStmt6 = curSqlStmt6 & "      WHERE Left(Event,1) = 'T'"
     curSqlStmt6 = curSqlStmt6 & "        AND left(TourID,6) = '" & curSanctionId & "')"
     curSqlStmt6 = curSqlStmt6 & "      AS PT ON MX.MemberID = PT.MemberID"
 
     curSqlStmt6 = curSqlStmt6 & "  LEFT JOIN ("
-    curSqlStmt6 = curSqlStmt6 & "      SELECT MemberID, Div as JDiv"
+    curSqlStmt6 = curSqlStmt6 & "      SELECT MemberID, Div as EventJump"
     curSqlStmt6 = curSqlStmt6 & "             , CASE when FeeClass='G' Then 'F' When FeeClass='S' Then 'C' Else FeeClass END as JFeeCls"
     curSqlStmt6 = curSqlStmt6 & "             , right(Cast(FeeRounds as Varchar(3)),1) as JFeeRds"
     curSqlStmt6 = curSqlStmt6 & "             , QfyOverride as JQfyOvr"
@@ -429,28 +434,28 @@ Function buildQueryMemberRegEntries(curSanctionId, curTourDate, curStateSQL, cur
     '	-----------------------------------------------------------------------
     curSqlStmt7 = ""
     curSqlStmt7 = curSqlStmt7 & "  LEFT JOIN ("
-    curSqlStmt7 = curSqlStmt7 & "      SELECT MemberID, Div as SDiv"
+    curSqlStmt7 = curSqlStmt7 & "      SELECT MemberID, Div as EventSlalom"
     curSqlStmt7 = curSqlStmt7 & "             , CASE When QfyStatus = 'Qualified' Then 'Y' Else ' ' END as SQfy"
     curSqlStmt7 = curSqlStmt7 & "      FROM " & RegQualifyTableName
     curSqlStmt7 = curSqlStmt7 & "      WHERE Left(Event,1) = 'S'"
     curSqlStmt7 = curSqlStmt7 & "        AND left(TourID,6) = '" & curSanctionId & "')"
-    curSqlStmt7 = curSqlStmt7 & "      AS QS ON PS.MemberID = QS.MemberID AND PS.SDiv = QS.SDiv"
+    curSqlStmt7 = curSqlStmt7 & "      AS QS ON PS.MemberID = QS.MemberID AND PS.EventSlalom = QS.EventSlalom"
 
     curSqlStmt7 = curSqlStmt7 & "  LEFT JOIN ("
-    curSqlStmt7 = curSqlStmt7 & "      SELECT MemberID, Div as TDiv"
+    curSqlStmt7 = curSqlStmt7 & "      SELECT MemberID, Div as EventTrick"
     curSqlStmt7 = curSqlStmt7 & "             , CASE When QfyStatus = 'Qualified' Then 'Y' Else ' ' END as TQfy"
     curSqlStmt7 = curSqlStmt7 & "      FROM " & RegQualifyTableName
     curSqlStmt7 = curSqlStmt7 & "      WHERE Left(Event,1) = 'T'"
     curSqlStmt7 = curSqlStmt7 & "        AND left(TourID,6) = '" & curSanctionId & "')"
-    curSqlStmt7 = curSqlStmt7 & "      AS QT ON PT.MemberID = QT.MemberID AND PT.TDiv = QT.TDiv"
+    curSqlStmt7 = curSqlStmt7 & "      AS QT ON PT.MemberID = QT.MemberID AND PT.EventTrick = QT.EventTrick"
 
     curSqlStmt7 = curSqlStmt7 & "  LEFT JOIN ("
-    curSqlStmt7 = curSqlStmt7 & "      SELECT MemberID, Div as JDiv"
+    curSqlStmt7 = curSqlStmt7 & "      SELECT MemberID, Div as EventJump"
     curSqlStmt7 = curSqlStmt7 & "             , CASE When QfyStatus = 'Qualified' Then 'Y' Else ' ' END as JQfy"
     curSqlStmt7 = curSqlStmt7 & "      FROM " & RegQualifyTableName
     curSqlStmt7 = curSqlStmt7 & "      WHERE Left(Event,1) = 'J'"
     curSqlStmt7 = curSqlStmt7 & "        AND left(TourID,6) = '" & curSanctionId & "')"
-    curSqlStmt7 = curSqlStmt7 & "      AS QJ ON PJ.MemberID = QJ.MemberID AND PJ.JDiv = QJ.JDiv "
+    curSqlStmt7 = curSqlStmt7 & "      AS QJ ON PJ.MemberID = QJ.MemberID AND PJ.EventJump = QJ.EventJump "
 
     '	-----------------------------------------------------------------------
     ' Retrieve officials ratings
@@ -538,9 +543,11 @@ Function buildQueryMemberRegEntries(curSanctionId, curTourDate, curStateSQL, cur
 
     IF len(curMemberId) = 0 AND len(curMemberFirstName) = 0  AND len(curMemberLastName) = 0 THEN
         curSqlStmt8 = curSqlStmt8 & "  AND ("
-        curSqlStmt8 = curSqlStmt8 & curStateSQL
-	    curSqlStmt8 = curSqlStmt8 & "   OR MX.PersonID in (Select PersonID from " & ApptOfficialsTableName & " WHERE TournAppID = '" & curSanctionId & "' ) "
+	    curSqlStmt8 = curSqlStmt8 & "   MX.PersonID in (Select PersonID from " & ApptOfficialsTableName & " WHERE TournAppID = '" & curSanctionId & "' ) "
 	    curSqlStmt8 = curSqlStmt8 & "   OR MX.MemberID in (Select MemberID from " & RegEventsTableName & " WHERE left(TourID,6) = '" & curSanctionId & "') "
+        IF len(curStateSQL) > 0 THEN
+            curSqlStmt8 = curSqlStmt8 & "  OR " & curStateSQL
+        END IF
         curSqlStmt8 = curSqlStmt8 & " ) "
     ELSE
         IF len(curMemberId) > 0 THEN
@@ -565,10 +572,239 @@ Function buildQueryMemberRegEntries(curSanctionId, curTourDate, curStateSQL, cur
     '	-----------------------------------------------------------------------
     curSqlStmt8 = curSqlStmt8 & " Order By MX.LastName, MX.FirstName, RD.MemberID, RD.Div"
 
+	''''response.write curSqlStmt1 & curSqlStmt2 & curSqlStmt3 & curSqlStmt4 & curSqlStmt5 & curSqlStmt6 & curSqlStmt7 & curSqlStmt8
+    ''''response.End
+
     '	-----------------------------------------------------------------------
     ' Execute SQL statement to retrieve skier information and load to registration template
     '	-----------------------------------------------------------------------
     buildQueryMemberRegEntries = curSqlStmt1 & curSqlStmt2 & curSqlStmt3 & curSqlStmt4 & curSqlStmt5 & curSqlStmt6 & curSqlStmt7 & curSqlStmt8
+
+End Function
+
+''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''
+''' Now build a Query to Extract the Desired Members, joining in data 
+''' pulled from the Rankings and Officials and Membership Type tables.
+''' Note that we prefix each team ID with "E" if the team has entries,
+''' or "Z" if no entries, so that all the entered teams list at the top,
+''' then finally all those without any team affiliation last with Zzzz.
+''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''
+Function buildQueryMemberRegNcwsaEntries(curSanctionId, curTourDate)
+    Dim curTourYear, curSqlStmt
+    curTourYear = 2000 + left(curSanctionId, 2)
+
+    'Member Number and name
+    curSqlStmt = ""
+    curSqlStmt = curSqlStmt & "Select Substring(MX.MemberID,1,3) + '-' + Substring(MX.MemberID,4,2) + '-' + Substring(MX.MemberID,6,4) as MemberID"
+    curSqlStmt = curSqlStmt & ", MX.LastName, MX.FirstName"
+
+    'Skier division
+    curSqlStmt = curSqlStmt & ", Case when MX.Sex = 'F' Then 'CW' else 'CM' END as Div"
+    
+    curSqlStmt = curSqlStmt & ", Case when MX.Age <= 17 and MX.Sex = 'F' Then 'G'"
+    curSqlStmt = curSqlStmt & "       when MX.Age <= 17 then 'B'"
+    curSqlStmt = curSqlStmt & "       when MX.Sex = 'F' then 'W'"
+    curSqlStmt = curSqlStmt & "       ELSE 'M' END"
+    curSqlStmt = curSqlStmt & "   + Case"
+    curSqlStmt = curSqlStmt & "          when MX.Age <= 9 then '1'"
+    curSqlStmt = curSqlStmt & "          when MX.Age <= 13 then '2'"
+    curSqlStmt = curSqlStmt & "          when MX.Age <= 17 then '3'"
+    curSqlStmt = curSqlStmt & "          when MX.Age <= 24 then '1'"
+    curSqlStmt = curSqlStmt & "          when MX.Age <= 34 then '2'"
+    curSqlStmt = curSqlStmt & "          when MX.Age <= 44 then '3'"
+    curSqlStmt = curSqlStmt & "          when MX.Age <= 52 then '4'"
+    curSqlStmt = curSqlStmt & "          when MX.Age <= 59 then '5'"
+    curSqlStmt = curSqlStmt & "          when MX.Age <= 64 then '6'"
+    curSqlStmt = curSqlStmt & "          when MX.Age <= 69 then '7'"
+    curSqlStmt = curSqlStmt & "          when MX.Age <= 74 then '8'"
+    curSqlStmt = curSqlStmt & "          when MX.Age <= 79 then '9'"
+    curSqlStmt = curSqlStmt & "          when MX.Age <= 84 then 'A'"
+    curSqlStmt = curSqlStmt & "          ELSE 'B' END as AgeDiv"
+
+    'Skier information
+    curSqlStmt = curSqlStmt & ", MX.Team, MX.TeamName, MX.TeamStat, MX.TeamTournAppID, MX.Age, MX.Sex as Gender, MX.City, MX.State, Coalesce(MX.Federation, '') as Federation, MX.Waiver"
+
+    'Skier official ratings
+    curSqlStmt = curSqlStmt & ", Coalesce(SO.OffCode,'') as ApptdOfficial"
+
+    'Sort attribute
+    curSqlStmt = curSqlStmt & ", Case when SO.OffCode is not Null AND MX.EventSlalom + MX.EventTrick + MX.EventJump = '      ' then 'E0FF' else MX.Sorter end as Sorter"
+
+    'Skier event attributes and payments
+    curSqlStmt = curSqlStmt & ", MX.EventWaiver, MX.EventSlalom, MX.EventTrick, MX.EventJump, MX.TrickBoat, MX.JumpHeight"
+
+    'Other member stuff
+    curSqlStmt = curSqlStmt & ", MX.EffTo, MX.Memtype, MX.MemCode, MX.ActiveMember, MX.MemTypeDesc, MX.CanSki, MX.CanSkiGR, MX.SptsDiv, MembershipRate, CostToUpgrade"
+
+    curSqlStmt = curSqlStmt & ", Case WHEN OPS.Rating = 'INT' THEN 'PanAm' ELSE Coalesce(OJS.Rating, '') END as JudgeSlalom"
+    curSqlStmt = curSqlStmt & ", Case WHEN OPT.Rating = 'INT' THEN 'PanAm' ELSE Coalesce(OJT.Rating, '') END as JudgeTrick"
+    curSqlStmt = curSqlStmt & ", Case WHEN OPJ.Rating = 'INT' THEN 'PanAm' ELSE Coalesce(OJJ.Rating, '') END as JudgeJump"
+    curSqlStmt = curSqlStmt & ", Coalesce(ODS.Rating, '') as DriverSlalom, Coalesce(ODT.Rating, '') as DriverTrick, Coalesce(ODJ.Rating, '') as DriverJump"
+    curSqlStmt = curSqlStmt & ", Coalesce(OCS.Rating, '') as ScorerSlalom, Coalesce(OCT.Rating, '') as ScorerTrick, Coalesce(OCJ.Rating, '') as ScorerJump"
+    curSqlStmt = curSqlStmt & ", Coalesce(OS.Rating, '') as Safety, Coalesce(OTC.Rating, '') as TechController "
+
+    '	-----------------------------------------------------------------------
+    'FROM Statement
+    '	-----------------------------------------------------------------------
+    curSqlStmt = curSqlStmt & " FROM ("
+
+    '	-----------------------------------------------------------------------
+    'Use select as a data source for member data
+    '	-----------------------------------------------------------------------
+    curSqlStmt = curSqlStmt & "    SELECT MT.PersonIDWithCheckDigit as MemberID, MT.PersonID, MT.LastName, FirstName, MT.FederationCode as Federation"
+    curSqlStmt = curSqlStmt & "        , (" & curTourYear & " - Year(MT.BirthDate) - 1) as Age, Upper(Left(MT.Sex,1)) as Sex, MT.WaiverStatusID as Waiver"
+    curSqlStmt = curSqlStmt & "        , MT.City, Left(MT.State,2) as State"
+    curSqlStmt = curSqlStmt & "        , MT.EffectiveTo as EffTo, MT.MembershipTypeCode as MemType"
+    curSqlStmt = curSqlStmt & "        , MT.Deceased, MT.DivisionCode1 + '/' + MT.DivisionCode2 as SptsDiv"
+    curSqlStmt = curSqlStmt & "        , Typ.ExporttoTouramentRegistrationTemplate as ExportToTemplate"
+    curSqlStmt = curSqlStmt & "        , Typ.TypeCode as MemCode, Typ.ActiveMember, Typ.Description as MemTypeDesc, Typ.CanSkiInTournaments as CanSki, Typ.CanSkiInGRTournaments as CanSkiGR"
+    curSqlStmt = curSqlStmt & "        , Coalesce(MR.MembershipTypeRates, 0) as MembershipRate, Coalesce(MR.CosttoUpgrade, 0) as CostToUpgrade"
+
+    curSqlStmt = curSqlStmt & "        , CASE WHEN TE.Team is not null THEN 'E' ELSE 'Z' END + CASE WHEN Coalesce(RP.Team, TR.Team) is not null THEN Coalesce(RP.Team, TR.Team) ELSE 'zzz' END as Sorter"
+    curSqlStmt = curSqlStmt & "        , CASE WHEN RP.MemberID is not null THEN 'A' WHEN TR.DateInactive is not null THEN 'I' ELSE 'A' END as TeamStat"
+    curSqlStmt = curSqlStmt & "        , Coalesce(RP.Team,TR.Team,'   ') as Team, Coalesce(TR.TeamName, '') as TeamName, Coalesce(RP.TournAppID, '') as TeamTournAppID"
+
+    curSqlStmt = curSqlStmt & "        , Coalesce(CASE WHEN right(RP.SlalomEnt,1) <= '9' THEN RP.SlalomEnt ELSE left(RP.SlalomEnt,1) + cast(ascii(right(RP.SlalomEnt,1)) - 55 as varchar(2)) END, '  ') as EventSlalom" 
+    curSqlStmt = curSqlStmt & "        , Coalesce(CASE WHEN right(RP.TrickEnt,1) <= '9' THEN RP.TRickEnt ELSE left(RP.TrickEnt,1) + cast(ascii(right(RP.TrickEnt,1)) - 55 as varchar(2)) END, '  ') as EventTrick" 
+    curSqlStmt = curSqlStmt & "        , Coalesce(CASE WHEN right(RP.JumpEnt,1) <= '9' THEN RP.JumpEnt ELSE left(RP.JumpEnt,1) + cast(ascii(right(RP.JumpEnt,1)) - 55 as varchar(2)) END, '  ') as EventJump" 
+
+    curSqlStmt = curSqlStmt & "        , Coalesce(RP.WaiverStat,' ') as EventWaiver" 
+    curSqlStmt = curSqlStmt & "        , Coalesce(RP.TrickBoat,'  ') as TrickBoat" 
+    curSqlStmt = curSqlStmt & "        , Coalesce(RP.RampHgt,'  ') as JumpHeight" 
+
+    curSqlStmt = curSqlStmt & "    FROM " & MemberTableName & " as MT "
+    curSqlStmt = curSqlStmt & "      INNER JOIN " & MembershipTypesTableName & " as Typ ON MT.MembershipTypeCode = Typ.MemberShipTypeID "
+    curSqlStmt = curSqlStmt & "      LEFT JOIN " & MembershipRatesTableName & " as MR ON MR.[Membership Type Code] = MT.MembershipTypeCode "
+    curSqlStmt = curSqlStmt & "           AND MR.EffectiveFrom <= CONVERT(DATETIME, '" & curTourDate & " 00:00:00', 102)"
+    curSqlStmt = curSqlStmt & "           AND MR.EffectiveTo >= CONVERT(DATETIME, '" & curTourDate & " 00:00:00', 102)"
+
+                            '	Subquery to retrieve Team ID's from the Team Roster Extract and identify Latest Team affiliation for Member
+    curSqlStmt = curSqlStmt & "      LEFT JOIN ("
+    curSqlStmt = curSqlStmt & "           SELECT RX.MemberID, RX.Team, TL.TeamName, RX.DateInactive "
+    curSqlStmt = curSqlStmt & "           FROM " & TeamRosterTableName & " as RX"
+    curSqlStmt = curSqlStmt & "             INNER JOIN " & TeamTableName & " as TL ON TL.TeamId = RX.Team AND SptsGrpId = 'NCW'"
+    curSqlStmt = curSqlStmt & "             INNER JOIN (SELECT MemberID, Max(LastEvent) as MaxEvt FROM " & TeamRosterTableName & " Group By MemberID" 
+    curSqlStmt = curSqlStmt & "                   ) as ME ON ME.MemberID = RX.MemberID and ME.MaxEvt = RX.LastEvent"
+    curSqlStmt = curSqlStmt & "                ) as TR ON TR.MemberID = MT.PersonIDWithCheckDigit"
+
+                            '	This subquery pulls Rotation Plan information for this Person/TourID -- LEAVE TEAM OUT !! (All Stars)
+    curSqlStmt = curSqlStmt & "      LEFT JOIN "
+    curSqlStmt = curSqlStmt & "          " & TeamRotationsTableName & " as RP ON RP.TournAppID = '" & curSanctionId & "' AND RP.MemberID = MT.PersonIDWithCheckDigit"
+
+                            '	This subquery identifies Teams that are Entered, used to preface Sorter extract column
+    curSqlStmt = curSqlStmt & "      LEFT JOIN ("
+    curSqlStmt = curSqlStmt & "           Select distinct team FROM " & TeamRotationsTableName & " WHERE WaiverStat >= 'C' and TournAppID = '" & curSanctionId & "') as TE"
+    curSqlStmt = curSqlStmt & "           ON TE.Team = Coalesce(RP.Team,TR.Team )"
+
+    ' -----------------------------------------------
+    '	End of MX Primary "MX" Select Subquery.  Appended Info Subqueries follow.
+    ' -----------------------------------------------
+    curSqlStmt = curSqlStmt & "    ) as MX"
+
+    '	-----------------------------------------------------------------------
+    ' Use select as a data source for chief officials
+    '	-----------------------------------------------------------------------
+    curSqlStmt = curSqlStmt & "     LEFT JOIN " & ApptOfficialsTableName & " AS SO ON SO.PersonID = MX.PersonID AND TournAppID = '" & curSanctionId & "' "
+
+    '	-----------------------------------------------------------------------
+    ' Retrieve officials ratings
+    '	-----------------------------------------------------------------------
+    curSqlStmt = curSqlStmt & " LEFT OUTER JOIN (Select OT.PersonID, LV.Level as Rating"
+    curSqlStmt = curSqlStmt & "     	FROM " & OfficialsTableName & " as OT"
+    curSqlStmt = curSqlStmt & "     		    INNER JOIN " & RatingLevelTableName & " as LV ON OT.Level_ID = LV.Level_ID"
+    curSqlStmt = curSqlStmt & "    		WHERE OT.RatingType_ID = 1 AND OT.EventsConsolidated like '%s%' AND OT.DivisionCode in ('AWS','USA') AND LV.LevelOrderforTemplate IS NOT NULL AND LV.LevelOrderforTemplate < 5"
+    curSqlStmt = curSqlStmt & "         ) as OJS ON OJS.PersonID = MX.PersonID"
+    curSqlStmt = curSqlStmt & "	LEFT OUTER JOIN (Select OT.PersonID, LV.Level as Rating"
+    curSqlStmt = curSqlStmt & "			FROM " & OfficialsTableName & " as OT"
+    curSqlStmt = curSqlStmt & "				INNER JOIN " & RatingLevelTableName & " as LV ON OT.Level_ID = LV.Level_ID"
+    curSqlStmt = curSqlStmt & "			WHERE OT.RatingType_ID = 1 AND OT.EventsConsolidated like '%t%' AND OT.DivisionCode in ('AWS','USA') AND LV.LevelOrderforTemplate IS NOT NULL AND LV.LevelOrderforTemplate < 5"
+    curSqlStmt = curSqlStmt & "			) as OJT ON OJT.PersonID = MX.PersonID"
+    curSqlStmt = curSqlStmt & "	LEFT OUTER JOIN (Select OT.PersonID, LV.Level as Rating"
+    curSqlStmt = curSqlStmt & "			FROM " & OfficialsTableName & " as OT"
+    curSqlStmt = curSqlStmt & "				INNER JOIN " & RatingLevelTableName & " as LV ON OT.Level_ID = LV.Level_ID"
+    curSqlStmt = curSqlStmt & "			WHERE OT.RatingType_ID = 1 AND OT.EventsConsolidated like '%j%' AND OT.DivisionCode in ('AWS','USA') AND LV.LevelOrderforTemplate IS NOT NULL AND LV.LevelOrderforTemplate < 5"
+    curSqlStmt = curSqlStmt & "			) as OJJ ON OJJ.PersonID = MX.PersonID"
+
+    curSqlStmt = curSqlStmt & "	LEFT OUTER JOIN (Select OT.PersonID, LV.Abbreviation as Rating"
+    curSqlStmt = curSqlStmt & "			FROM " & OfficialsTableName & " as OT"
+    curSqlStmt = curSqlStmt & "				INNER JOIN " & RatingLevelTableName & " as LV ON OT.Level_ID = LV.Level_ID"
+    curSqlStmt = curSqlStmt & "			WHERE OT.RatingType_ID = 1 AND OT.EventsConsolidated like '%s%' AND OT.DivisionCode in ('AWS','USA') AND LV.LevelOrderforTemplate = 5"
+    curSqlStmt = curSqlStmt & "			) as OPS ON OPS.PersonID = MX.PersonID"
+    curSqlStmt = curSqlStmt & "	LEFT OUTER JOIN (Select OT.PersonID, LV.Abbreviation as Rating"
+    curSqlStmt = curSqlStmt & "			FROM " & OfficialsTableName & " as OT"
+    curSqlStmt = curSqlStmt & "				INNER JOIN " & RatingLevelTableName & " as LV ON OT.Level_ID = LV.Level_ID"
+    curSqlStmt = curSqlStmt & "			WHERE OT.RatingType_ID = 1 AND OT.EventsConsolidated like '%t%' AND OT.DivisionCode in ('AWS','USA') AND LV.LevelOrderforTemplate = 5"
+    curSqlStmt = curSqlStmt & "			) as OPT ON OPT.PersonID = MX.PersonID"
+    curSqlStmt = curSqlStmt & "	LEFT OUTER JOIN (Select OT.PersonID, LV.Abbreviation as Rating"
+    curSqlStmt = curSqlStmt & "			FROM " & OfficialsTableName & " as OT"
+    curSqlStmt = curSqlStmt & "				INNER JOIN " & RatingLevelTableName & " as LV ON OT.Level_ID = LV.Level_ID"
+    curSqlStmt = curSqlStmt & "			WHERE OT.RatingType_ID = 1 AND OT.EventsConsolidated like '%j%' AND OT.DivisionCode in ('AWS','USA') AND LV.LevelOrderforTemplate = 5"
+    curSqlStmt = curSqlStmt & "			) as OPJ ON OPJ.PersonID = MX.PersonID"
+
+    curSqlStmt = curSqlStmt & "	LEFT OUTER JOIN (Select OT.PersonID, LV.Level as Rating"
+    curSqlStmt = curSqlStmt & "			FROM " & OfficialsTableName & " as OT"
+    curSqlStmt = curSqlStmt & "				INNER JOIN " & RatingLevelTableName & " as LV ON OT.Level_ID = LV.Level_ID"
+    curSqlStmt = curSqlStmt & "			WHERE OT.RatingType_ID = 3 AND OT.EventsConsolidated like '%s%' AND OT.DivisionCode in ('AWS','USA') AND LV.LevelOrderforTemplate IS NOT NULL"
+    curSqlStmt = curSqlStmt & "			) as ODS ON ODS.PersonID = MX.PersonID"
+    curSqlStmt = curSqlStmt & "	LEFT OUTER JOIN (Select OT.PersonID, LV.Level as Rating"
+    curSqlStmt = curSqlStmt & "			FROM " & OfficialsTableName & " as OT"
+    curSqlStmt = curSqlStmt & "				INNER JOIN " & RatingLevelTableName & " as LV ON OT.Level_ID = LV.Level_ID"
+    curSqlStmt = curSqlStmt & "			WHERE OT.RatingType_ID = 3 AND OT.EventsConsolidated like '%t%' AND OT.DivisionCode in ('AWS','USA') AND LV.LevelOrderforTemplate IS NOT NULL"
+    curSqlStmt = curSqlStmt & "			) as ODT ON ODT.PersonID = MX.PersonID"
+    curSqlStmt = curSqlStmt & "	LEFT OUTER JOIN (Select OT.PersonID, LV.Level as Rating"
+    curSqlStmt = curSqlStmt & "			FROM " & OfficialsTableName & " as OT"
+    curSqlStmt = curSqlStmt & "				INNER JOIN " & RatingLevelTableName & " as LV ON OT.Level_ID = LV.Level_ID"
+    curSqlStmt = curSqlStmt & "			WHERE OT.RatingType_ID = 3 AND OT.EventsConsolidated like '%j%' AND OT.DivisionCode in ('AWS','USA') AND LV.LevelOrderforTemplate IS NOT NULL"
+    curSqlStmt = curSqlStmt & "			) as ODJ ON ODJ.PersonID = MX.PersonID"
+
+    curSqlStmt = curSqlStmt & "	LEFT OUTER JOIN (Select OT.PersonID, LV.Level as Rating"
+    curSqlStmt = curSqlStmt & "			FROM " & OfficialsTableName & " as OT"
+    curSqlStmt = curSqlStmt & "				INNER JOIN " & RatingLevelTableName & " as LV ON OT.Level_ID = LV.Level_ID"
+    curSqlStmt = curSqlStmt & "			WHERE OT.RatingType_ID = 2 AND OT.EventsConsolidated like '%s%' AND OT.DivisionCode in ('AWS','USA') AND LV.LevelOrderforTemplate IS NOT NULL"
+    curSqlStmt = curSqlStmt & "			) as OCS ON OCS.PersonID = MX.PersonID"
+    curSqlStmt = curSqlStmt & "	LEFT OUTER JOIN (Select OT.PersonID, LV.Level as Rating"
+    curSqlStmt = curSqlStmt & "			FROM " & OfficialsTableName & " as OT"
+    curSqlStmt = curSqlStmt & "				INNER JOIN " & RatingLevelTableName & " as LV ON OT.Level_ID = LV.Level_ID"
+    curSqlStmt = curSqlStmt & "			WHERE OT.RatingType_ID = 2 AND OT.EventsConsolidated like '%t%' AND OT.DivisionCode in ('AWS','USA') AND LV.LevelOrderforTemplate IS NOT NULL"
+    curSqlStmt = curSqlStmt & "			) as OCT ON OCT.PersonID = MX.PersonID"
+    curSqlStmt = curSqlStmt & "	LEFT OUTER JOIN (Select OT.PersonID, LV.Level as Rating"
+    curSqlStmt = curSqlStmt & "			FROM " & OfficialsTableName & " as OT"
+    curSqlStmt = curSqlStmt & "				INNER JOIN " & RatingLevelTableName & " as LV ON OT.Level_ID = LV.Level_ID"
+    curSqlStmt = curSqlStmt & "			WHERE OT.RatingType_ID = 2 AND OT.EventsConsolidated like '%j%' AND OT.DivisionCode in ('AWS','USA') AND LV.LevelOrderforTemplate IS NOT NULL"
+    curSqlStmt = curSqlStmt & "			) as OCJ ON OCJ.PersonID = MX.PersonID"
+
+    curSqlStmt = curSqlStmt & "	LEFT OUTER JOIN (Select OT.PersonID, LV.Level as Rating"
+    curSqlStmt = curSqlStmt & "			FROM " & OfficialsTableName & " as OT"
+    curSqlStmt = curSqlStmt & "				INNER JOIN " & RatingLevelTableName & " as LV ON OT.Level_ID = LV.Level_ID"
+    curSqlStmt = curSqlStmt & "			WHERE OT.RatingType_ID = 9 AND OT.DivisionCode in ('AWS','USA') AND LV.LevelOrderforTemplate IS NOT NULL"
+    curSqlStmt = curSqlStmt & "			) as OS ON OS.PersonID = MX.PersonID"
+
+    curSqlStmt = curSqlStmt & "	LEFT OUTER JOIN (Select OT.PersonID, LV.Level as Rating"
+    curSqlStmt = curSqlStmt & "			FROM " & OfficialsTableName & " as OT"
+    curSqlStmt = curSqlStmt & "				INNER JOIN " & RatingLevelTableName & " as LV ON OT.Level_ID = LV.Level_ID"
+    curSqlStmt = curSqlStmt & "			WHERE OT.RatingType_ID = 4 AND OT.DivisionCode in ('AWS','USA') AND LV.LevelOrderforTemplate IS NOT NULL"
+    curSqlStmt = curSqlStmt & "			) as OTC ON OTC.PersonID = MX.PersonID"
+
+    ' -----------------------------------------------
+    ' Where clause
+    ' -----------------------------------------------
+    curSqlStmt = curSqlStmt & " WHERE MX.ExportToTemplate = 1"
+    curSqlStmt = curSqlStmt & "  AND DateAdd(mm,18,MX.EffTo) > GetDate()"
+    curSqlStmt = curSqlStmt & "  AND MX.Deceased = 0 "
+    curSqlStmt = curSqlStmt & "  AND ( MX.TeamTournAppID = '" & curSanctionId & "'"
+    curSqlStmt = curSqlStmt & "        OR MX.PersonID in (SELECT PersonID FROM " & ApptOfficialsTableName & " Where TournAppID = '" & curSanctionId & "')"
+    curSqlStmt = curSqlStmt & "      )"
+
+    ' -----------------------------------------------
+    ' Order by clause
+    ' -----------------------------------------------
+    curSqlStmt = curSqlStmt & " ORDER BY CASE WHEN SO.OffCode is not Null and MX.EventSlalom + MX.EventTrick + MX.EventJump = '      ' THEN 'E0FF' ELSE MX.Sorter END"
+    curSqlStmt = curSqlStmt & "         , MX.LastName, MX.FirstName, MX.MemberID"
+
+    '	-----------------------------------------------------------------------
+    ' Execute SQL statement to retrieve skier information and load to registration template
+    '	-----------------------------------------------------------------------
+    buildQueryMemberRegNcwsaEntries = curSqlStmt
 
 End Function
 
