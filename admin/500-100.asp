@@ -1,9 +1,9 @@
 <%
-  
+
   'Version 1.02
   'Added On Resume Next around the part that display form data so this page
   'wint puke if the form data is binary (on upload pages)
-  
+
   'Version 1.03
   'Added Session.Contents to error email.
 
@@ -20,12 +20,12 @@
   End If
 
   Set objASPError = Server.GetLastError
-	
+
 	noImages = 9
 	Randomize
 	randomNumber = Int(Rnd * noImages) + 1
 	'randomNumber = 1
-	
+
 	Select Case randomNumber
 		Case 1, 5
 			fontColor = "#fff"
@@ -59,10 +59,6 @@
     <p>All fun aside, we apologize for the inconvenience.</p>
   </div>
   </div>
-</body>
-</html>
-
-
 
 <%
   Dim bakCodepage
@@ -88,88 +84,94 @@
 	  bakCodepage = Session.Codepage
 	  Session.Codepage = 1252
 
+If ErrNumber <> 0 then
+    Dim strBody
+    strBody = "An error was raised on " & Request.ServerVariables("SERVER_NAME") & " while doing a " & Request.ServerVariables("REQUEST_METHOD")
+    strBody = strBody & " to " & Request.ServerVariables("SCRIPT_NAME") & " at " & Now() & "." & VbCrLf
+    strBody = strBody & "Here is some information about the error:" & VbCrLf & VbCrLf
+    strBody = strBody & "Error Category        - " & ErrCategory & VbCrLf
+    strBody = strBody & "Error ASP Code        - " & ErrASPCode & VbCrLf
+    strBody = strBody & "Error Number          - " & ErrNumber & VbCrLf
+    strBody = strBody & "Error ASP Description - " & ErrASPDescription & VbCrLf
+    strBody = strBody & "Error Description     - " & ErrDescription & VbCrLf
+    strBody = strBody & "Error File            - " & ErrFile & VbCrLf
+    strBody = strBody & "Error Source          - " & ErrSource & VbCrLf
+    strBody = strBody & "Error Line            - " & ErrLine & VbCrLf
+    strBody = strBody & "Error Column          - " & ErrColumn & VbCrLf & VbCrLf
+    strBody = strBody & "----------------------------------------------------------" & VbCrLf & VbCrLf
+    strBody = strBody & "Here is the Form/Querystring/Session data:" & VbCrLf
+    strBody = strBody & "REQUEST.QUERYSTRING   -" & VbCrLf
+    Dim QS
+    For each QS in Request.QueryString
+	    strBody = strBody & "  " & Request.QueryString.Key(QS) & "=" & Request.QueryString.Item(Request.QueryString.Key(QS)) & VbCrLf
+    Next
+    strBody = strBody & "REQUEST.FORM          -" & VbCrLf
+    Dim Frm
 
- 
-'If ErrNumber <> 0 then  
-Dim strBody
-strBody = "An error was raised on " & Request.ServerVariables("SERVER_NAME") & " while doing a " & Request.ServerVariables("REQUEST_METHOD")
-strBody = strBody & " to " & Request.ServerVariables("SCRIPT_NAME") & " at " & Now() & "." & VbCrLf
-strBody = strBody & "Here is some information about the error:" & VbCrLf & VbCrLf
-strBody = strBody & "Error Category        - " & ErrCategory & VbCrLf
-strBody = strBody & "Error ASP Code        - " & ErrASPCode & VbCrLf
-strBody = strBody & "Error Number          - " & ErrNumber & VbCrLf
-strBody = strBody & "Error ASP Description - " & ErrASPDescription & VbCrLf
-strBody = strBody & "Error Description     - " & ErrDescription & VbCrLf
-strBody = strBody & "Error File            - " & ErrFile & VbCrLf
-strBody = strBody & "Error Source          - " & ErrSource & VbCrLf
-strBody = strBody & "Error Line            - " & ErrLine & VbCrLf
-strBody = strBody & "Error Column          - " & ErrColumn & VbCrLf & VbCrLf
-strBody = strBody & "----------------------------------------------------------" & VbCrLf & VbCrLf
-strBody = strBody & "Here is the Form/Querystring/Session data:" & VbCrLf
-strBody = strBody & "REQUEST.QUERYSTRING   -" & VbCrLf
-Dim QS
-For each QS in Request.QueryString 
-	strBody = strBody & "  " & Request.QueryString.Key(QS) & "=" & Request.QueryString.Item(Request.QueryString.Key(QS)) & VbCrLf
-Next
-strBody = strBody & "REQUEST.FORM          -" & VbCrLf
-Dim Frm
+    'mok 2-8-2003
+    on error resume next
 
-'mok 2-8-2003
-on error resume next
+    For each Frm in Request.Form
+	    strBody = strBody & "  " & Request.Form.Key(Frm) & "=" & Request.Form.Item(Request.Form.Key(Frm)) & VbCrLf
+    Next
 
-For each Frm in Request.Form
-	strBody = strBody & "  " & Request.Form.Key(Frm) & "=" & Request.Form.Item(Request.Form.Key(Frm)) & VbCrLf
-Next
+    strBody = strBody & "SESSION.CONTENTS      -" & VbCrLf
 
-strBody = strBody & "SESSION.CONTENTS      -" & VbCrLf
+    Dim item
+    For each item in Session.Contents
+	    strBody = strBody & "  " & item & "=" & Session.Contents(item) & VbCrLf
+    Next
 
-Dim item
-For each item in Session.Contents
-	strBody = strBody & "  " & item & "=" & Session.Contents(item) & VbCrLf
-Next
+    'mok 2-8-2003
+    'on error goto 0
 
-'mok 2-8-2003
-'on error goto 0
+    strBody = strBody & "----------------------------------------------------------" & VbCrLf & VbCrLf
+    strBody = strBody & "Here are all the ServerVariables:" & VbCrLf
+    Dim SV
+    For each SV in Request.ServerVariables
+	    strBody = strBody & "  " & Request.ServerVariables.Key(SV) & "=" & Request.ServerVariables.Item(Request.ServerVariables.Key(SV)) & VbCrLf
+    Next
 
-strBody = strBody & "----------------------------------------------------------" & VbCrLf & VbCrLf
-strBody = strBody & "Here are all the ServerVariables:" & VbCrLf
-Dim SV
-For each SV in Request.ServerVariables
-	strBody = strBody & "  " & Request.ServerVariables.Key(SV) & "=" & Request.ServerVariables.Item(Request.ServerVariables.Key(SV)) & VbCrLf
-Next
+    Set objMessage = CreateObject("CDO.Message")
+    objMessage.Subject = "USA Waterski Admin Error Message"
+    objMessage.From = "viper@epolk.org"
+    objMessage.To = "<AWSATechDude@comcast.net>; <RankingsErrors@usawaterski.org>"
+    objMessage.TextBody = strBody
+    '==This section provides the configuration information for the remote SMTP server.
+    objMessage.Configuration.Fields.Item _
+    ("http://schemas.microsoft.com/cdo/configuration/sendusing") = 2
+    'Name or IP of Remote SMTP Server
+    objMessage.Configuration.Fields.Item _
+    ("http://schemas.microsoft.com/cdo/configuration/smtpserver") = "mail.epolk.net"
+    'Type of authentication, NONE, Basic (Base64 encoded), NTLM
+    objMessage.Configuration.Fields.Item _
+    ("http://schemas.microsoft.com/cdo/configuration/smtpauthenticate") = 0
+    'Your UserID on the SMTP server
+    objMessage.Configuration.Fields.Item _
+    ("http://schemas.microsoft.com/cdo/configuration/sendusername") = "viper@epolk.org"
+    'Your password on the SMTP server
+    objMessage.Configuration.Fields.Item _
+    ("http://schemas.microsoft.com/cdo/configuration/sendpassword") = "V1p3rMAIL0090"
+    'Server port (typically 25)
+    objMessage.Configuration.Fields.Item _
+    ("http://schemas.microsoft.com/cdo/configuration/smtpserverport") = 25
+    'Use SSL for the connection (False or True)
+    objMessage.Configuration.Fields.Item _
+    ("http://schemas.microsoft.com/cdo/configuration/smtpusessl") = False
+    'Connection Timeout in seconds (the maximum time CDO will try to establish a connection to the SMTP server)
+    objMessage.Configuration.Fields.Item _
+    ("http://schemas.microsoft.com/cdo/configuration/smtpconnectiontimeout") = 60
+    objMessage.Configuration.Fields.Update
+    '==End remote SMTP server configuration section==
 
-Set objMessage = CreateObject("CDO.Message")
-objMessage.Subject = "USA Waterski Admin Error Message"
-objMessage.From = "viper@epolk.org"
-objMessage.To = "<AWSATechDude@comcast.net>; <RankingsErrors@usawaterski.org>"
-objMessage.TextBody = strBody
-'==This section provides the configuration information for the remote SMTP server.
-objMessage.Configuration.Fields.Item _
-("http://schemas.microsoft.com/cdo/configuration/sendusing") = 2
-'Name or IP of Remote SMTP Server
-objMessage.Configuration.Fields.Item _
-("http://schemas.microsoft.com/cdo/configuration/smtpserver") = "mail.epolk.net"
-'Type of authentication, NONE, Basic (Base64 encoded), NTLM
-objMessage.Configuration.Fields.Item _
-("http://schemas.microsoft.com/cdo/configuration/smtpauthenticate") = 0
-'Your UserID on the SMTP server
-objMessage.Configuration.Fields.Item _
-("http://schemas.microsoft.com/cdo/configuration/sendusername") = "viper@epolk.org"
-'Your password on the SMTP server
-objMessage.Configuration.Fields.Item _
-("http://schemas.microsoft.com/cdo/configuration/sendpassword") = "V1p3rMAIL0090"
-'Server port (typically 25)
-objMessage.Configuration.Fields.Item _
-("http://schemas.microsoft.com/cdo/configuration/smtpserverport") = 25
-'Use SSL for the connection (False or True)
-objMessage.Configuration.Fields.Item _
-("http://schemas.microsoft.com/cdo/configuration/smtpusessl") = False
-'Connection Timeout in seconds (the maximum time CDO will try to establish a connection to the SMTP server)
-objMessage.Configuration.Fields.Item _
-("http://schemas.microsoft.com/cdo/configuration/smtpconnectiontimeout") = 60
-objMessage.Configuration.Fields.Update
-'==End remote SMTP server configuration section==
-'objMessage.Send
+    ''''objMessage.Send
 
-'end if
+end if
+
+'''' Use this to show the error information on the page
+''''<div><br /><br />Debug Info:<br /><%=strBody %></div>
 %>
+<div><br /><br />Debug Info:<br /><%=strBody %></div>
+
+</body>
+</html>
