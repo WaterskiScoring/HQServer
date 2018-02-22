@@ -1,29 +1,27 @@
 <!--#include virtual="/admin/includes/security.asp" -->
 <html>
-
 <head>
-<title>Admin Index</title>
-
-<meta http-equiv="Content-Type" content="text/html; charset=iso-8859-1">
+	<title>Admin Index</title>
+	<meta http-equiv="Content-Type" content="text/html; charset=iso-8859-1">
 </head>
 
 <body bgcolor="#FFFFFF" background = "/templates/images/TopBackground.jpg" leftMargin=0 topMargin=0 marginheight="0" marginwidth="0" >
 <table width="100%" border="0" cellspacing="0" cellpadding="0">
-  <tr> 
+  <tr>
     <td width="182" bgcolor="#42639F" valign="top"></td>
     <td bgcolor="#42639F">
       <p>&nbsp;</p>
-      <p align="center"><font face="Verdana" size="6" color="#FFFFFF">USA Water 
+      <p align="center"><font face="Verdana" size="6" color="#FFFFFF">USA Water
         Ski Admin</font></p>
       <p>&nbsp;</p>
     </td>
   </tr>
-  <tr> 
+  <tr>
    <td bgcolor="#42639F">
 <!--#include virtual="/admin/includes/menu.asp" -->
   </td>
     <td valign="top" >
-	
+
  <%
 
 
@@ -34,12 +32,12 @@ objConn1.Open Application("WaterSkiConn")
 Set objRS = Server.CreateObject("ADODB.RecordSet")
 objRS.ActiveConnection = objConn1
 
-'objRS.Open "SELECT * FROM Members ORDER BY PersonID" 
+'objRS.Open "SELECT * FROM Members ORDER BY PersonID"
 SQLString = "SELECT Members.PersonID, Members.PersonIDwithCheckDigit, Members.FirstName, Members.MiddleName, Members.LastName, Members.NameSuffix, "
 SQLString = SQLString & " Members.SSN, Members.CompanyName, Members.BirthDate, Members.Sex, Members.DivisionCode1, Members.DivisionCode2, Members.State, "
 SQLString = SQLString & " Members.MembershipTypeCode, Members.EffectiveFrom, Members.EffectiveTo, MembershipTypes.TypeCode, MembershipTypes.Description "
 SQLString = SQLString & " FROM Members INNER JOIN "
-SQLString = SQLString & " MembershipTypes ON Members.MembershipTypeCode = MembershipTypes.MemberShipTypeID" 
+SQLString = SQLString & " MembershipTypes ON Members.MembershipTypeCode = MembershipTypes.MemberShipTypeID"
 objRS.Open SQLString
 
 
@@ -83,13 +81,13 @@ objConn1.Close
 Set objConn1 = Nothing
 
 %>
-      <p><a href="/admin/tmp<%= filename %>"><font face="Arial" size="2">Click 
+      <p><a href="/admin/tmp<%= filename %>"><font face="Arial" size="2">Click
         here to download your file.</font></a> </p>
-      <p><font face="Arial, Helvetica, sans-serif" size="-2">(to download, right 
+      <p><font face="Arial, Helvetica, sans-serif" size="-2">(to download, right
         click on the link and select save target as.)</font> </p>
 
-	
-	
+
+
 	</td>
   </tr>
 </table>
