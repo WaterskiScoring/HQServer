@@ -1,9 +1,7 @@
-<!--#include virtual="/epl/functions.asp" -->
 <!--#include virtual="/admin/MemberRegFunctions.asp"-->
-<%
 If not Session("aauth") then response.redirect "Login.asp"
 
-Server.ScriptTimeout = 10
+Server.ScriptTimeout = 30
 
 ' The following lines of HTML display the "opening please wait" banner.
 ''''http://usawaterski.org/admin/CreateNCWSATemplate.asp
@@ -20,6 +18,7 @@ AllowAccess = false
 
 sUserName = session("UserName")
 sTourID = Session("TournamentID")
+
 IF len(sTourID) > 0 THEN
     sTourID = Session("TournamentID")
     sTourDate = session("tournamentdate")
@@ -683,13 +682,13 @@ Response.Flush
          total entry fees.</font>
          <br>&nbsp;<br>
 
-         <a href="excel/<% response.write filenamewithscores %>"><font face="Arial" size="2"><b>RIGHT
-         Click Here</b></font></a>&nbsp; <font size="2" face="Verdana, Arial, Helvetica,
-         sans-serif">to download your NCWSA Registration Template workbook, then select the
-         "Save As" option from that menu, and then choose a suitable location to store the
-         download file in your PC.&nbsp; After your Registration Template download has
-         completed, then open the Excel file from that location on your PC.&nbsp; It will
-         open automatically to an Instructions Tab section.&nbsp; Please review the material
+         <a href="excel/<% response.write regTemplateFilename %>"><font face="Arial" size="2"><b>RIGHT 
+         Click Here</b></font></a>&nbsp; <font size="2" face="Verdana, Arial, Helvetica, 
+         sans-serif">to download your NCWSA Registration Template workbook, then select the 
+         "Save As" option from that menu, and then choose a suitable location to store the 
+         download file in your PC.&nbsp; After your Registration Template download has 
+         completed, then open the Excel file from that location on your PC.&nbsp; It will 
+         open automatically to an Instructions Tab section.&nbsp; Please review the material 
          in that section for the latest information on contents and usage.</font>
          <br>&nbsp;<br>
 
