@@ -1,5 +1,4 @@
 <!--#include virtual="/admin/MemberRegFunctions.asp"-->
-
 <%
 If not Session("aauth") then response.redirect "Login.asp"
 
@@ -331,7 +330,7 @@ Do until rsMember.EOF
 		objExcelPreReg.Fields(18).Value = rsMember("OverallRating")
 
         objExcelPreReg.Fields(27).Value = rsMember("EffTo")
-            
+
 		IF rsMember("EffTo") >= cdate(sTourDate) and rsMember("CanSki") = True and rsMember("Waiver") > 0 THEN
 		    objExcelPreReg.Fields(24).Value = "Yes"
 			objExcelPreReg.Fields(25).Value = "Pre-Regist"
@@ -407,7 +406,7 @@ Do until rsMember.EOF
         objExcelActive.Fields(25).Value = rsMember("MemTypeDesc")
 		objExcelActive.Fields(26).Value = FormatNumber(0,2)
         objExcelActive.Fields(27).Value = rsMember("EffTo")
-            
+
 		objExcelActive.Fields(32).Value = rsMember("JudgeSlalom")
 		objExcelActive.Fields(33).Value = rsMember("JudgeTrick")
 		objExcelActive.Fields(34).Value = rsMember("JudgeJump")
@@ -454,7 +453,7 @@ Do until rsMember.EOF
 		' Figure applicable Renewal / Upgrade Amount based on MemType & Status
 '	-----------------------------------------------------------------------
         objExcelInActive.Fields(27).Value = rsMember("EffTo")
-            
+
 		' Figure applicable Renewal / Upgrade Amount based on MemType & Status
 		IF rsMember("EffTo") < cdate(sTourDate) THEN
 			IF rsMember("CanSki") = False THEN

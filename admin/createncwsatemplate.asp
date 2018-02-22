@@ -1,6 +1,4 @@
 <!--#include virtual="/admin/MemberRegFunctions.asp"-->
-<% 
-
 If not Session("aauth") then response.redirect "Login.asp"
 
 Server.ScriptTimeout = 30
@@ -41,7 +39,7 @@ IF I1=2 THEN DateFmt = DateFmt + "-0" + Left(DateRaw,1): ELSE DateFmt = DateFmt 
 IF I2-I1=2 THEN DateFmt = DateFmt + "-0" + Mid(DateRaw,I1+1,1): ELSE DateFmt = DateFmt + "-" + Mid(DateRaw,I1+1,2)
 DateFmtForFile = Mid(DateFmt, 1, 4) + Mid(DateFmt, 6, 2) + Mid(DateFmt, 9, 2)
 %>
-    
+
 <html>
     <head><title>USA Water Ski NCWSA Registration Template</title>
         <SCRIPT LANGUAGE="JavaScript">
@@ -55,7 +53,7 @@ DateFmtForFile = Mid(DateFmt, 1, 4) + Mid(DateFmt, 6, 2) + Mid(DateFmt, 9, 2)
         else if(document.all) { // IE 4
     	    var ie4 = true;
     	    }
-    
+
         function showObject(obj) {
         if (ns4) {
     	    obj.visibility = "show";
@@ -64,7 +62,7 @@ DateFmtForFile = Mid(DateFmt, 1, 4) + Mid(DateFmt, 6, 2) + Mid(DateFmt, 9, 2)
     	    obj.style.visibility = "visible";
     	    }
         }
-    
+
         function hideObject(obj) {
         if (ns4) {
     	    obj.visibility = "hide";
@@ -73,10 +71,10 @@ DateFmtForFile = Mid(DateFmt, 1, 4) + Mid(DateFmt, 6, 2) + Mid(DateFmt, 9, 2)
     	    obj.style.visibility = "hidden";
     	    }
         }
-    
+
         </SCRIPT>
     </head>
-    
+
     <body>
         <DIV ID="splashScreen" STYLE="position:absolute;z-index:5;top:30%;left:35%;">
             <TABLE BGCOLOR="#000000" BORDER=1 BORDERCOLOR="#000000"	CELLPADDING=0 CELLSPACING=0 HEIGHT=150 WIDTH=300>
@@ -85,20 +83,20 @@ DateFmtForFile = Mid(DateFmt, 1, 4) + Mid(DateFmt, 6, 2) + Mid(DateFmt, 9, 2)
                         <BR>
                         <FONT FACE="Helvetica,Verdana,Arial" SIZE=2 COLOR="#000066">
                         <B>Preparing your Registration Template.<br><br>
-                        This may take a minute or so ...<br><br><br>  
+                        This may take a minute or so ...<br><br><br>
                         </B></FONT>
                         <IMG SRC="includes/wait.gif" BORDER=1 WIDTH=150 HEIGHT=15><BR><BR>
                     </TD>
                 </TR>
             </TABLE>
         </DIV>
-    
+
 <%
 
 ' Once the above "please wait" banner is written to HTML, we flush the response
 ' buffer to make the page appear to the users browser.  That sits on their display
 ' while the rest of the template preparation script processing takes place.
-    
+
 response.flush
 
 '	-----------------------------------------------------------------------
@@ -176,7 +174,7 @@ objExcelConn.Open
 ''''response.write "<br />Open Excel file=" & copyFileDest
 
 Set objExcelSingleFields = Server.CreateObject("ADODB.Recordset")
-objExcelSingleFields.ActiveConnection = objExcelConn 
+objExcelSingleFields.ActiveConnection = objExcelConn
 objExcelSingleFields.CursorType = 3                    'Static cursor.
 objExcelSingleFields.LockType = 2                      'Pessimistic Lock.
 
@@ -185,34 +183,34 @@ objExcelSingleFields.Open
 objExcelSingleFields.Fields(0).Value = sTourName
 objExcelSingleFields.update
 objExcelSingleFields.close
-		
+
 objExcelSingleFields.Source = "Select * from RegistTourID"
 objExcelSingleFields.Open
 objExcelSingleFields.Fields(0).Value = strTSanction
 objExcelSingleFields.update
 objExcelSingleFields.close
-		
+
 objExcelSingleFields.Source = "Select * from AllOthrTourName"
 objExcelSingleFields.Open
 objExcelSingleFields.Fields(0).Value = sTourName
 objExcelSingleFields.update
 objExcelSingleFields.close
-		
+
 objExcelSingleFields.Source = "Select * from AllOthrTourID"
 objExcelSingleFields.Open
 objExcelSingleFields.Fields(0).Value = strTSanction
 objExcelSingleFields.update
 objExcelSingleFields.close
-		
+
 Set objExcelRegist = Server.CreateObject("ADODB.Recordset")
-objExcelRegist.ActiveConnection = objExcelConn 
+objExcelRegist.ActiveConnection = objExcelConn
 objExcelRegist.CursorType = 3                    'Static cursor.
 objExcelRegist.LockType = 2                      'Pessimistic Lock.
 objExcelRegist.Source = "Select * from RegistRange"
 objExcelRegist.Open
 
 Set objExcelAllOthr = Server.CreateObject("ADODB.Recordset")
-objExcelAllOthr.ActiveConnection = objExcelConn 
+objExcelAllOthr.ActiveConnection = objExcelConn
 objExcelAllOthr.CursorType = 3                    'Static cursor.
 objExcelAllOthr.LockType = 2                      'Pessimistic Lock.
 objExcelAllOthr.Source = "Select * from AllOthrRange"
@@ -225,7 +223,7 @@ objExcelAllOthr.Open
 refreshApptOfficials(curSanctionId)
 
 ''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''
-''' Now build a Query to Extract the Desired Members, joining in data 
+''' Now build a Query to Extract the Desired Members, joining in data
 ''' pulled from the Rankings and Officials and Membership Type tables.
 ''' Note that we prefix each team ID with "E" if the team has entries,
 ''' or "Z" if no entries, so that all the entered teams list at the top,
@@ -288,7 +286,7 @@ GrandTot = 0
 
 DO until rsWaterski.EOF
     ''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''
-	' Determine the membership status 
+	' Determine the membership status
     ' e.g. "OK to Ski" OR "Reason not ready to ski" and renew/upgrade amount strings
     ''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''
     ''''curTraceMsg = curTraceMsg & "<br /><br />FirstName=" & rsWaterski("FirstName") & ", LastName=" & rsWaterski("LastName") & ", Team=" & rsWaterski("Team") & ", OffCode=" & rsWaterski("ApptdOfficial") & ", Sorter=" + rsWaterski("Sorter") & ", TeamStat=" & rsWaterski("TeamStat")
@@ -297,30 +295,30 @@ DO until rsWaterski.EOF
 	curMemType = rsWaterski("MemType")
 	IF curMemType < 1 OR curMemType > 200 THEN curMemType = 1
 
-	IF rsWaterski("EffTo") < cdate(sTourDate) THEN 
+	IF rsWaterski("EffTo") < cdate(sTourDate) THEN
 		IF rsWaterski("CanSki") = False THEN
-			OKtoSki = "Needs Renew/Upgrade" 
+			OKtoSki = "Needs Renew/Upgrade"
             UpgrdAmt = FormatNumber(rsWaterski("MembershipRate") + rsWaterski("CostToUpgrade"), 2)
 		ELSE
-			OKtoSki = "Needs Renew" 
+			OKtoSki = "Needs Renew"
             UpgrdAmt = FormatNumber(rsWaterski("MembershipRate"), 2)
 		END IF
-	ELSE 
+	ELSE
 		IF rsWaterski("CanSki") = False THEN
-			OKtoSki = "Needs Upgrade" 
+			OKtoSki = "Needs Upgrade"
             UpgrdAmt = FormatNumber(rsWaterski("CostToUpgrade"), 2)
 		ELSEIF rsWaterski("Waiver") = 0 THEN
-			OKtoSki = "Needs Annual Waiver" 
+			OKtoSki = "Needs Annual Waiver"
 			UpgrdAmt = ""
 		ELSEIF rsWaterski("EventWaiver") <> "X" THEN
-			OKtoSki = "Needs Event Waiver" 
+			OKtoSki = "Needs Event Waiver"
 			UpgrdAmt = ""
 		ELSE
-			OKtoSki = "" 
+			OKtoSki = ""
 			UpgrdAmt = ""
-		END IF				
+		END IF
 	END IF
-	
+
     ''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''
 	' Determine if current record is for a new team
     ' When a new team is detected then write totals for previous team
@@ -342,12 +340,12 @@ DO until rsWaterski.EOF
 			objExcelRegist.Fields(10).Value = TeamJmp
 			objExcelRegist.Fields(11).Value = " <Rides  Skiers>"
 			objExcelRegist.Fields(15).Value = TeamTot
-			objExcelRegist.Update	
-			
+			objExcelRegist.Update
+
             objExcelRegist.addnew
 			objExcelRegist.Fields(0).Value = " "
-			objExcelRegist.Update	
-	
+			objExcelRegist.Update
+
 			GrandSlm = GrandSlm + TeamSlm
 			GrandTrk = GrandTrk + TeamTrk
 			GrandJmp = GrandJmp + TeamJmp
@@ -355,7 +353,7 @@ DO until rsWaterski.EOF
 			TeamSlm = 0
 			TeamTrk = 0
 			TeamJmp = 0
-			TeamTot = 0			
+			TeamTot = 0
 
 			IF curSortValue <> "E0FF" THEN
 				objExcelRegist.addnew
@@ -402,7 +400,7 @@ DO until rsWaterski.EOF
     ''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''
 	IF left(curSortValue, 1) = "E" and (rsWaterski("TeamStat") = "A" or rsWaterski("ApptdOfficial") <> "") THEN
 		NumEvts = 0
-		
+
         objExcelRegist.addnew
 		objExcelRegist.Fields(0).Value = rsWaterski("MemberID")
 		objExcelRegist.Fields(1).Value = rsWaterski("LastName")
@@ -438,23 +436,23 @@ DO until rsWaterski.EOF
 		objExcelRegist.Fields(17).Value = OKtoSki
 		objExcelRegist.Fields(18).Value = UpgrdAmt
 
-		IF rsWaterski("EventSlalom") > "  " THEN 
+		IF rsWaterski("EventSlalom") > "  " THEN
 			NumEvts = NumEvts + 1
 			TeamSlm = TeamSlm + 1
 		END IF
 
-		IF rsWaterski("EventTrick") > "  " THEN 
+		IF rsWaterski("EventTrick") > "  " THEN
 			NumEvts = NumEvts + 1
 			TeamTrk = TeamTrk + 1
 		END IF
 
-		IF rsWaterski("EventJump") > "  " THEN 
+		IF rsWaterski("EventJump") > "  " THEN
 			NumEvts = NumEvts + 1
 			TeamJmp = TeamJmp + 1
 		END IF
 
-		
-		IF NumEvts > 0 THEN 
+
+		IF NumEvts > 0 THEN
 			objExcelRegist.Fields(19).Value = NumEvts
 			TeamTot = TeamTot + 1
 		END IF
@@ -501,8 +499,8 @@ DO until rsWaterski.EOF
 		objExcelAllOthr.Fields(41).Value = rsWaterski("Safety")
 		objExcelAllOthr.Fields(42).Value = rsWaterski("TechController")
 
-		objExcelAllOthr.Update	
-            		
+		objExcelAllOthr.Update
+
 	END IF
 
 	rsWaterski.MoveNext
@@ -523,7 +521,7 @@ LOOP
 
 objExcelRegist.addnew
 objExcelRegist.Fields(0).Value = " "
-objExcelRegist.Update	
+objExcelRegist.Update
 
 objExcelRegist.addnew
 objExcelRegist.Fields(0).Value = "Grand Tots"
@@ -536,7 +534,7 @@ objExcelRegist.Fields(11).Value = " <Rides  Skiers>"
 
 ' objExcelRegist.Fields(13).Value = "Skiers>"
 objExcelRegist.Fields(15).Value = GrandTot
-objExcelRegist.Update	
+objExcelRegist.Update
 
 objExcelRegist.close
 set objExcelRegist = nothing
@@ -593,12 +591,12 @@ Set objFSO = Nothing
 Set fileRegXls = Nothing
 
 Response.Flush
-      
+
 ' This final bit of HTML is written after processing is successfully completed
 ' to tell the user how to download their template, and where to go from here.
-      
+
 %>
-    
+
     <SCRIPT LANGUAGE="JavaScript">
     if(upLevel) {
       var splash = document.getElementById("splashScreen");
@@ -609,9 +607,9 @@ Response.Flush
     else if(ie4) {
       var splash = document.all.splashScreen;
     }
-      
+
     hideObject(splash);
-    </SCRIPT>  
+    </SCRIPT>
 
 
 <html>
@@ -625,7 +623,7 @@ Response.Flush
 <body bgcolor="#FFFFFF" background = "/images/TopBackground.jpg" leftMargin=0 topMargin=0 marginheight="0" marginwidth="0" >
 
 <table width="100%" border="0" cellspacing="0" cellpadding="0">
-  <tr> 
+  <tr>
     <td bgcolor="#42639F">
       <p>&nbsp;</p>
       <p align="center"><font face="Verdana" size="6" color="#FFFFFF">
@@ -635,10 +633,10 @@ Response.Flush
       <p>&nbsp;</p>
     </td>
   </tr>
-</table>  
-  
-<table border="0" cellspacing="0" cellpadding="0">  
-  <tr> 
+</table>
+
+<table border="0" cellspacing="0" cellpadding="0">
+  <tr>
     <td width="185" valign="top" bgcolor="#42639F">
 
 	<% If Session("aauth") then %>
@@ -649,8 +647,8 @@ Response.Flush
 	<% Else %>
 	<font face="Verdana" size="2" COLOR="#FFFFFF"><br>&nbsp;Not currently logged in.</font>
 	<% End If %>
-	
-			<font face="Verdana" size="2"> 
+
+			<font face="Verdana" size="2">
          <br>&nbsp;<a href="logout.asp"><font face="arial" COLOR="#FFFFFF">Log Out</font></a>&nbsp;<br>
 			</font>
 			<br>
@@ -664,7 +662,7 @@ Response.Flush
 	<td>
 
   <table>
-      <tr> 
+      <tr>
          <td width="14">&nbsp;</td>
          <td><font size="2" face="Verdana, Arial, Helvetica, sans-serif"><br>Your NCWSA
          Registration Export Excel Workbook is now complete and ready to download.&nbsp;</font>
@@ -675,12 +673,12 @@ Response.Flush
          </strong></font><br>
          <font size="2" face="Verdana, Arial, Helvetica, sans-serif">Details of Team Entry
          and Rotation Plans that have been prepared and submitted by the respective team
-         captains through the new online team entry system, are now incorporated into this 
-         Excel workbook.&nbsp; See the revised instructions section of your Excel workbook 
-         for details.&nbsp; <font color="#FF0000"><strong>New for Fall 2011 -- A Registrar 
-         Recap is now included.</strong></font>&nbsp; This new section in the Excel workbook 
-         makes it easier for Registrars to see each team's overall entry status, to see which 
-         entered skiers still need to execute event waivers locally, and to assess each team's 
+         captains through the new online team entry system, are now incorporated into this
+         Excel workbook.&nbsp; See the revised instructions section of your Excel workbook
+         for details.&nbsp; <font color="#FF0000"><strong>New for Fall 2011 -- A Registrar
+         Recap is now included.</strong></font>&nbsp; This new section in the Excel workbook
+         makes it easier for Registrars to see each team's overall entry status, to see which
+         entered skiers still need to execute event waivers locally, and to assess each team's
          total entry fees.</font>
          <br>&nbsp;<br>
 
@@ -696,24 +694,24 @@ Response.Flush
 
          <% IF AllowAccess THEN %>
 
-         <font size="2" face="Verdana, Arial, Helvetica, sans-serif">If you are now doing 
-         your <b><i>final and official</i></b> download of entries for this tournament, then 
-         <b><i>after</i></b> downloading your Excel workbook (see the <b>RIGHT Click Here</b> 
+         <font size="2" face="Verdana, Arial, Helvetica, sans-serif">If you are now doing
+         your <b><i>final and official</i></b> download of entries for this tournament, then
+         <b><i>after</i></b> downloading your Excel workbook (see the <b>RIGHT Click Here</b>
          link in paragraph above), then click the <b>Close Registration</b> button that you
-         see below.&nbsp; That will block any further modifications to existing Team Entry and 
-         Rotation Plans, and refer team captains to the Tournament Registrar at the tournament 
+         see below.&nbsp; That will block any further modifications to existing Team Entry and
+         Rotation Plans, and refer team captains to the Tournament Registrar at the tournament
          site for any last-minute changes.</font>
          <br>&nbsp;<br>
-         
+
          <% ELSE %>
 
-         <font size="2" face="Verdana, Arial, Helvetica, sans-serif">Online Entry to this 
-         tournament is currently set to <b>Closed</b>.&nbsp; If you have not yet done your 
-         <b><i>final and official</i></b> download of entries for this tournament, then 
-         you may want to re-open Online Entry status, by clicking the <b>Re-Open Registration</b> 
+         <font size="2" face="Verdana, Arial, Helvetica, sans-serif">Online Entry to this
+         tournament is currently set to <b>Closed</b>.&nbsp; If you have not yet done your
+         <b><i>final and official</i></b> download of entries for this tournament, then
+         you may want to re-open Online Entry status, by clicking the <b>Re-Open Registration</b>
          button below.</font>
          <br>&nbsp;<br>
-         
+
          <% END IF %>
 
          </td>
@@ -722,7 +720,7 @@ Response.Flush
  	</table>
 
 	<TABLE ALIGN="CENTER" WIDTH=80%>
-		
+
 		<TR>
 
     <% IF AllowAccess THEN %>
@@ -748,11 +746,11 @@ Response.Flush
 		<input type="submit" style="width:10em" value="Lookup Members"></form>
     	</TD>
 
-	    <td width=25% align=center>     				
+	    <td width=25% align=center>
 		<form action="Index.asp" method="post">
     <input type="submit" style="width:7em" value="Quit"></form>
  	    </td>
-  	    
+
  	  </TR>
 
  	</TABLE>

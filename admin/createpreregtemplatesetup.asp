@@ -1,16 +1,13 @@
-
 <!--#include virtual="epl/functions.asp" -->
-
-<% 
-
+<%
 If not Session("aauth") then response.redirect "Login.asp"
-	
+
 Function GetStateCount(ListValues)
 Dim WorkingString
-Dim StateCounter 
+Dim StateCounter
 StateCounter = 1
 WorkingString = ListValues
-While instr(WorkingString,",") > 0 
+While instr(WorkingString,",") > 0
 	LocationofComma = instr(WorkingString,",")
 	'Now trim the string
 	WorkingString = right(WorkingString, len(WorkingString) - (LocationofComma + 1))
@@ -21,8 +18,8 @@ End Function
 
 Function BuildStateSQL(ListValues)
 Dim WorkingString
-Dim StateCounter 
-Dim StateSQL 
+Dim StateCounter
+Dim StateSQL
 StateCounter = 1
 WorkingString = ListValues
 'Get the first state
@@ -33,7 +30,7 @@ else
 	StateSQL = "'" & WorkingString & "'"
 end if
 
-While instr(WorkingString,",") > 0 
+While instr(WorkingString,",") > 0
 	LocationofComma = instr(WorkingString,",")
 	'Now trim the string
 	WorkingString = right(WorkingString, len(WorkingString) - (LocationofComma + 1))
@@ -46,8 +43,8 @@ End Function
 
 Function BuildStateList(ListValues)
 Dim WorkingString
-Dim StateCounter 
-Dim StateSQL 
+Dim StateCounter
+Dim StateSQL
 StateCounter = 1
 WorkingString = ListValues
 'Get the first state
@@ -58,7 +55,7 @@ else
 	StateSQL = WorkingString
 end if
 
-While instr(WorkingString,",") > 0 
+While instr(WorkingString,",") > 0
 	LocationofComma = instr(WorkingString,",")
 	'Now trim the string
 	WorkingString = right(WorkingString, len(WorkingString) - (LocationofComma + 1))
@@ -95,7 +92,7 @@ If Request.Form <> "" then 	'this is a postback
 	if Request.Form("IncludeElite") = "True" then
 		if len(Session("StateSQL")) > 0 then Session("StateSQL") = Session("StateSQL") & " OR"
 		Session("StateSQL") = Session("StateSQL") & " PersonIDWithCheckDigit in"
-		Session("StateSQL") = Session("StateSQL") & " (Select MemberID FROM Cobra00025.usawsrank.Rankings" 
+		Session("StateSQL") = Session("StateSQL") & " (Select MemberID FROM Cobra00025.usawsrank.Rankings"
 		Session("StateSQL") = Session("StateSQL") & " where left(Div,1)='O' or Div='MM' group by MemberID)"
 		Session("StateList") = Session("StateList") & "OP"
 	end if
@@ -117,11 +114,11 @@ If Request.Form <> "" then 	'this is a postback
 
 			If TopUser.EOF then
 				ErroronPage = True
-				ErrorMessage = "Cannot find that Tournament ID -- pls revise."			
+				ErrorMessage = "Cannot find that Tournament ID -- pls revise."
 			else
 				if TopUser("AllowAccess") <> True then
 					ErroronPage = True
-					ErrorMessage = "ERROR: Access Denied for that Tournament ID -- pls try another."			
+					ErrorMessage = "ERROR: Access Denied for that Tournament ID -- pls try another."
 				else
 					Session("TournamentID") = TopUser("Name")
 					session("TournamentDate") = TopUser("TournamentDate")
@@ -138,7 +135,7 @@ If Request.Form <> "" then 	'this is a postback
 			ErroronPage = True
 			ErrorMessage = "Please specify the desired Tournament ID."
 		end if
-	
+
 	end if
 
 	IF left(request.form("NowWhat"),4) = "Look" and ErroronPage = False then
@@ -150,14 +147,14 @@ If Request.Form <> "" then 	'this is a postback
 		ErroronPage = True
 		ErrorMessage = "Please specify at least one State or other Selection Option below."
 	end if
-	
+
 
 	if ErroronPage = True then
 		'show page with the error
 	else
 
 		'Display constructed SQL WHERE clause in debug log
-		
+
 		'	Set tempFSO=Server.CreateObject("Scripting.FileSystemObject")
 		'	IF Not (tempFSO.FileExists(Server.mappath("/")&"\..\" & "sql-debug-log.txt")) = true THEN
    	'		Set logobject=tempFSO.CreateTextFile(Server.mappath("/")&"\..\" & "sql-debug-log.txt",true)
@@ -168,11 +165,11 @@ If Request.Form <> "" then 	'this is a postback
 		'		logobject.Close
 		'	Set logobject=nothing
 		'	Set tempFSO=nothing
-				
+
         response.redirect "createPreRegTemplate.asp"
 
 	end if
-	
+
 end if
 
 %>
@@ -187,7 +184,7 @@ end if
 <body bgcolor="#FFFFFF" background = "/images/TopBackground.jpg" leftMargin=0 topMargin=0 marginheight="0" marginwidth="0" >
 
 <table width="100%" border="0" cellspacing="0" cellpadding="0">
-  <tr> 
+  <tr>
     <td bgcolor="#42639F">
       <p>&nbsp;</p>
       <p align="center"><font face="Verdana" size="6" color="#FFFFFF">
@@ -201,15 +198,15 @@ end if
 
 
 <table width="800" border="0" cellspacing="0" cellpadding="0">
-  <tr> 
+  <tr>
     <td width="185" valign="top"  bgcolor="#42639F">
 
 	<font face="Verdana" size="2" COLOR="#FFFFFF"><br>&nbsp;Currently Logged in as: </font><br>
 	<font face="Verdana" size="2" COLOR="#FFFFFF">&nbsp;<%=Session("UserName")%>&nbsp;&nbsp;
 		<%=session("TournamentDate")%></font><br>
 	<br>
-	
-			<font face="Verdana" size="2"> 
+
+			<font face="Verdana" size="2">
          <br>&nbsp;<a href="logout.asp"><font face="arial" COLOR="#FFFFFF">Log Out</font></a>&nbsp;<br>
 			</font>
 			<br>
@@ -228,36 +225,36 @@ end if
     			<%  end if %>
 
   <table width="600" border="0" cellspacing="0" cellpadding="0">
-      <tr> 
+      <tr>
         <td width="20">&nbsp;</td>
         <td width="150">&nbsp;</td>
         <td width="20">&nbsp;</td>
         <td width="390">&nbsp;</td>
         <td width="20">&nbsp;</td>
       </tr>
- 
-      <tr> 
+
+      <tr>
          <td>&nbsp;</td>
          <td>&nbsp;</td>
       </tr>
 
       <form action="CreatePreRegTemplateSetup.asp" method="post">
- 
-      <tr> 
+
+      <tr>
          <td>&nbsp;</td>
          <td> <select name="States" size="11" multiple id="States">
 
-                <%   
+                <%
 Dim objRS
 Set objConn1 = Server.CreateObject("ADODB.Connection")
 objConn1.Open Application("WaterSkiConn")
 Set objRS = Server.CreateObject("ADODB.RecordSet")
 objRS.ActiveConnection = objConn1
 
-objRS.Open "SELECT * FROM [USStates] Where StateCode in ('AL','AK','AZ','AR','CA','CO','CT','DE','DC','FL','GA','HI','ID','IL','IN','IA','KS','KY','LA','ME','MD','MA','MI','MN','MS','MO','MT','NE','NV','NH','NJ','NM','NY','NC','ND','OH','OK','OR','PA','RI','SC','SD','TN','TX','UT','VT','VA','WA','WV','WI','WY') Order by StateName;" 
+objRS.Open "SELECT * FROM [USStates] Where StateCode in ('AL','AK','AZ','AR','CA','CO','CT','DE','DC','FL','GA','HI','ID','IL','IN','IA','KS','KY','LA','ME','MD','MA','MI','MN','MS','MO','MT','NE','NV','NH','NJ','NM','NY','NC','ND','OH','OK','OR','PA','RI','SC','SD','TN','TX','UT','VT','VA','WA','WV','WI','WY') Order by StateName;"
 
 Do until objRS.EOF %>
-                <option value="<% Response.write objrs("StateCode") %>" > 
+                <option value="<% Response.write objrs("StateCode") %>" >
                 <% Response.write objrs("StateName") %>
                 </option>
                 <%	objRS.MoveNext
@@ -274,20 +271,20 @@ Set objConn1 = Nothing
          <td>&nbsp;</td>
 
          <td valign="top">
-         	 <font color="#FF0000" size="2" face="Verdana, Arial, Helvetica, 
+         	 <font color="#FF0000" size="2" face="Verdana, Arial, Helvetica,
          	 	sans-serif"><strong>Instructions:&nbsp; </strong></font>
-         	 <font size="2" face="Verdana, Arial, Helvetica, sans-serif"> 
-           Indicate the set of additional members you wish to retrieve along with 
-           your pre-registered entrants, using the options which appear to 
-           the left.&nbsp; You may select states, and/or 
-           check one or both of the special selection option boxes which 
+         	 <font size="2" face="Verdana, Arial, Helvetica, sans-serif">
+           Indicate the set of additional members you wish to retrieve along with
+           your pre-registered entrants, using the options which appear to
+           the left.&nbsp; You may select states, and/or
+           check one or both of the special selection option boxes which
            appear below that state selection window.&nbsp; To specify two
-           or more states, hold down the Ctrl Key and click on each 
-           state that you desire.&nbsp; Then click the 
-           &#8220;Create Export&#8221; button, and I will then build an 
+           or more states, hold down the Ctrl Key and click on each
+           state that you desire.&nbsp; Then click the
+           &#8220;Create Export&#8221; button, and I will then build an
            Excel template containing those members for you to download.
            </font></td>
-         
+
 			</tr>
 
 
@@ -301,7 +298,7 @@ Set objConn1 = Nothing
          <td>&nbsp;</td>
 
 			<% if left(session("UserName"),1) > "9" THEN %>
-   	      <td><font size="2" face="Verdana, Arial, Helvetica, sans-serif">Tournament 
+   	      <td><font size="2" face="Verdana, Arial, Helvetica, sans-serif">Tournament
               ID<font size="1"> (yyRnnn):</font></font><br>
          	<input name="TournamentID" type="text" id="TournamentID" value="<%= Session("TournamentID") %>">
 			<% ELSE %>
@@ -324,20 +321,20 @@ Set objConn1 = Nothing
          <td>&nbsp;</td>
       </tr>
 
-     <tr> 
+     <tr>
         <td>&nbsp;</td>
         <td colspan="4"><hr></td>
      </tr>
 
-     <tr> 
+     <tr>
         <td>&nbsp;</td>
         <td align="center"><input type="submit" name="NowWhat" value="Look Up&#13;Individual&#13;Members"></td>
         <td>&nbsp;</td>
-        <td><font color="#FF0000" size="2" face="Verdana, Arial, Helvetica, 
-        	 sans-serif"><strong>Alternatively:&nbsp; </strong></font><font size="2" face="Verdana, Arial, Helvetica, sans-serif"> 
-           If you need to get information for a few additional scattered members, we now 
-           provide the means for you to look up individuals.&nbsp; You can then copy and 
-           paste their information into your existing template.&nbsp; Click on the &#8220;Look 
+        <td><font color="#FF0000" size="2" face="Verdana, Arial, Helvetica,
+        	 sans-serif"><strong>Alternatively:&nbsp; </strong></font><font size="2" face="Verdana, Arial, Helvetica, sans-serif">
+           If you need to get information for a few additional scattered members, we now
+           provide the means for you to look up individuals.&nbsp; You can then copy and
+           paste their information into your existing template.&nbsp; Click on the &#8220;Look
            Up Individual Members&#8221; button to the left, to begin that process.</font></td>
      </tr>
 
@@ -347,7 +344,7 @@ Set objConn1 = Nothing
 
     </td>
   </tr>
-  
+
 </table>
 </body>
 </html>
