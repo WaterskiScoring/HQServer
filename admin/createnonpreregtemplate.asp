@@ -2,7 +2,7 @@
 <%
 If not Session("aauth") then response.redirect "Login.asp"
 
-Server.ScriptTimeout = 300
+Server.ScriptTimeout = 120000
 
 Dim curTraceMsg, sTourID, sTourDate, sStateSQL, sTourName, sStateList, sUserName
 

@@ -91,9 +91,9 @@ If Request.Form <> "" then 	'this is a postback
 
 	if Request.Form("IncludeElite") = "True" then
 		if len(Session("StateSQL")) > 0 then Session("StateSQL") = Session("StateSQL") & " OR"
-		Session("StateSQL") = Session("StateSQL") & " PersonIDWithCheckDigit in"
-		Session("StateSQL") = Session("StateSQL") & " (Select MemberID FROM Cobra00025.usawsrank.Rankings"
-		Session("StateSQL") = Session("StateSQL") & " where left(Div,1)='O' or Div='MM' group by MemberID)"
+		''''Session("StateSQL") = Session("StateSQL") & " MX.PersonID in (Select Distinct MemberID FROM Cobra00025.usawsrank.Rankings where SkiYearID = 1 AND Div in ('OM', 'OW', 'MM', 'MW') )"
+	    Session("StateSQL") = Session("StateSQL") & "  SX.Div in ('OM', 'OW', 'MM', 'MW') OR TX.Div in ('OM', 'OW', 'MM', 'MW') "
+	    Session("StateSQL") = Session("StateSQL") & " OR JX.Div in ('OM', 'OW', 'MM', 'MW') OR OX.Div in ('OM', 'OW', 'MM', 'MW') "
 		Session("StateList") = Session("StateList") & "OP"
 	end if
 
