@@ -1,4 +1,5 @@
 <!--#include virtual="/admin/includes/security.asp" -->
+
 <%
 If Request.Form("submit") = "Add" Then
   'validate entries
@@ -45,16 +46,16 @@ End If
 
 <body bgcolor="#FFFFFF" background = "/templates/images/TopBackground.jpg" link="#000000" vlink="#000000" leftMargin=0 topMargin=0 marginheight="0" marginwidth="0" >
 <table width="100%" border="0" cellspacing="0" cellpadding="0">
-  <tr> 
+  <tr>
     <td width="182" bgcolor="#42639F" valign="top"></td>
     <td bgcolor="#42639F">
       <p>&nbsp;</p>
-      <p align="center"><font face="Verdana" size="6" color="#FFFFFF">USA Water 
+      <p align="center"><font face="Verdana" size="6" color="#FFFFFF">USA Water
         Ski Admin</font></p>
       <p>&nbsp;</p>
     </td>
   </tr>
-  <tr> 
+  <tr>
    <td bgcolor="#42639F" valign="top">
 <!--#include virtual="/admin/includes/menu.asp" -->
   </td>
