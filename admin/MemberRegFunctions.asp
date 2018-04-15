@@ -169,6 +169,21 @@ Function RemoveInvalidChars(strInput)
 
 End Function
 
+Function PersonIDwChkDgt (PersonID)
+    ' ---------------------------------------------------
+    ' This function is given an integer "PersonID" value, and returns the
+    ' 9-Character "PersonIDWithCheckDigit" value for that particular member.
+    ' ---------------------------------------------------
+    Dim PIDSum, PIDChar, PIDLen, PIDPtr
+    PIDSum = 0: PIDChar = trim(PersonID): PIDLen = Len(PIDChar)
+
+    FOR PIDPtr = 1 TO PIDLen STEP 2
+	    PIDSum = PIDSum + (3*MID(PIDChar,PIDPtr,1))
+	    IF PIDPtr+1 <= PIDLen THEN PIDSum = PIDSum + MID(PIDChar,PIDPtr+1,1)
+    NEXT
+
+    PersonIDwChkDgt = right(100-PIDSum,1) & Right(100000000+PersonID,8)
+End Function
 
 '	-----------------------------------------------------------------------
 ' Build a query to extract member entries for tournament registrations

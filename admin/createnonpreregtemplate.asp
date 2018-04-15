@@ -310,7 +310,7 @@ Do until rsMember.EOF
 
 		Counter1 = Counter1 + 1
 		objExcelPreReg.addnew
-		objExcelPreReg.Fields(0).Value = rsMember("MemID")
+		objExcelPreReg.Fields(0).Value = rsMember("MemberID")
 		objExcelPreReg.Fields(1).Value = rsMember("LastName")
 		objExcelPreReg.Fields(2).Value = rsMember("FirstName")
 
@@ -380,7 +380,7 @@ Do until rsMember.EOF
 	ELSEIF rsMember("EffTo") >= cdate(sTourDate) and rsMember("CanSki") = True and rsMember("Waiver") > 0 THEN
 		Counter2 = Counter2 + 1
 		objExcelActive.addnew
-		objExcelActive.Fields(0).Value = rsMember("MemID")
+		objExcelActive.Fields(0).Value = rsMember("MemberID")
 		objExcelActive.Fields(1).Value = rsMember("LastName")
 		objExcelActive.Fields(2).Value = rsMember("FirstName")
 
@@ -424,7 +424,7 @@ Do until rsMember.EOF
 	ELSE
 		Counter3 = Counter3 + 1
 		objExcelInActive.addnew
-		objExcelInActive.Fields(0).Value = rsMember("MemID")
+		objExcelInActive.Fields(0).Value = rsMember("MemberID")
 		objExcelInActive.Fields(1).Value = rsMember("LastName")
 		objExcelInActive.Fields(2).Value = rsMember("FirstName")
 
