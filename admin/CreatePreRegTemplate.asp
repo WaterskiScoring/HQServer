@@ -110,7 +110,9 @@ Set rsWaterski = Server.CreateObject("ADODB.RecordSet")
 rsWaterski.ActiveConnection = WaterskiConnect
 
 Dim curSqlStmt, strTStatus, strTSanction, strTourName, strTourDate
-curSqlStmt = "Select Distinct TSanction, TStatus, TournAppID, TDateE, TName, TCity, TState from " & SanctionTableName & " where TournAppID = '" & curSanctionId & "'"
+curSqlStmt = "Select Distinct TSanction, TStatus, TournAppID, TDateE, TName, TCity, TState "
+curSqlStmt = curSqlStmt & "FROM " & SanctionTableName 
+curSqlStmt = curSqlStmt & " WHERE TournAppID = '" & curSanctionId & "' AND TsanApproved = 1"
 rsWaterski.Open curSqlStmt
 If rsWaterski.EOF THEN
 	response.write "Invalid sanction number (" & curSanctionId & "), unable to complete request"

@@ -553,10 +553,10 @@ Function buildQueryMemberRegEntries(curSanctionId, curTourDate, curStateSQL, cur
 
     curSqlStmt8 = " "
     curSqlStmt8 = curSqlStmt8 & "WHERE MX.ExportToTemplate = 1"
-    curSqlStmt8 = curSqlStmt8 & "  AND DateAdd(mm,18,MX.EffTo) > GetDate()"
     curSqlStmt8 = curSqlStmt8 & "  AND MX.Deceased = 0 "
 
     IF len(curMemberId) = 0 AND len(curMemberFirstName) = 0  AND len(curMemberLastName) = 0 THEN
+        curSqlStmt8 = curSqlStmt8 & "  AND DateAdd(mm,18,MX.EffTo) > GetDate()"
         curSqlStmt8 = curSqlStmt8 & "  AND ("
 	    curSqlStmt8 = curSqlStmt8 & "   MX.PersonID in (Select PersonID from " & ApptOfficialsTableName & " WHERE TournAppID = '" & curSanctionId & "' ) "
 	    curSqlStmt8 = curSqlStmt8 & "   OR MX.MemberID in (Select MemberID from " & RegEventsTableName & " WHERE left(TourID,6) = '" & curSanctionId & "') "
@@ -565,6 +565,8 @@ Function buildQueryMemberRegEntries(curSanctionId, curTourDate, curStateSQL, cur
         END IF
         curSqlStmt8 = curSqlStmt8 & " ) "
     ELSE
+        curSqlStmt8 = curSqlStmt8 & "  AND DateAdd(mm,30,MX.EffTo) > GetDate()"
+        
         IF len(curMemberId) > 0 THEN
             curSqlStmt8 = curSqlStmt8 & "  AND MX.MemberID = '" & curMemberId & "' "
         ELSE

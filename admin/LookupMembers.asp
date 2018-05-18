@@ -186,7 +186,7 @@ ELSE
 
 	sSQL = "SELECT TOP 11 Mem.PersonID, Mem.LastName, Mem.FirstName, Mem.City, Mem.State,"
 	sSQL = sSQL + " Datepart(yyyy,Mem.BirthDate) as BirthYear, Left(Mem.Sex,1) as Sex" 
-	sSQL = sSQL + " FROM USAWaterski.dbo.memberslive as Mem, USAWaterski.dbo.MembershipTypes as Typ"
+	sSQL = sSQL + " FROM USAWaterski.dbo.members as Mem, USAWaterski.dbo.MembershipTypes as Typ"
 	sSQL = sSQL + " WHERE Mem.MembershipTypeCode = Typ.MemberShipTypeID"
 	sSQL = sSQL + " AND Typ.ExporttoTouramentRegistrationTemplate = 1"
 
@@ -195,11 +195,15 @@ ELSE
 	END IF
 	
 	IF sLastName <> "" THEN
-		sSQL = sSQL + " AND lower(left(Mem.lastname," & len(sLastName) & ")) = '" & RemInvChr(lCASE(sLastName)) & "'"
+        sLastName = lCASE(sLastName)
+        sLastName = Replace(sLastName, "'", "''")
+		sSQL = sSQL + " AND lower(Mem.lastname) like '" & sLastName & "%'"
 	END IF
 	
 	IF sFirstName <> "" THEN
-		sSQL = sSQL + " AND lower(left(Mem.firstname," & len(sFirstName) & ")) = '" & RemInvChr(lCASE(sFirstName)) & "'"
+        sFirstName = lCASE(sFirstName)
+        sFirstName = Replace(sFirstName, "'", "''")
+		sSQL = sSQL + " AND lower(Mem.firstname) like '" & sFirstName & "%'"
 	END IF
 
 	IF sState <> "" THEN

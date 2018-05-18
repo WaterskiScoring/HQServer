@@ -164,14 +164,13 @@ If ErrNumber <> 0 then
     objMessage.Configuration.Fields.Update
     '==End remote SMTP server configuration section==
 
-    ''''objMessage.Send
+    objMessage.Send
 
 end if
 
 '''' Use this to show the error information on the page
-''''<div><br /><br />Debug Info:<br /><%=strBody %></div>
+''''<div><br /><br />Debug Info:<br /><..%=strBody %..></div>
 %>
-<div><br /><br />Debug Info:<br /><%=strBody %></div>
 
 </body>
 </html>

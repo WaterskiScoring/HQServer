@@ -259,7 +259,7 @@ END IF
                             If rsContact.EOF THEN
                                 ContactDtls = ""
                             ELSE
-	                            ContactDtls = "&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; Member Name:&nbsp;&nbsp; " & rsContact("firstname") & " " & rsContact("lastname") 
+	                            ContactDtls = "&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; Member Name:&nbsp;&nbsp; " & rsContact("firstname") & " " & rsContact("lastname")  & " " & rsContact("PersonID") & " " & curMemberId
 	                            ContactDtls = ContactDtls & "<br>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; Address:&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; " & rsContact("Address1") & "&nbsp; " & rsContact("Address2")
 	                            ContactDtls = ContactDtls & "<br>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; City/ST/Zip:&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; " & rsContact("city") & ", " & rsContact("State") & "&nbsp; " & rsContact("Zip")
 	                            ContactDtls = ContactDtls & "<br>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; Birthdate:&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; " & rsContact("BDate") & "&nbsp;&nbsp;&nbsp;&nbsp; Gender: &nbsp;" & Left(rsContact("Gender"),1)
