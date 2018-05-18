@@ -74,6 +74,10 @@ Dim rsMember
 
 Set WaterskiConnect = Server.CreateObject("ADODB.Connection")
 WaterskiConnect.Open Application("WaterSkiConn")
+
+curMemberLastName = Replace(curMemberLastName, "'", "''")
+curMemberFirstName = Replace(curMemberFirstName, "'", "''")
+
 curSqlStmt = ""
 IF len(curMemberId) > 0 OR len(curMemberFirstName) > 0  OR len(curMemberLastName) > 0 OR len(curStateSQL) > 0 THEN
     curSqlStmt = buildQueryMemberRegEntries(curSanctionId, curTourDate, curStateSQL, curMemberId, curMemberFirstName, curMemberLastName)
