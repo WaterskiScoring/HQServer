@@ -12,7 +12,8 @@ Dim rid
 randomize()
 rid=round(rnd() * 1000000000000)
 
-Dim RawScoresTableName, RawScoresOtherTableName, RawGRScoresTableName, EquivScoresTableName, EquivDivsTableName, OverAllScoresTableName 
+Dim RawScoresTableName, RawScoresOtherTableName, RawGRScoresTableName, EquivScoresTableName, EquivDivsTableName, OverAllScoresTableName
+Dim EquivLevel10TableName 
 Dim LoginTableName, DivisionsTableName, DivisionsOtherTableName, RankTableName, RankNumsTableName, SkiYearTableName 
 Dim CutOffTableName, RegionTableName, MemberTableName, MemberLiveTableName, MemberShortTableName
 Dim MemberWFedIDTableName, FedIDPatternTableName, MemberStatusTableName
@@ -20,7 +21,7 @@ Dim ConsMemTableName, MemberTypeTableName, MemberTypeOLRTableName, SanctionTable
 Dim TRADbName, MemberDBName, SanctionDBName, RegGenTableName, TourGenTableName, TRegSetupTableName, SptsGrpTableName
 Dim EmailTemplateTableName, EmailSendSummaryTableName, EmailSendDetailTableName
 Dim SitesTableName, RegnSetupTableName, RegTransTableName, RegPaymentTableName, RegSurveyQuestionsTableName, RegSurveyAnswersTableName 
-Dim TrafficTableName
+Dim TrafficTableName, PBStickerTableName
 Dim RegTempTableName, CCLogTableName, RegPWTableName, BioTableName, RegTemporary
 Dim RegDetailTableName, RegDetailTempTableName,  ControlDisplayTableName
 Dim RegQualifyTableName, LeagueQfyTableName, LeagueTableName, LeagueToursTableName, RegQfyHistoryTable
@@ -96,7 +97,7 @@ Dim marksemailaddress, USAWaterski_AccountingEmail, USAWaterski_CompetitionEmail
 
 
 ' --- Used in redirect back from CC_process.asp
-RankPath = "http://usawaterski.org\rankings"
+RankPath = "https://usawaterski.org\rankings"
 
 ' ***** NOV 02 Add Start
 Dim PathtoRenewalForm
@@ -159,6 +160,7 @@ RawScoresOtherTableName = "usawsrank.ScoresOther"
 RawGRScoresTableName = "usawsrank.ScoresGR"
 EquivScoresTableName = "usawsrank.EquivScores"
 EquivDivsTableName = "usawsrank.EquivDivs"
+EquivLevel10TableName = "usawsrank.Equiv_Level10_Dates"
 OverAllScoresTableName = "dbo.OverAllScores"
 RegionTableName = "usawsrank.Region"
 DivisionsTableName = "usawsrank.Division"
@@ -218,7 +220,7 @@ V_LeagueTeamsTableName = "usawsrank.V_League_Teams"
 V_LeagueTeamBenchmarkTableName = "usawsrank.V_League_Team_Bench"
 
 MobileAppUserTable = "usawsrank.Mobile_AppUsers"
-
+PBStickerTableName = "usawsrank.Personal_Best_Stickers"
 
 
 TRAUser = "usawsrank"
@@ -231,10 +233,12 @@ MonthList = ",Jan,Feb,Mar,Apr,May,Jun,Jul,Aug,Sep,Oct,Nov,Dec"
 
 
 ' --- Defines liability waiver - Changed to 2010 version on 3-6-2011 ---
-adult_waiver = "adlt2010"
-minor_waiver = "min_2010"
 'adult_waiver = "adlt2007"
 'minor_waiver = "min_2007"
+'adult_waiver = "adlt2010"
+'minor_waiver = "min_2010"
+adult_waiver = "adlt2018"
+minor_waiver = "min_2018"
 
 
 ' --- Defines the width of the table in the HQ formatted site ---

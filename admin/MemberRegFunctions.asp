@@ -200,8 +200,16 @@ Function buildQueryMemberRegEntries(curSanctionId, curTourDate, curStateSQL, cur
     curSqlStmt1 = curSqlStmt1 & ", MX.LastName, MX.FirstName"
 
     'Skier division
-    curSqlStmt1 = curSqlStmt1 & ", Coalesce(RD.Div,"
-    curSqlStmt1 = curSqlStmt1 & "     Case when MX.Age <= 17 and MX.Sex = 'F' Then 'G'"
+    curSqlStmt1 = curSqlStmt1 & ", Coalesce(Case When RD.Div = 'OM' Then RD.Div"
+    curSqlStmt1 = curSqlStmt1 & "          When RD.Div = 'OW' Then RD.Div"
+    curSqlStmt1 = curSqlStmt1 & "          When RD.Div = 'MM' Then RD.Div"
+    curSqlStmt1 = curSqlStmt1 & "          When RD.Div = 'MW' Then RD.Div"
+    curSqlStmt1 = curSqlStmt1 & "          When RD.Div = 'B1' Then RD.Div"
+    curSqlStmt1 = curSqlStmt1 & "          When RD.Div = 'B2' Then RD.Div"
+    curSqlStmt1 = curSqlStmt1 & "          When RD.Div = 'G1' Then RD.Div"
+    curSqlStmt1 = curSqlStmt1 & "          When RD.Div = 'G2' Then RD.Div"
+    curSqlStmt1 = curSqlStmt1 & "          End"
+    curSqlStmt1 = curSqlStmt1 & "   , Case when MX.Age <= 17 and MX.Sex = 'F' Then 'G'"
     curSqlStmt1 = curSqlStmt1 & "          when MX.Age <= 17 then 'B' when MX.Sex = 'F' then 'W' else 'M' end"
     curSqlStmt1 = curSqlStmt1 & "   + Case"
     curSqlStmt1 = curSqlStmt1 & "          when MX.Age <= 9 then '1'"
@@ -210,7 +218,7 @@ Function buildQueryMemberRegEntries(curSanctionId, curTourDate, curStateSQL, cur
     curSqlStmt1 = curSqlStmt1 & "          when MX.Age <= 24 then '1'"
     curSqlStmt1 = curSqlStmt1 & "          when MX.Age <= 34 then '2'"
     curSqlStmt1 = curSqlStmt1 & "          when MX.Age <= 44 then '3'"
-    curSqlStmt1 = curSqlStmt1 & "          when MX.Age <= 52 then '4'"
+    curSqlStmt1 = curSqlStmt1 & "          when MX.Age <= 54 then '4'"
     curSqlStmt1 = curSqlStmt1 & "          when MX.Age <= 59 then '5'"
     curSqlStmt1 = curSqlStmt1 & "          when MX.Age <= 64 then '6'"
     curSqlStmt1 = curSqlStmt1 & "          when MX.Age <= 69 then '7'"
@@ -240,7 +248,6 @@ Function buildQueryMemberRegEntries(curSanctionId, curTourDate, curStateSQL, cur
     curSqlStmt1 = curSqlStmt1 & ", Case when PJ.JQfyOvr > '   ' then 'Y' else QJ.JQfy end as JumpQfy"
 
     'Skier event attributes and payments
-    curSqlStmt1 = curSqlStmt1 & ", Coalesce(PR.Weight,'') as Weight"
     curSqlStmt1 = curSqlStmt1 & ", Coalesce(PT.TrickBoat,'') as TrickBoat"
     curSqlStmt1 = curSqlStmt1 & ", Coalesce(PR.JRamp,'') as JumpHeight"
     curSqlStmt1 = curSqlStmt1 & ", PR.Prereg"
@@ -409,7 +416,7 @@ Function buildQueryMemberRegEntries(curSanctionId, curTourDate, curStateSQL, cur
     '	-----------------------------------------------------------------------
     curSqlStmt6 = ""
     curSqlStmt6 = curSqlStmt6 & "  LEFT JOIN ("
-    curSqlStmt6 = curSqlStmt6 & "      SELECT MemberID, Weight, BibNo, 'YES' as PreReg"
+    curSqlStmt6 = curSqlStmt6 & "      SELECT MemberID, BibNo, 'YES' as PreReg"
     curSqlStmt6 = curSqlStmt6 & "             , CASE When Len(RampHeight) < 3 Then RampHeight Else left(RampHeight,1) + right(RampHeight,1) END as JRamp"
     curSqlStmt6 = curSqlStmt6 & "      FROM " & RegGenTableName
     curSqlStmt6 = curSqlStmt6 & "      WHERE left(TourID,6) = '" & curSanctionId & "')"
@@ -629,7 +636,7 @@ Function buildQueryMemberRegNcwsaEntries(curSanctionId, curTourDate)
     curSqlStmt = curSqlStmt & "          when MX.Age <= 24 then '1'"
     curSqlStmt = curSqlStmt & "          when MX.Age <= 34 then '2'"
     curSqlStmt = curSqlStmt & "          when MX.Age <= 44 then '3'"
-    curSqlStmt = curSqlStmt & "          when MX.Age <= 52 then '4'"
+    curSqlStmt = curSqlStmt & "          when MX.Age <= 54 then '4'"
     curSqlStmt = curSqlStmt & "          when MX.Age <= 59 then '5'"
     curSqlStmt = curSqlStmt & "          when MX.Age <= 64 then '6'"
     curSqlStmt = curSqlStmt & "          when MX.Age <= 69 then '7'"

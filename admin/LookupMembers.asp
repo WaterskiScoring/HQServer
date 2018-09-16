@@ -113,9 +113,9 @@ elseif  SkiAge >= 25 AND SkiAge < 35 THEN '2'
 	AgeDivision = "2"
 elseif  SkiAge >= 35 AND SkiAge < 45 THEN '3' 
 	AgeDivision = "3"
-elseif  SkiAge >= 45 AND SkiAge < 53 THEN '4' 
+elseif  SkiAge >= 45 AND SkiAge < 55 THEN '4' 
 	AgeDivision = "4"
-elseif  SkiAge >= 53 AND SkiAge < 60 THEN '5' 
+elseif  SkiAge >= 55 AND SkiAge < 60 THEN '5' 
 	AgeDivision = "5"
 elseif  SkiAge >= 60 AND SkiAge < 65 THEN '6' 
 	AgeDivision = "6"
@@ -290,7 +290,7 @@ ELSE
        			  <TD ALIGN="Center" vAlign="top" BGCOLOR="#FFFFFF"><FONT COlOR="#000000" size="1" face="Verdana, Arial, Helvetica, sans-serif"><%=PersonIDwChkDgt(rs("PersonID"))%></a></FONT></TD>
            		  <TD ALIGN="Center" vAlign="top" BGCOLOR="#FFFFFF"><FONT COlOR="#000000" size="1" face="Verdana, Arial, Helvetica, sans-serif"><a href="DisplayOneMember.asp?PersonID=<%=rs("PersonID")%>"><%=rs("LastName")%>,&nbsp;<%=rs("FirstName")%></a></FONT></TD>
          		  <TD ALIGN="Center" vAlign="top" BGCOLOR="#FFFFFF"><FONT COlOR="#000000" size="1" face="Verdana, Arial, Helvetica, sans-serif">&nbsp;<%=rs("City")&", "&rs("State")%></a></FONT></TD>
-         		  <TD ALIGN="Center" vAlign="top" BGCOLOR="#FFFFFF"><FONT COlOR="#000000" size="1" face="Verdana, Arial, Helvetica, sans-serif">&nbsp;<% response.write(sMembAge&" / "&rs("Sex"))%></a></FONT></TD>
+         		  <TD ALIGN="Center" vAlign="top" BGCOLOR="#FFFFFF"><FONT COlOR="#000000" size="1" face="Verdana, Arial, Helvetica, sans-serif">&nbsp;<% response.write(sMembAge & " / " & rs("Sex"))%></a></FONT></TD>
             </tr><% 
 
 					LastPersID = rs("personid")

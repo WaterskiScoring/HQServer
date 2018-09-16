@@ -66,6 +66,12 @@ Set rsWaterski = Nothing
 WaterskiConnect.Close
 
 '	-----------------------------------------------------------------------
+' Refresh the list of chief and appointed officials for a tournament
+' The data is stored in a temporary work table for use in build tournament registration entries
+'	-----------------------------------------------------------------------
+refreshApptOfficials(curSanctionId)
+
+'	-----------------------------------------------------------------------
 ' Retrieve member entries for tournament registrations
 ' Include data from rankings, qualifications, membership status, and official ratings
 '	-----------------------------------------------------------------------

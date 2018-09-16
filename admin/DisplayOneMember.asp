@@ -12,7 +12,7 @@ sStateSQL = "State IN ('')"
 
 sUserName = session("UserName")
 sTourID = Session("TournamentID")
-sTourDate = session("tournamentdate")
+sTourDate = session("TournamentDate")
 sTourName = session("TournamentName")
 
 curSanctionId = left(sTourID, 6)
@@ -28,6 +28,7 @@ If len(curSanctionId) < 6 THEN
 
     monthNode = Left(sTourDate, delim1 - 1)
     yearNode = Right(sTourDate, 4)
+	IF datepart("y",date()) >= 225 then yearNode = yearNode + 1
     dayNode = Mid(sTourDate, delim1 + 1, delim2 - delim1 - 1)
     
     curSanctionId = yearNode - 2000 & "Z000"
@@ -51,7 +52,7 @@ END IF
       <p align="center"><font face="Verdana" size="6" color="#FFFFFF">
       	USA Water Ski Registration Details</font></p>
       <p align="center"><font face="Verdana" size="4" color="#FFFFFF">
-      	Registration Support for -- <%=session("TournamentName")%></font></p>
+      	Registration Support for -- <%=session("TournamentName")%>, <%=curSanctionId%>, <%=yearNode%></font></p>
       <p>&nbsp;</p>
     </td>
   </tr>
@@ -62,7 +63,7 @@ END IF
         <td width="185" valign="top" bgcolor="#42639F">
 	        <font face="Verdana" size="2" COLOR="#FFFFFF"><br>&nbsp;Currently Logged in as: </font><br>
 	        <font face="Verdana" size="2" COLOR="#FFFFFF">&nbsp;<%=Session("UserName")%>&nbsp;&nbsp;
-		    <%=session("tournamentdate")%></font><br>
+		    <%=session("TournamentDate")%> <%=session("TournamentDate")%></font><br>
 	        <br>
 
 			<font face="Verdana" size="2"> 

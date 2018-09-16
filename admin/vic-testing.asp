@@ -354,7 +354,7 @@ sSQL = sSQL & " Case when MX.Age <= 17 and MX.Sex = 'F' Then 'G'"
 sSQL = sSQL & " when MX.Age <= 17 then 'B' when MX.Sex = 'F' then 'W' else 'M' end + Case"
 sSQL = sSQL & " when MX.Age <= 9 then '1' when MX.Age <= 13 then '2' when MX.Age <= 17 then '3'"
 sSQL = sSQL & " when MX.Age <= 24 then '1' when MX.Age <= 34 then '2' when MX.Age <= 44 then '3'"
-sSQL = sSQL & " when MX.Age <= 52 then '4' when MX.Age <= 59 then '5' when MX.Age <= 64 then '6'"
+sSQL = sSQL & " when MX.Age <= 54 then '4' when MX.Age <= 59 then '5' when MX.Age <= 64 then '6'"
 sSQL = sSQL & " when MX.Age <= 69 then '7' when MX.Age <= 74 then '8' when MX.Age <= 79 then '9'"
 sSQL = sSQL & " when MX.Age <= 84 then 'A' else 'B' end as AgeDiv,"
 		
