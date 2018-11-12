@@ -10,38 +10,35 @@ IF Session("UploadMode") <> "Zip" AND Session("UploadMode") <> "Rpt" THEN Respon
 WriteIndexPageHeader
 
 %>
-
 		<table border="2" cellspacing="1" cellpadding="1">
 
 		<tr>
 			<td>&nbsp;&nbsp;&nbsp;DLA</td>
 
 			<td valign="top"><font face="Verdana, Arial, Helvetica, sans-serif" Size="2">
-    	
 <%
 
 Dim strTourID, strTourZip, strTourFldr
 Dim sSQL, strFile, strStatus, strAction
 Dim TSanction, TName, TDateE, TStatus
 Dim TEventSlalom, TEventTrick, TEventJump
-Dim objFSO, objZip, objRS, objMail, eMailSubj, eMailFrom, eMailTo, eMailCC, eMailReplyTo, SeedRep, Owner
+Dim objFSO, objZip, objRS, eMailSubj, eMailFrom, eMailTo, eMailCC, eMailReplyTo, SeedRep, Owner
 Dim FoundNewWSP, WSPFileName
 
 Dim PTF_SBK, PTF_WSP, PTF_TS, PTF_OD, PTF_BT, PTF_JT
 Dim PTF_CS, PTF_CJ, PTF_SD, PTF_TU, PTF_HD, PTF_TNY, nFilSto
-
 
 Set objFSO = Server.CreateObject("Scripting.FileSystemObject")
 Set objZip = Server.CreateObject("SoftComplex.Zip")
 Set objRS = Server.CreateObject("ADODB.recordset")
 OpenConSanUpd
 			
-
 '	Startup -- create some folder and file name variables
 
 strTourID = UCase(left(Session("strTourID"),6))
 strTourZip = Session("strTourZip")
 strTourFldr = PathtoScratch & "\" & Session("strTourID")
+WriteDebugSQL ("ExtractWfw.asp: TourID: " & strTourID & ", Tourzip=" & strTourZip & ", TourFldr=" & strTourFldr)
 
 '	============= Get SWIFT entry into objRS answerset & pull TD name & eMail adrs
 
@@ -72,9 +69,12 @@ sSQL = sSQL & " WHERE TournAppID = '" & strTourID & "' and isnumeric(CScorePID) 
 sSQL = sSQL & " CC on CC.TournAppID = ST.TournAppID where upper(ST.TournAppID) = '"
 sSQL = sSQL & strTourID & "'"
 
+WriteDebugSQL ("ExtractWfw.asp: Get Swift Entry: " & SanctionTableName)
+
 objRS.open sSQL, sConnectionToSanctionTable, 3, 3
 If objRS.EOF THEN
 	strTStatus = -1
+    WriteDebugSQL ("ExtractWfw.asp: Failed to retrieve Swift Entry")
 ELSE 
 	strTStatus = objRS("TStatus")
 	TSanction = objRS("TSanction")
@@ -320,7 +320,9 @@ END IF
 ' Get submitter Name and eMail ID from WSP Header for eMail confirmation,
 '	Otherwise use Chief Scorer name and eMail address obtained from Sanction.
 IF objFSO.FileExists (strTourFldr & "\" & strFileName) THEN
-	IF Instr(strAction, "Stored") > 0 THEN
+    WriteDebugSQL ("ExtractWfw.asp: Sending emails")
+	
+    IF Instr(strAction, "Stored") > 0 THEN
 		tmpFiles = objZip.ZipFilesTo(strTourFldr&"\"&strFileName, strTourZip)
 		PTF_WSP = 1
 	ELSEIF strAction = "- -" AND PTF_WSP = 1 THEN
@@ -361,6 +363,10 @@ ELSE
 		eMailTo = eMailTo & """" & objRS("CScorName") & """ <" & objRS("CScorEmail") & ">"
 	END IF
 END IF
+WriteDebugSQL ("ExtractWfw.asp: eMailTo: " & eMailTo)
+
+WriteDebugSQL ("ExtractWfw.asp: DisplayFile ")
+
 DisplayFile
 
 
@@ -369,7 +375,14 @@ DisplayFile
 nFilSt0 = 0
 strFileName = strTourID & "TS.PRN"
 strDescription = "Tournament Summary Report"
-ExtractFile strFileName, strTourFldr, 550
+WriteDebugSQL ("ExtractWfw.asp: " & strFileName & " " & strDescription)
+
+On Error Resume Next
+    ExtractFile strFileName, strTourFldr, 550
+    If Err.Number <> 0 Then
+        WriteDebugSQL ("ExtractWfw.asp: Error sending email: Err.Number=" & Err.Number & " Message="  & Err.Description )
+        On Error Goto 0 ' But don't let other errors hide!
+    End If
 IF objFSO.FileExists (strTourFldr & "\" & strFileName) THEN
 	nFilSto = nFilSto + 1
 	IF Instr(strAction, "Stored") > 0 THEN
@@ -390,7 +403,14 @@ DisplayFile
 
 strFileName = strTourID & "TS.TXT"
 strDescription = "WfW Tournament Export Data File"
-ExtractFile strFileName, strTourFldr, 100
+WriteDebugSQL ("ExtractWfw.asp: " & strFileName & " " & strDescription)
+
+On Error Resume Next
+    ExtractFile strFileName, strTourFldr, 100
+    If Err.Number <> 0 Then
+        WriteDebugSQL ("ExtractWfw.asp: Error sending email: Err.Number=" & Err.Number & " Message="  & Err.Description )
+        On Error Goto 0 ' But don't let other errors hide!
+    End If
 IF objFSO.FileExists (strTourFldr & "\" & strFileName) THEN
 	nFilSto = nFilSto + 1
 	IF Instr(strAction, "Stored") > 0 THEN
@@ -417,7 +437,14 @@ If PTF_TS = 0 and nFilSto = 2 then PTF_TS = 1
 
 strFileName = strTourID & "OD.TXT"
 strDescription = "Officials Data File (Credits)"
-ExtractFile strFileName, strTourFldr, 750
+WriteDebugSQL ("ExtractWfw.asp: " & strFileName & " " & strDescription)
+
+On Error Resume Next
+    ExtractFile strFileName, strTourFldr, 750
+    If Err.Number <> 0 Then
+        WriteDebugSQL ("ExtractWfw.asp: Error sending email: Err.Number=" & Err.Number & " Message="  & Err.Description )
+        On Error Goto 0 ' But don't let other errors hide!
+    End If
 
 '	If file stored, Check for chiefs and reset status if missing
 
@@ -486,7 +513,14 @@ DisplayFile
 IF TEventSlalom = True or TEventJump = True THEN
 	strFileName = strTourID & "BT.PRN"
 	strDescription = "Boat Time Tracking Report"
-	ExtractFile strFileName, strTourFldr, 500
+    WriteDebugSQL ("ExtractWfw.asp: " & strFileName & " " & strDescription)
+
+    On Error Resume Next
+        ExtractFile strFileName, strTourFldr, 500
+        If Err.Number <> 0 Then
+            WriteDebugSQL ("ExtractWfw.asp: Error sending email: Err.Number=" & Err.Number & " Message="  & Err.Description )
+            On Error Goto 0 ' But don't let other errors hide!
+        End If
 	IF instr(strAction,"Stored") > 0 THEN 
 		objFSO.CopyFile strTourFldr & "\" & strFileName, PathtoTiming & "\", TRUE
 	END IF
@@ -516,7 +550,14 @@ END IF
 IF TEventJump = True THEN
 	strFileName = strTourID & "JT.CSV"
 	strDescription = "Jump Time Data File"
-	ExtractFile strFileName, strTourFldr, 500
+    WriteDebugSQL ("ExtractWfw.asp: " & strFileName & " " & strDescription)
+
+    On Error Resume Next
+        ExtractFile strFileName, strTourFldr, 500
+        If Err.Number <> 0 Then
+            WriteDebugSQL ("ExtractWfw.asp: Error sending email: Err.Number=" & Err.Number & " Message="  & Err.Description )
+            On Error Goto 0 ' But don't let other errors hide!
+        End If
 	IF instr(strAction,"Stored") > 0 THEN 
 		objFSO.CopyFile strTourFldr & "\" & strFileName, PathtoTiming & "\", TRUE
 		IF instr("LRPAB",mid(Session("strTourID"),7,1)) > 0 THEN
@@ -548,7 +589,14 @@ END IF
 
 strFileName = strTourID & "CS.HTM"
 strDescription = "Condensed Scorebook Report"
-ExtractFile strFileName, strTourFldr, 400
+WriteDebugSQL ("ExtractWfw.asp: " & strFileName & " " & strDescription)
+
+On Error Resume Next
+    ExtractFile strFileName, strTourFldr, 400
+    If Err.Number <> 0 Then
+        WriteDebugSQL ("ExtractWfw.asp: Error sending email: Err.Number=" & Err.Number & " Message="  & Err.Description )
+        On Error Goto 0 ' But don't let other errors hide!
+    End If
 IF instr(strAction,"Stored") > 0 THEN 
 	objFSO.CopyFile strTourFldr & "\" & strFileName, PathtoScoreBks & "\", TRUE
 	IF instr("LRPAB",mid(Session("strTourID"),7,1)) > 0 THEN
@@ -578,7 +626,14 @@ DisplayFile
 nFilSto = 0
 strFileName = strTourID & "CJ.PRN"
 strDescription = "Chief Judges Tournament Report"
-ExtractFile strFileName, strTourFldr, 800
+WriteDebugSQL ("ExtractWfw.asp: " & strFileName & " " & strDescription)
+
+On Error Resume Next
+    ExtractFile strFileName, strTourFldr, 800
+    If Err.Number <> 0 Then
+        WriteDebugSQL ("ExtractWfw.asp: Error sending email: Err.Number=" & Err.Number & " Message="  & Err.Description )
+        On Error Goto 0 ' But don't let other errors hide!
+    End If
 
 IF objFSO.FileExists (strTourFldr & "\" & strFileName) THEN
 	nFilSto = nFilSto + 1
@@ -600,7 +655,14 @@ DisplayFile
 
 strFileName = strTourID & "CJ.TXT"
 strDescription = "Chief Judges Rept Data File"
-ExtractFile strFileName, strTourFldr, 100
+WriteDebugSQL ("ExtractWfw.asp: " & strFileName & " " & strDescription)
+
+On Error Resume Next
+    ExtractFile strFileName, strTourFldr, 100
+    If Err.Number <> 0 Then
+        WriteDebugSQL ("ExtractWfw.asp: Error sending email: Err.Number=" & Err.Number & " Message="  & Err.Description )
+        On Error Goto 0 ' But don't let other errors hide!
+    End If
 
 IF instr(strAction,"Stored") > 0 THEN 
 	objFSO.CopyFile strTourFldr & "\" & strFileName, PathtoHQInBox & "\", TRUE
@@ -626,15 +688,18 @@ DisplayFile
 
 If PTF_CJ = 0 and nFilSto = 2 then PTF_CJ = 1
 
-
-
-
 '	============ Safety Report
-
 nFilSto = 0
 strFileName = strTourID & "SD.PRN"
 strDescription = "Safety Directors Report"
-ExtractFile strFileName, strTourFldr, 800
+WriteDebugSQL ("ExtractWfw.asp: " & strFileName & " " & strDescription)
+
+On Error Resume Next
+    ExtractFile strFileName, strTourFldr, 800
+    If Err.Number <> 0 Then
+        WriteDebugSQL ("ExtractWfw.asp: Error sending email: Err.Number=" & Err.Number & " Message="  & Err.Description )
+        On Error Goto 0 ' But don't let other errors hide!
+    End If
 IF objFSO.FileExists (strTourFldr & "\" & strFileName) THEN
 	nFilSto = nFilSto + 1
 	IF Instr(strAction, "Stored") > 0 THEN
@@ -655,7 +720,14 @@ DisplayFile
 
 strFileName = strTourID & "SD.TXT"
 strDescription = "Safety Directors Data File"
-ExtractFile strFileName, strTourFldr, 100
+WriteDebugSQL ("ExtractWfw.asp: " & strFileName & " " & strDescription)
+
+On Error Resume Next
+    ExtractFile strFileName, strTourFldr, 100
+    If Err.Number <> 0 Then
+        WriteDebugSQL ("ExtractWfw.asp: Error sending email: Err.Number=" & Err.Number & " Message="  & Err.Description )
+        On Error Goto 0 ' But don't let other errors hide!
+    End If
 
 IF instr(strAction,"Stored") > 0 THEN 
 	objFSO.CopyFile strTourFldr & "\" & strFileName, PathtoHQInBox & "\", TRUE
@@ -687,7 +759,14 @@ If PTF_SD = 0 and nFilSto = 2 then PTF_SD = 1
 nFilSto = 0
 strFileName = strTourID & "TU.PRN"
 strDescription = "Towboat Utilization Report"
-ExtractFile strFileName, strTourFldr, 800
+WriteDebugSQL ("ExtractWfw.asp: " & strFileName & " " & strDescription)
+
+On Error Resume Next
+    ExtractFile strFileName, strTourFldr, 800
+    If Err.Number <> 0 Then
+        WriteDebugSQL ("ExtractWfw.asp: Error sending email: Err.Number=" & Err.Number & " Message="  & Err.Description )
+        On Error Goto 0 ' But don't let other errors hide!
+    End If
 IF instr(strAction,"Stored") > 0 THEN 
 	objFSO.CopyFile strTourFldr & "\" & strFileName, PathtoHQInBox & "\", TRUE
 END IF
@@ -711,7 +790,14 @@ DisplayFile
 
 strFileName = strTourID & "TU.TXT"
 strDescription = "Towboat Utilization Data File"
-ExtractFile strFileName, strTourFldr, 100
+WriteDebugSQL ("ExtractWfw.asp: " & strFileName & " " & strDescription)
+
+On Error Resume Next
+    ExtractFile strFileName, strTourFldr, 100
+    If Err.Number <> 0 Then
+        WriteDebugSQL ("ExtractWfw.asp: Error sending email: Err.Number=" & Err.Number & " Message="  & Err.Description )
+        On Error Goto 0 ' But don't let other errors hide!
+    End If
 
 IF instr(strAction,"Stored") > 0 THEN 
 	objFSO.CopyFile strTourFldr & "\" & strFileName, PathtoHQInBox & "\", TRUE
@@ -744,7 +830,12 @@ If PTF_TU = 0 and nFilSto = 2 then PTF_TU = 1
 IF instr("ELRPAB",mid(Session("strTourID"),7,1)) > 0 THEN
 	strFileName = strTourID & "HD.TXT"
 	strDescription = "Homologation Dossier"
-	ExtractFile strFileName, strTourFldr, 6000
+    On Error Resume Next
+        ExtractFile strFileName, strTourFldr, 6000
+        If Err.Number <> 0 Then
+            WriteDebugSQL ("ExtractWfw.asp: Error sending email: Err.Number=" & Err.Number & " Message="  & Err.Description )
+            On Error Goto 0 ' But don't let other errors hide!
+        End If
 
 	IF instr(strAction,"Stored") > 0 and mid(Session("strTourID"),7,1) <> "E" THEN 
 		objFSO.CopyFile strTourFldr & "\" & strFileName, PathtoTiming & "\", TRUE
@@ -776,7 +867,14 @@ END IF
 
 strFileName = "WWPARM.TNY"
 strDescription = "Tournament Control File"
-ExtractFile strFileName, strTourFldr, 60
+WriteDebugSQL ("ExtractWfw.asp: " & strFileName & " " & strDescription)
+
+On Error Resume Next
+    ExtractFile strFileName, strTourFldr, 60
+    If Err.Number <> 0 Then
+        WriteDebugSQL ("ExtractWfw.asp: Error sending email: Err.Number=" & Err.Number & " Message="  & Err.Description )
+        On Error Goto 0 ' But don't let other errors hide!
+    End If
 IF objFSO.FileExists (strTourFldr & "\" & strFileName) THEN
 	IF Instr(strAction, "Stored") > 0 THEN
 		tmpFiles = objZip.ZipFilesTo(strTourFldr&"\"&strFileName, strTourZip)
@@ -834,8 +932,8 @@ ConSanUpd.Execute(sSQL)
 ' ================ Now generate confirmation email, but only if we have addresses
 
 IF len(eMailTo) > 0 THEN
+    WriteDebugSQL ("ExtractWfw.asp: send emailto " & eMailTo)
 
-	'Set objMail = CreateObject("CDO.Message")
 	eMailSubj = "Post-Tournament Reports from " & Session("strTourID") & " " & Session("strTourName") & " (" & Session("strTourDate") & ")"
 
 	IF mid(strTourID,3,1) = "C" THEN
@@ -854,61 +952,60 @@ IF len(eMailTo) > 0 THEN
 	ELSE
 		Owner = ""
 	END IF
+    WriteDebugSQL ("ExtractWfw.asp: emailto Owner " & Owner)
 
 	' eMailCC = """Dave Clark"" <awsatechdude@comcast.net>; ""Kirby Whetsel"" <kwhetsel@charter.net>"
 	eMailCC = """Kirby Whetsel"" <kwhetsel@charter.net>"
 
 	IF Session("Firstname") & Session("LastName") = "DannyLeBourgeois" THEN
 		IF instr("CSM",mid(strTourID,3,1)) = 0 and len(Owner) > 0 THEN eMailCC = eMailCC & "; " & Owner
-		eMailFrom = """Danny LeBourgeois"" <dleboo@gmail.com>"
+		''''eMailFrom = """Danny LeBourgeois"" <dleboo@gmail.com>"
+		eMailFrom = """USA Water Ski Competition"" <dleboo@gmail.com>"
 		eMailReplyTo = "dleboo@gmail.com"
 		SeedRep = "Danny LeBourgeois" & vbCrLf & "AWSA South Central Seeding" & vbCrLf & "dleboo@gmail.com" & vbCrLf & "(713) 213-1779"
-'	ELSEIF Session("Firstname") & Session("LastName") = "DaveClark" THEN
-'		IF instr("SM",mid(strTourID,3,1)) = 0 and len(Owner) > 0 THEN eMailCC = eMailCC & "; " & Owner
-'		eMailFrom = """Dave Clark"" <awsatechdude@comcast.net>"
-'		eMailReplyTo = "awsatechdude@comcast.net"
-'		SeedRep = "Dave Clark" & vbCrLf & "AWSA Midwest Seeding" & vbCrLf & "awsatechdude@comcast.net" & vbCrLf & "(847) 269-7041"
 	ELSEIF Session("Firstname") & Session("LastName") = "RobertRhyne" THEN
 		IF instr("USM",mid(strTourID,3,1)) = 0 and len(Owner) > 0 THEN eMailCC = eMailCC & "; " & Owner
-		eMailFrom = """Robert Rhyne"" <rrriii@mindspring.com>"
+		''''eMailFrom = """Robert Rhyne"" <rrriii@mindspring.com>"
+		eMailFrom = """USA Water Ski Competition"" <rrriii@mindspring.com>"
 		eMailReplyTo = "rrriii@mindspring.com"
 		SeedRep = "Robert Rhyne" & vbCrLf & "NCWSA Seeding" & vbCrLf & "rrriii@mindspring.com" & vbCrLf & "(704) 906-7779"
 	ELSEIF Session("Firstname") & Session("LastName") = "JenniferFrederick-Kelley" THEN
 		IF instr("ESM",mid(strTourID,3,1)) = 0 and len(Owner) > 0 THEN eMailCC = eMailCC & "; " & Owner
-		eMailFrom = """Jennifer Frederick-Kelly"" <jennifer@frederickmachine.com>"
+		''''eMailFrom = """Jennifer Frederick-Kelly"" <jennifer@frederickmachine.com>"
+		eMailFrom = """USA Water Ski Competition"" <jennifer@frederickmachine.com>"
 		eMailReplyTo = "jennifer@frederickmachine.com"
 		SeedRep = "Jennifer Frederick-Kelly" & vbCrLf & "AWSA East Seeding" & vbCrLf & "jennifer@frederickmachine.com" & vbCrLf & "(716) 892-1425"
 	ELSEIF Session("Firstname") & Session("LastName") = "KirbyWhetsel" THEN
 		IF instr("SM",mid(strTourID,3,1)) = 0 and len(Owner) > 0 THEN eMailCC = eMailCC & "; " & Owner
-		eMailFrom = """Kirby Whetsel"" <kwhetsel@charter.net>"
+		''''eMailFrom = """Kirby Whetsel"" <kwhetsel@charter.net>"
+		eMailFrom = """USA Water Ski Competition"" <kwhetsel@charter.net>"
 		eMailReplyTo = "kwhetsel@charter.net"
 		SeedRep = "Kirby Whetsel" & vbCrLf & "AWSA South Seeding" & vbCrLf & "kwhetsel@charter.net" & vbCrLf & "(931) 409-0389"
 	ELSEIF Session("Firstname") & Session("LastName") = "JudyStanford" THEN
 		IF instr("WSM",mid(strTourID,3,1)) = 0 and len(Owner) > 0 THEN eMailCC = eMailCC & "; " & Owner
-		eMailFrom = """Judy Stanford"" <judy-don@sbcglobal.net>"
+		''''eMailFrom = """Judy Stanford"" <judy-don@sbcglobal.net>"
+		eMailFrom = """USA Water Ski Competition"" <judy-don@sbcglobal.net>"
 		eMailReplyTo = "judy-don@sbcglobal.net"
 		SeedRep = "Judy Stanford" & vbCrLf & "AWSA West Seeding" & vbCrLf & "judy-don@sbcglobal.net" & vbCrLf & "(925) 932-7781"
 	ELSEIF Session("Firstname")="Mike" AND INSTR(LCASE(Session("LastName")),"connor")>0 THEN
 		IF instr("SM",mid(strTourID,3,1)) = 0 and len(Owner) > 0 THEN eMailCC = eMailCC & "; " & Owner
-		eMailFrom = """Mike O'Connor"" <h2oskimo@gmail.com>"
+		''''eMailFrom = """Mike O'Connor"" <h2oskimo@gmail.com>"
+		eMailFrom = """USA Water Ski Competition"" <h2oskimo@gmail.com>"
 		eMailReplyTo = "h2oskimo@gmail.com"	
 		SeedRep = "Mike O'Connor" & vbCrLf & "AWSA Midwest Seeding" & vbCrLf & "h2oskimo@gmail.com" & vbCrLf & "(573) 864-2138"
 	ELSE
 		IF instr("SMU",mid(strTourID,3,1)) = 0 and len(Owner) > 0 THEN eMailCC = eMailCC & "; " & Owner
-		eMailFrom = """USA Water Ski Competition"" <shardee@usawaterski.org>"
-		eMailReplyTo = "shardee@usawaterski.org"
+		''''eMailFrom = """USA Water Ski Competition"" <shardee@usawaterski.org>"
+		''''eMailReplyTo = "shardee@usawaterski.org"
+		eMailFrom = """USA Water Ski Competition"" <mawsa@comcast.net>"
+		eMailReplyTo = "mawsa@comcast.net"
 		SeedRep = Session("Firstname") & " " & Session("LastName") & " on behalf of Sandy Hardee" & vbCRLF & "Competition Department HQ" & vbCRLF & "shardee@usawaterski.org" & vbCRLF & "1-863-324-4341 ext 126" & vbCRLF & "Direct Line:1-863-874-5681"
 	END IF
 
+    ''''WriteDebugSQL ("ExtractWfw.asp: emailto SeedRep " & SeedRep)
 	IF mid(strTourID,3,1) = "U" THEN
 		eMailCC = eMailCC & "; ""Jeff Surdej"" <j_surdej@yahoo.com>; ""Adam Koehler"" <adam.t.koehler@gmail.com>; ""Joey McNamara"" <ncwsa@joeymcnamara.com>"
 	END IF
-
-	'objMail.From = eMailFrom
-	'objMail.To = eMailTo
-	'objMail.CC = eMailCC
-	'objMail.BCC = """Dave Allen"" <allendbj@comcast.net>"
-
 
 	eMailBody = "Dear Tournament Organizer and/or Chief Official(s) --" & vbCRLF & vbCRLF
 
@@ -922,6 +1019,7 @@ IF len(eMailTo) > 0 THEN
 		eMailBody = eMailBody & "-- " & Session("strTourName") & " -- ending " & Session("strTourDate") & vbCRLF & vbCRLF
 	END IF		
 
+    WriteDebugSQL ("ExtractWfw.asp: emailto UploadMode " & Session("UploadMode"))
 	IF len(strMissing) = 0 THEN
 
 		eMailBody = eMailBody & "All of the required post-tournament reports are now accounted for" & vbCRLF 
@@ -958,6 +1056,8 @@ IF len(eMailTo) > 0 THEN
 
 	END IF
 
+    WriteDebugSQL ("ExtractWfw.asp: emailto strMissing " & strMissing)
+
 	eMailBody = eMailBody & SeedRep
 	
 	IF Instr(strMissing, "CS.HTM") = 0 THEN
@@ -976,19 +1076,26 @@ IF len(eMailTo) > 0 THEN
 	objMessage.To = eMailTo
 
 	IF instr(eMailCC,eMailFrom) = 0 THEN eMailCC = eMailCC & "; " & eMailFrom
+
 	objMessage.cc = eMailCC
-	objMessage.From = """Competition Support"" <Post_Tour@usawaterski.org>"
+	''''objMessage.From = """Competition Support"" <Post_Tour@usawaterski.org>"
+    objMessage.From = eMailFrom
 	objMessage.ReplyTo = eMailReplyTo
 
-	' objMessage.bcc = "allendbj@comcast.net, cronemarka@gmail.com"
-	objMessage.bcc = "allendbj@comcast.net"
+	objMessage.bcc = "mawsa@comcast.net"
 	objMessage.TextBody = eMailBody
 
-	WriteDebugSQL ("Upload Time:  " & Date() & " " & Time() & vbCRLF)
-    WriteDebugSQL (eMailTo & " --and-- " & eMailCC)
+	WriteDebugSQL ("ExtractWfw.asp: Upload Time:  " & Date() & " " & Time())
+    WriteDebugSQL ("ExtractWfw.asp: MailTo: " & eMailTo & " eMailCC: " & eMailCC)
 
 	' Finally send the message, and then clear that object
-	objMessage.Send
+    On Error Resume Next
+    	objMessage.Send
+        If Err.Number <> 0 Then
+            WriteDebugSQL ("ExtractWfw.asp: Error sending email: Err.Number=" & Err.Number & " Message="  & Err.Description )
+            On Error Goto 0 ' But don't let other errors hide!
+        End If
+    WriteDebugSQL ("ExtractWfw.asp: email sent")
 	set objMessage = Nothing
 	
 	' Now append this message details to the eMails.txt file, creating if not already present.
@@ -1006,6 +1113,7 @@ IF len(eMailTo) > 0 THEN
 	objeMailTxt.WriteBlankLines (4)
 	objeMailTxt.Close
 	Set objeMailTxt = Nothing
+    WriteDebugSQL ("ExtractWfw.asp: emailto closed")
 
 	' Now Zip this newly-modified eMails.txt file into the archive, then delete it.
 
