@@ -143,30 +143,88 @@ If ErrNumber <> 0 then
     'Set objCDO = Nothing
 
 
-    Set objMessage = CreateObject("CDO.Message")
-    objMessage.Subject = "USA Waterski Rankings Error Message"
-    objMessage.From = "viper@epolk.org"
-    objMessage.To = "<mawsa@comcast.net>; <AWSATechDude@comcast.net>; <RankingsErrors@usawaterski.org>; <cronemarka@gmail.com>; <shansen@dakotatechgroup.com>"
-    'objMessage.cc = "errors@epolk.com"
-    objMessage.TextBody = strBody
-    '==This section provides the configuration information for the remote SMTP server.
-    objMessage.Configuration.Fields.Item _
-    ("http://schemas.microsoft.com/cdo/configuration/sendusing") = 2
-    'Name or IP of Remote SMTP Server
-    objMessage.Configuration.Fields.Item _
-    ("http://schemas.microsoft.com/cdo/configuration/smtpserver") = "mail.epolk.net"
-    'Type of authentication, NONE, Basic (Base64 encoded), NTLM
-    objMessage.Configuration.Fields.Item _
-    ("http://schemas.microsoft.com/cdo/configuration/smtpauthenticate") = 0
-    'Your UserID on the SMTP server
-    objMessage.Configuration.Fields.Item _
-    ("http://schemas.microsoft.com/cdo/configuration/sendusername") = "viper@epolk.org"
-    'Your password on the SMTP server
-    objMessage.Configuration.Fields.Item _
-    ("http://schemas.microsoft.com/cdo/configuration/sendpassword") = "V1p3rMAIL0090"
-    'Server port (typically 25)
-    objMessage.Configuration.Fields.Item _
-    ("http://schemas.microsoft.com/cdo/configuration/smtpserverport") = 25
+
+
+
+
+    
+
+
+
+
+		Dim testemailsettings
+		testemailsettings="N"
+		IF testemailsettings="Y" THEN 
+
+    		Set objMessage = CreateObject("CDO.Message")
+    		objMessage.Subject = "USA Waterski Rankings Error Message"
+   			objMessage.From = "rankingserrors@usawaterski.org"
+    		objMessage.To = "<mawsa@comcast.net>; <cronemarka@gmail.com>"
+    		objMessage.TextBody = strBody
+    		'==This section provides the configuration information for the remote SMTP server.
+
+		    objMessage.Configuration.Fields.Item _
+    		("http://schemas.microsoft.com/cdo/configuration/sendusing") = 2
+
+
+
+    		'Name or IP of Remote SMTP Server
+    		objMessage.Configuration.Fields.Item _
+    		("http://schemas.microsoft.com/cdo/configuration/smtpserver") = "smtp.office365.com"
+
+    		'Type of authentication, NONE, Basic (Base64 encoded), NTLM
+    		objMessage.Configuration.Fields.Item _
+    		("http://schemas.microsoft.com/cdo/configuration/smtpauthenticate") = 1
+
+    		'Your UserID on the SMTP server
+    		objMessage.Configuration.Fields.Item _
+    		("http://schemas.microsoft.com/cdo/configuration/sendusername") = "rankingserrors@usawaterski.org"
+
+    		'Your password on the SMTP server
+    		objMessage.Configuration.Fields.Item _
+    		("http://schemas.microsoft.com/cdo/configuration/sendpassword") = "W@t3r$k1"
+
+    		'Server port (typically 25)
+    		objMessage.Configuration.Fields.Item _
+    		("http://schemas.microsoft.com/cdo/configuration/smtpserverport") = 587
+		ELSE
+
+    		Set objMessage = CreateObject("CDO.Message")
+    		objMessage.Subject = "USA Waterski Rankings Error Message"
+   			objMessage.From = "viper@epolk.net"
+    		objMessage.To = "<mawsa@comcast.net>; <cronemarka@gmail.com>"
+    		objMessage.TextBody = strBody
+    		'==This section provides the configuration information for the remote SMTP server.
+
+		    objMessage.Configuration.Fields.Item _
+    		("http://schemas.microsoft.com/cdo/configuration/sendusing") = 2
+
+
+
+
+    		'Name or IP of Remote SMTP Server
+    		objMessage.Configuration.Fields.Item _
+    		("http://schemas.microsoft.com/cdo/configuration/smtpserver") = "mail.epolk.net"
+ 
+     		'Type of authentication, NONE, Basic (Base64 encoded), NTLM
+    		objMessage.Configuration.Fields.Item _
+    		("http://schemas.microsoft.com/cdo/configuration/smtpauthenticate") = 0   
+    
+				'Your UserID on the SMTP server
+    		objMessage.Configuration.Fields.Item _
+    		("http://schemas.microsoft.com/cdo/configuration/sendusername") = "viper@epolk.org"
+
+		    'Your password on the SMTP server
+    		objMessage.Configuration.Fields.Item _
+    		("http://schemas.microsoft.com/cdo/configuration/sendpassword") = "V1p3rMAIL0090"
+
+		    'Server port (typically 25)
+    		objMessage.Configuration.Fields.Item _
+    		("http://schemas.microsoft.com/cdo/configuration/smtpserverport") = 25
+		END IF
+
+
+
     'Use SSL for the connection (False or True)
     objMessage.Configuration.Fields.Item _
     ("http://schemas.microsoft.com/cdo/configuration/smtpusessl") = False

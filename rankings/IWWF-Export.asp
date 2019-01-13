@@ -8,12 +8,11 @@ Dim tempEvent, tempPQ1, tempPQ2, tempSex, tempYOB, TempSlmMiss, tempSpecial, tem
 Dim sTourID, sTSanction, sTName, sTDateE, sTDPretty, sTSiteID, sTSite, sIWWFSubj
 Dim eMailTo, eMailCC, SeedRep, Owner
 Dim RecsSaved, RecBypassedNoScore, RecBypassedRampHght, RecBypassedForDiv
-Dim ErrMsg, RecsNoLic, LastNoLicMem, TraceMsg
+Dim ErrMsg, RecsNoLic, LastNoLicMem
 Dim InsertCmd, sSQL, emailBody
 
 ' Initialize a few things
 ErrMsg = ""
-TraceMsg = ""
 RecsSaved = 0
 RecBypassedNoScore = 0
 RecBypassedRampHght = 0
@@ -29,10 +28,10 @@ END IF
 
 IF len(sTourID) <=0 THEN
     ErrMsg = ErrMsg & "<br />Tournament ID not provided.  Setting default"
-    sTourID = "17C999A"
+    sTourID = "99C999A"
 END IF	
 
-TraceMsg = TraceMsg & "<br />TourId=" & sTourID
+WriteDebugSQL ("IWWF-Export.asp: Begin processing for TourId=" & sTourID)
 
 ' ***************************************
 ' Set up Database and Record Set Connection
@@ -64,15 +63,15 @@ sSQL = sSQL & " WHERE TournAppID = '" & left(sTourID,6) & "' and isnumeric(CScor
 sSQL = sSQL & " CC on CC.TournAppID = ST.TournAppID where upper(ST.TournAppID) = '"
 sSQL = sSQL & left(sTourID,6) & "'"
 
-TraceMsg = TraceMsg & "<br /><br />Sanction Query:<br />" & sSQL
-
 ' ***************************************
 ' Open and run SQL statement to retrieve sanction and contact information
 ' ***************************************
 rs.open sSQL, sConnectionToSanctionTable, 3, 3
 
 IF rs.eof THEN
-   ErrMsg = ErrMsg & "<br><br><center><h2>Requested Tournament ID&nbsp; <b>" & sTourID & "</b>&nbsp; not found.</h2></center><br>"
+    ErrMsg = ErrMsg & "<br><br><center><h2>Requested Tournament ID&nbsp; <b>" & sTourID & "</b>&nbsp; not found.</h2></center><br>"
+    WriteDebugSQL ("IWWF-Export.asp: ERROR Requested Tournament ID " & sTourID & " not found")
+
 ELSE
    sTSanction = rs("TSanction")
    sTName = Replace(rs("TName"),","," ")
@@ -96,11 +95,10 @@ ELSE
 
    rs.close
    sIWWFSubj = sTName & "," & sTSanction & "," & sTSiteID & "," & Left(sTDateE,4) & "-" & Mid(sTDateE,5,2) & "-" & Right(sTDateE,2)
-    TraceMsg = TraceMsg & "<br /><br />Title: " & sIWWFSubj
 END IF
 
 
-EmailCC = """Melanie Hanson"" <mhanson@usawaterski.org>; ""Dave Clark"" <awsatechdude@comcast.net>; ""David Allen"" <mawsa@comcast.net>"
+EmailCC = """Melanie Hanson"" <mhanson@usawaterski.org>; ""David Allen"" <mawsa@comcast.net>"
 IF mid(sTourID,3,1) = "C" THEN
    EmailCC = EmailCC & "; ""Danny LeBourgeois"" <dleboo@gmail.com>"
 ELSEIF mid(sTourID,3,1) = "E" THEN
@@ -197,11 +195,6 @@ ExportFile = PathToIWWF & "\" & left(sTourID,6) & "RS.TXT"
 Set objTextOut = objFSO.opentextfile(ExportFile,2,true)
 
 ' ***************************************
-' Invoke "standard" Email Server Configuration -- defines objMessage object
-' ***************************************
-SetupEmailService
-
-' ***************************************
 'Open Raw Scores Table and Pull applicable Score Records, along with necessary Membership table derivatives
 ' ***************************************
 sSQL = "SELECT RS.FName, RS.LName, RS.MemberID, MT.Email, MT.Password, MT.FederationCode as MemberFed"
@@ -220,7 +213,10 @@ sSQL = sSQL & "  LEFT JOIN " & DivisionsTableName & " as DT ON RS.Div = DT.Div a
 sSQL = sSQL & "WHERE RS.Class in ('R','L') AND RS.TourID = '" & sTourID & "' "
 sSQL = sSQL & "ORDER BY RS.MemberID, RS.Round, RS.Event"
 
-TraceMsg = TraceMsg & "<br /><br />Scores Query:<br />" & sSQL
+' ***************************************
+' Invoke "standard" Email Server Configuration -- defines objMessage object
+' ***************************************
+SetupEmailService
 
 rs.open sSQL, SConnectionToTRATable, 3, 3
 do while not rs.eof
@@ -329,10 +325,6 @@ do while not rs.eof
 
     END SELECT
 
-    'TraceMsg = TraceMsg & "<br />Skier: " & tempFirst & " " & tempLast & ", Age=" & tempAge& ", Div=" & tempDiv & ", IWSF=" & tempIWSF & ", Special=" & tempSpecial 
-    'TraceMsg = TraceMsg & ", Event=" & tempEvent & ", Score=" & tempScore & ", tempAlt=" & tempAlt & ", tempPQ1=" & tempPQ1 & ", tempPQ2=" & tempPQ2
-    'TraceMsg = TraceMsg & ", Export=" & tempExport & ", tempSL=" & tempSL & ", tempTR=" & tempTR & ", tempJU=" & tempJU
-
     IF tempExport = "Y" THEN
     	
         objTextOut.write ( tempLast & ";" )
@@ -369,10 +361,10 @@ do while not rs.eof
 
 			' Prepare and Send Notification eMail
 			objMessage.Subject = "ACTION REQUIRED !!  IWWF License ID needed to submit your scores"
-			objMessage.From = """USA Water Ski Membership (Melanie Hanson)"" <mhanson@usawaterski.org>"
+            '''objMessage.From = """USA Water Ski Membership (Melanie Hanson)"" <competition@usawaterski.org>"
+            objMessage.From = "competition@usawaterski.org"
 			objMessage.To = """" & rs("FName") & " " & rs("LName") & """ <" & rs("Email") & ">"
-		    objMessage.To = """Dave Clark"" <awsatechdude@comcast.net>"
-		    objMessage.CC = """Dave Clark"" <AWSATechDude@comcast.net>"
+			objMessage.CC = """USA Water Ski Membership (Melanie Hanson)"" <mhanson@usawaterski.org>"
 		    objMessage.CC = """Dave Allen"" <mawsa@comcast.net>"
 			objMessage.CC = eMailCC & "; " & eMailTo
 
@@ -458,7 +450,14 @@ do while not rs.eof
             ' DLA: Send email regarding something, not quite sure what 
             ' ***************************************
 			objMessage.HTMLBody = emailBody
-			objMessage.Send
+            On Error Resume Next
+		        objMessage.Send
+                If Err.Number <> 0 Then
+                    WriteDebugSQL ("IWWF-Export.asp: Error sending IWWF License Issue email: Err.Number=" & Err.Number & " Message="  & Err.Description )
+                    On Error Goto 0 ' But don't let other errors hide!
+                ELSE
+                    WriteDebugSQL ("IWWF-Export.asp: IWWF License ID needed email sent")
+                End If
 
     		RecsNoLic = RecsNoLic + 1
         
@@ -497,15 +496,20 @@ set objTextOut = nothing
    WriteIndexPageHeader
 
     IF RecsSaved > 0 Then
+        Dim File2Send
+        File2Send = PathtoIWWF & "\" & left(sTourID,6) & "RS.TXT"
+
         ' ***************************************
         ' Prepare and Send Notification eMail
         ' ***************************************
+        SetupEmailService
         objMessage.Subject = sIWWFSubj
-        objMessage.From = """USA Water Ski"" <dclark@usawaterski.org>"
-		objMessage.To = """Dave Clark"" <AWSATechDude@comcast.net>; ""IWWF Ranking Data"" <rankingdata@iwsftournament.com>"
-		objMessage.CC = """David Allen"" <mawsa@comcast.net>; ""Dave Clark"" <AWSATechDude@comcast.net>; ""IWWF-EA"" <competitions@iwwfed-ea.org"
+        ''''objMessage.From = """USA Water Ski Competition"" <competition@usawaterski.org>"
+        objMessage.From = "competition@usawaterski.org"
+		objMessage.To = """IWWF Ranking Data"" <rankingdata@iwsftournament.com>"
+		objMessage.CC = """David Allen"" <mawsa@comcast.net>; ""IWWF-EA"" <competitions@iwwfed-ea.org"
 
-		objMessage.AddAttachment PathtoIWWF & "\" & left(sTourID,6) & "RS.TXT"
+		objMessage.AddAttachment File2Send
 
 		objMessage.HTMLBody = ""
 		objMessage.TextBody = sIWWFSubj
@@ -513,6 +517,7 @@ set objTextOut = nothing
         On Error Resume Next
 		objMessage.Send
         If Err.Number <> 0 Then
+            WriteDebugSQL ("IWWF-Export.asp: Error sending email: Err.Number=" & Err.Number & " Message="  & Err.Description )
             %>
                 <DIV ID="debugMsg">
                     <br />Err.Number=<%=Err.Number %>
@@ -521,6 +526,8 @@ set objTextOut = nothing
                 </DIV>
             <%
             On Error Goto 0 ' But don't let other errors hide!
+        ELSE
+            WriteDebugSQL ("IWWF-Export.asp: EmailToIWWF email sent for File=" & File2Send)
         End If
 
         objFSO.CopyFile PathtoIWWF & "\" & left(sTourID,6) & "RS.TXT", PathtoIWWF & "\Archived\", TRUE
@@ -544,7 +551,6 @@ set objTextOut = nothing
         <h4>No R/L Records were exported for&nbsp; <b><%=sTourID%><b>.</h4><br><br>
         <%
     END IF
-TraceMsg = ""
     %>
     <form method=post action="DefaultHQ.asp?process=uploadany" method="post">
         <input type="submit" style="width:13em" value="Finished"  title="Return to the Upload Control Page">
@@ -562,7 +568,6 @@ TraceMsg = ""
 
     <DIV style="width: 100%; Text-Align:Left; margin-left: 0; margin-right: auto; FONT-SIZE:1.0em; FONT-WEIGHT:normal;">
         <br /><br />Messages<br /><%=ErrMsg %>
-        <br /><br /><%=TraceMsg %>
     </DIV>
 
 <%
