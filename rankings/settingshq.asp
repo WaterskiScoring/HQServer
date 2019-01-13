@@ -647,19 +647,59 @@ END SUB
 
 
 	Set objMessage = CreateObject("CDO.Message")
-
 	'=====  This section provides the configuration information for the remote SMTP server.
 	objMessage.Configuration.Fields.Item _
 	("http://schemas.microsoft.com/cdo/configuration/sendusing") = 2
 	'Name or IP of Remote SMTP Server
 	objMessage.Configuration.Fields.Item _
+	("http://schemas.microsoft.com/cdo/configuration/smtpserver") = "smtp.office365.com"
+
+	'Type of authentication, NONE, Basic (Base64 encoded), NTLM
+	objMessage.Configuration.Fields.Item _
+	("http://schemas.microsoft.com/cdo/configuration/smtpauthenticate") = 1
+
+	'Your UserID on the SMTP server
+	objMessage.Configuration.Fields.Item _
+	("http://schemas.microsoft.com/cdo/configuration/sendusername") = "competition@usawaterski.org"
+	'Your password on the SMTP server
+	objMessage.Configuration.Fields.Item _
+	("http://schemas.microsoft.com/cdo/configuration/sendpassword") = "W@t3r$k1"
+
+	'Server port (typically 25)
+	objMessage.Configuration.Fields.Item _
+	("http://schemas.microsoft.com/cdo/configuration/smtpserverport") = 25
+	'Use SSL for the connection (False or True)
+	objMessage.Configuration.Fields.Item _
+	("http://schemas.microsoft.com/cdo/configuration/smtpusessl") = true
+	'Connection Timeout in seconds (the maximum time CDO will try to establish a connection to the SMTP server)
+	objMessage.Configuration.Fields.Item _
+	("http://schemas.microsoft.com/cdo/configuration/smtpconnectiontimeout") = 60
+	objMessage.Configuration.Fields.Update
+	'=====  End remote SMTP server configuration section
+
+
+END SUB
+
+
+
+' -------------------------
+   SUB SetupEmailService_Old
+' -------------------------
+
+
+	Set objMessage = CreateObject("CDO.Message")
+	'=====  This section provides the configuration information for the remote SMTP server.
+	objMessage.Configuration.Fields.Item _
+	("http://schemas.microsoft.com/cdo/configuration/sendusing") = 2
+	'Name or IP of Remote SMTP Server
+  objMessage.Configuration.Fields.Item _
 	("http://schemas.microsoft.com/cdo/configuration/smtpserver") = "mail.epolk.net"
 	'Type of authentication, NONE, Basic (Base64 encoded), NTLM
 	objMessage.Configuration.Fields.Item _
 	("http://schemas.microsoft.com/cdo/configuration/smtpauthenticate") = 0
 	'Your UserID on the SMTP server
 	objMessage.Configuration.Fields.Item _
-	("http://schemas.microsoft.com/cdo/configuration/sendusername") = "viper@usawaterski.org"
+	("http://schemas.microsoft.com/cdo/configuration/sendusername") = "viper@epolk.org"
 	'Your password on the SMTP server
 	objMessage.Configuration.Fields.Item _
 	("http://schemas.microsoft.com/cdo/configuration/sendpassword") = "V1p3rMAIL0090"
@@ -675,8 +715,8 @@ END SUB
 	objMessage.Configuration.Fields.Update
 	'=====  End remote SMTP server configuration section
 
-END SUB
 
+END SUB
 
 
 
@@ -1041,20 +1081,6 @@ PersonIDwChkDgt = right(100-PIDSum,1) & Right(100000000+PersonID,8)
 
 END FUNCTION
 
-
-
-
-
-
-
-
-
-
-
-
-
-
-
 validImageExtensions = "jpg,gif,bmp"
 imageArray = array(".jpg", ".gif", ".bmp")
 validDocExtensions = "pdf,doc,txt,wpd,xls"
@@ -1065,11 +1091,6 @@ maxSUBFolderInColumn = 6
 strServerName = "http://" & request.servervariables("SERVER_NAME") & "/"
 strImageWebRoot  =  strServerName
 strDocWebRoot  =  strServerName
-
-
-
-
-
 
 %>
 
