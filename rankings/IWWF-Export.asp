@@ -197,13 +197,14 @@ Set objTextOut = objFSO.opentextfile(ExportFile,2,true)
 ' ***************************************
 'Open Raw Scores Table and Pull applicable Score Records, along with necessary Membership table derivatives
 ' ***************************************
-sSQL = "SELECT RS.FName, RS.LName, RS.MemberID, MT.Email, MT.Password, MT.FederationCode as MemberFed"
+sSQL = "SELECT RS.FName, RS.LName, RS.MemberID, MT.Email, MT.FederationCode as MemberFed"
 sSQL = sSQL & ", Convert(char(8),RS.EndDate,112) as EndDate, RS.TourID"
 sSQL = sSQL & ", RS.Event, RS.Div, RS.Class, RS.Round, RS.Place"
 sSQL = sSQL & ", Case when RS.Event = 'S' AND RS.AltScore < 0 AND RS.Perf_Qual1 < 1825 then 1825 else RS.Perf_Qual1 end as Perf_Qual1"
 sSQL = sSQL & ", RS.Perf_Qual2, ABS(RS.AltScore) as AltScore"
 sSQL = sSQL & ", Case when RS.Event = 'S' then RS.Score else RS.Score end as Score"
 sSQL = sSQL & ", MT.Sex, MT.BirthDate, MT.ForFedID, MT.FedIDLen"
+sSQL = sSQL & ", Year(RS.EndDate) - Year(MT.BirthDate) - 1 as SkiYearAge"
 sSQL = sSQL & ", case when MT.ForFedID = RS.MemberID then 'USAWS-#' when MT.FedIDLen = 0 then 'Missing' when FFP.ForFedPatt is null then 'Invalid' else 'Present' end as ForFedStat "
 sSQL = sSQL & "FROM " & RawScoresTableName & " as RS "
 sSQL = sSQL & "  LEFT JOIN " & MemberWFedIDTableName & " as MT ON cast(right(RS.MemberID,8) as integer) = MT.PersonID "
@@ -226,8 +227,8 @@ do while not rs.eof
     tempLast = replace(ucase(rs("LName")),"'","")
 
     tempSex = ucase(left(rs("sex"),1))
-    tempYOB = right(rs("birthdate"),4)
-    tempAge = 2000 + left(sTourID,2) - TempYOB
+    tempYOB = right(rs("BirthDate"),4)
+    tempAge = FormatNumber(rs("SkiYearAge"),0)
 
     If rs("MemberFed") = "USA" THEN 
     	tempIWSF = "USA" & rs("MemberID")
@@ -274,10 +275,17 @@ do while not rs.eof
           RecBypassedNoScore = RecBypassedNoScore + 1
    	  END IF
 
-      IF tempDiv = "B1" or tempDiv = "G1" or tempDiv = "B2" or tempDiv = "G2" THEN 
+      IF tempDiv = "B1" or tempDiv = "G1" THEN 
           tempExport = "N"
           RecBypassedForDiv = RecBypassedForDiv + 1
-   	  END IF
+   	  ELSE 
+          IF tempDiv = "B2" or tempDiv = "G2" THEN
+              IF tempAge < 12 THEN
+                  tempExport = "N"
+                  RecBypassedForDiv = RecBypassedForDiv + 1
+              END IF
+          END IF
+      END IF
 
     CASE "J"
       ' ***************************************
@@ -361,10 +369,9 @@ do while not rs.eof
 
 			' Prepare and Send Notification eMail
 			objMessage.Subject = "ACTION REQUIRED !!  IWWF License ID needed to submit your scores"
-            '''objMessage.From = """USA Water Ski Membership (Melanie Hanson)"" <competition@usawaterski.org>"
             objMessage.From = "competition@usawaterski.org"
 			objMessage.To = """" & rs("FName") & " " & rs("LName") & """ <" & rs("Email") & ">"
-			objMessage.CC = """USA Water Ski Membership (Melanie Hanson)"" <mhanson@usawaterski.org>"
+			objMessage.CC = """USA WATER SKI & WAKE SPORTS (USA-WSWS) | MEMBERSHIP AND OFFICIALS PROGRAMS (Melanie Hanson)"" <mhanson@usawaterski.org>"
 		    objMessage.CC = """Dave Allen"" <mawsa@comcast.net>"
 			objMessage.CC = eMailCC & "; " & eMailTo
 
@@ -390,18 +397,18 @@ do while not rs.eof
 			'	emailBody = emailBody & "<p>Dear " & rs("FName") & " " & rs("LName") & ",</p>"
 
 			emailBody = emailBody & "<p>It has come to our attention that you recently recorded class L or R scores in a competition sanctioned"
-			emailBody = emailBody & " by USA Water Ski –- " & sTName & " (" & sTSanction & "), held at " & STSite & " on " & sTDPretty & ".</p>"
+			emailBody = emailBody & " by USA WATER SKI & WAKE SPORTS (USA-WSWS) –- " & sTName & " (" & sTSanction & "), held at " & STSite & " on " & sTDPretty & ".</p>"
 
 			emailBody = emailBody & "<p>As you may already be aware, an IWWF License ID number must now be submitted with all Class L or R"
 			emailBody = emailBody & " scores, in order for those scores to be properly included in the IWWF World Ranking Lists.&nbsp;"
 				
 			IF rs("ForFedStat") = "Missing" THEN
 				emailBody = emailBody & " Unfortunately, we find that you have not yet entered your " & rs("MemberFed")
-				emailBody = emailBody & " License ID number into your USA Water Ski Membership Profile.&nbsp;"
+				emailBody = emailBody & " License ID number into your USA WATER SKI & WAKE SPORTS (USA-WSWS) Membership Profile.&nbsp;"
 		
 			ELSE		
 				emailBody = emailBody & " Unfortunately, we now find that the License ID number value which you entered"
-				emailBody = emailBody & " into your USA Water Ski Membership Profile -- """ & rs("ForFedID") 				
+				emailBody = emailBody & " into your USA WATER SKI & WAKE SPORTS (USA-WSWS) Membership Profile -- """ & rs("ForFedID") 				
 				emailBody = emailBody & """ -- is not valid for Federation code " & rs("MemberFed") & ".&nbsp;"
 
 			END IF
@@ -418,8 +425,8 @@ do while not rs.eof
 			emailBody = emailBody & " listings.&nbsp; If your name and ID is <i><b>not</i></b> listed there, then you will need to contact your home"
 			emailBody = emailBody & " country federation (" & rs("MemberFed") & ") to obtain your License ID number from them.<br>&nbsp;</li>"
 				
-			emailBody = emailBody & "<li>Then, <a href=""http://www.usawaterski.org/members/login/index.asp?m=" & rs("MemberID") & "&p=" & rs("Password") 
-			emailBody = emailBody & """>Click Here</a> to go to your USA Water Ski ""Members-Only"" login page.&nbsp; Your membership number and password will" 
+			emailBody = emailBody & "<li>Then, <a href=""http://www.usawaterski.org/members/login/index.asp?m=" & rs("MemberID") & "&p=" 
+			emailBody = emailBody & """>Click Here</a> to go to your USA WATER SKI & WAKE SPORTS (USA-WSWS) ""Members-Only"" login page.&nbsp; Your membership number will" 
 			emailBody = emailBody & " be filled in automatically; all you have to do is click the ""<b>Sign In</b>"" button to complete your login.<br>&nbsp;</li>"
 				
 			emailBody = emailBody & "<li>Click on the ""<b>Update my Membership Info</b>"" link, which appears on the left-hand side of the page.<br>&nbsp;</li>"
@@ -434,7 +441,7 @@ do while not rs.eof
 				
 			emailBody = emailBody & "<li>Then click the ""<b>Update</b>"" button, to save your changes.<br>&nbsp;</li>"
 				
-			emailBody = emailBody & "<li>Then finally reply to this email, confirming that you have recorded your License ID in your USA Water Ski"
+			emailBody = emailBody & "<li>Then finally reply to this email, confirming that you have recorded your License ID in your USA WATER SKI & WAKE SPORTS (USA-WSWS)"
 			emailBody = emailBody & " membership profile –- and we will then re-send your scores to IWWF, associated with that License ID.<br>&nbsp;</li>"
  
 			emailBody = emailBody & "</ul>"
@@ -504,7 +511,6 @@ set objTextOut = nothing
         ' ***************************************
         SetupEmailService
         objMessage.Subject = sIWWFSubj
-        ''''objMessage.From = """USA Water Ski Competition"" <competition@usawaterski.org>"
         objMessage.From = "competition@usawaterski.org"
 		objMessage.To = """IWWF Ranking Data"" <rankingdata@iwsftournament.com>"
 		objMessage.CC = """David Allen"" <mawsa@comcast.net>; ""IWWF-EA"" <competitions@iwwfed-ea.org"
