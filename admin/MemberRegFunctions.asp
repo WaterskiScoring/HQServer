@@ -28,14 +28,23 @@ SanctionTableName = "Sanctions.dbo.TSchedul"
 TeamRosterTableName = "Cobra00025.USAWSRank.TeamRoster"
 
 Function CheckBasicAuth()
-	Dim curAuth, curRqstAuth
+	Dim curAuth, curRqstAuth, curSessionUsernName
 
 	'	-----------------------------------------------------------------------
 	' Check for authorization for WSTIMS for Windows request for official ratings
 	'	-----------------------------------------------------------------------
 	curRqstAuth = 0
-	curAuth = Request.ServerVariables("HTTP_AUTHORIZATION")
-	IF len(curAuth) > 0 THEN
+    curSessionUsernName = session("UserName")
+    ''''curAuth = Request.ServerVariables("HTTP_AUTHORIZATION")
+    curAuth = Request.ServerVariables("HTTP_WSTIMS")
+	''''response.write "<br/>UserName=" & curSessionUsernName & "<br/>"
+    ''''response.write "<br/>WSTIMS_AUTHORIZATION=" & curAuth & "<br/>"
+	''''response.end
+
+	IF len(curSessionUsernName) > 0 THEN
+		curRqstAuth = 1
+
+	ELSEIF len(curAuth) > 0 THEN
 		curAuthParts = Split(curAuth, " ")
 		IF IsArray(curAuthParts) THEN
 			IF curAuthParts(0) = "Basic" THEN
@@ -50,10 +59,25 @@ Function CheckBasicAuth()
 				END IF
 			END IF
 		END IF
-	ELSE
+	
+    ELSEIF len(curAuth) > 0 THEN
+        curAuth= Request.QueryString("WSTIMS")
+		curCredParts = Split(curAuthParts(1), ":")
+		curTraceMsg = curTraceMsg & "<br />curCredParts:Count=" & UBound(curCredParts) & ", IsArray=" & IsArray(curCredParts)
+		IF IsArray(curCredParts) THEN
+			IF curCredParts(0) = "wstims" AND curCredParts(1) = "Slalom38tTrick13Jump250" THEN
+				curRqstAuth = 1
+			ELSE
+				curRqstAuth = ValidateSanctionAccess(curCredParts(0), curCredParts(1))
+			END IF
+		END IF
+    
+    ELSE
         curUser = Request.QueryString("user")
         curpassword = Request.QueryString("password")
 		curRqstAuth = ValidateSanctionAccess(curUser, curpassword)
+	    ''''response.write "ValidateSanctionAccess Credentials=" & curUser & "," & curpassword & "," & curRqstAuth & "<br/><br/>"
+	    ''''response.end
 	END IF
 	CheckBasicAuth = curRqstAuth
 End Function
@@ -605,6 +629,105 @@ Function buildQueryMemberRegEntries(curSanctionId, curTourDate, curStateSQL, cur
     buildQueryMemberRegEntries = curSqlStmt1 & curSqlStmt2 & curSqlStmt3 & curSqlStmt4 & curSqlStmt5 & curSqlStmt6 & curSqlStmt7 & curSqlStmt8
 
 End Function
+
+'	-----------------------------------------------------------------------
+' Build a query to extract member entries for tournament registrations
+' Include data from rankings, qualifications, membership status, and official ratings
+'	-----------------------------------------------------------------------
+Function buildQueryMemberRankingEquivalents(curSanctionId, curTourDate, curStateSQL, curMemberId, curMemberFirstName, curMemberLastName)
+    Dim curTourYear, curSqlStmt1, curSqlStmt2, curSqlStmt3, curSqlStmt4
+    curTourYear = 2000 + left(curSanctionId, 2)
+
+    'Member Number and name
+    curSqlStmt1 = ""
+    curSqlStmt1 = curSqlStmt1 & "SELECT MX.PersonIDWithCheckDigit as MemberID, MX.PersonID, MX.LastName, MX.FirstName, MX.FederationCode as Federation" 
+    curSqlStmt1 = curSqlStmt1 & ", (" & curTourYear & " - Year(MX.BirthDate) - 1) as Age"
+    curSqlStmt1 = curSqlStmt1 & ", Upper(Left(MX.Sex,1)) as Sex"
+    curSqlStmt1 = curSqlStmt1 & ", MX.City, MX.State"
+    curSqlStmt1 = curSqlStmt1 & ", MX.MembershipTypeCode as MemType"
+	
+    curSqlStmt1 = curSqlStmt1 & ", MX.EffectiveTo as EffTo"
+    curSqlStmt1 = curSqlStmt1 & ", Typ.ActiveMember"
+    curSqlStmt1 = curSqlStmt1 & ", Typ.Description as MemTypeDesc"
+    curSqlStmt1 = curSqlStmt1 & ", Typ.CanSkiInTournaments as CanSki"
+
+    curSqlStmt1 = curSqlStmt1 & ", SX.Div, SX.AWSA_Rat as SlalomRating"
+    curSqlStmt1 = curSqlStmt1 & ", Cast(SX.RankScore as Decimal(7,2)) as SlalomRank"
+    curSqlStmt1 = curSqlStmt1 & ", SX.Top_Equiv_SC1 as SlalomRankEquiv1"
+    curSqlStmt1 = curSqlStmt1 & ", SX.Top_Equiv_SC2 as SlalomRankEquiv2"
+    curSqlStmt1 = curSqlStmt1 & ", SX.Top_Equiv_SC3 as SlalomRankEquiv3"
+
+    curSqlStmt1 = curSqlStmt1 & ", TX.AWSA_Rat as TrickRating"
+    curSqlStmt1 = curSqlStmt1 & ", Cast(TX.RankScore as Decimal(7,2)) as TrickRank"
+    curSqlStmt1 = curSqlStmt1 & ", TX.Top_Equiv_SC1 as TrickRankEquiv1"
+    curSqlStmt1 = curSqlStmt1 & ", TX.Top_Equiv_SC2 as TrickRankEquiv2"
+    curSqlStmt1 = curSqlStmt1 & ", TX.Top_Equiv_SC3 as TrickRankEquiv3"
+
+    curSqlStmt1 = curSqlStmt1 & ", JX.AWSA_Rat as JumpRating"
+    curSqlStmt1 = curSqlStmt1 & ", Cast(JX.RankScore as Decimal(7,2)) as JumpRank"
+    curSqlStmt1 = curSqlStmt1 & ", JX.Top_Equiv_SC1 as JumpRankEquiv1"
+    curSqlStmt1 = curSqlStmt1 & ", JX.Top_Equiv_SC2 as JumpRankEquiv2"
+    curSqlStmt1 = curSqlStmt1 & ", JX.Top_Equiv_SC3 as JumpRankEquiv3"
+
+    curSqlStmt1 = curSqlStmt1 & ", OX.AWSA_Rat as OverallRating"
+    curSqlStmt1 = curSqlStmt1 & ", Cast(OX.RankScore as Decimal(7,2)) as OverallRank"
+
+    'From Tables
+    curSqlStmt2 = " "
+    curSqlStmt2 = curSqlStmt2 & "FROM " & MemberTableName & " AS MX "
+    curSqlStmt2 = curSqlStmt2 & "INNER JOIN " & MembershipTypesTableName & " AS Typ ON Typ.MemberShipTypeID = MX.MembershipTypeCode "
+
+    curSqlStmt2 = curSqlStmt2 & "LEFT JOIN " & RankingsTableName & " AS SX "
+    curSqlStmt2 = curSqlStmt2 & "	ON SX.MemberID = MX.PersonIDWithCheckDigit AND SX.SkiYearID = 1 AND SX.Event = 'S' AND Left(SX.Div,1) in ('B','G','M','W','O') AND SX.RankScore is not null "
+    curSqlStmt2 = curSqlStmt2 & "LEFT JOIN " & RankingsTableName & " AS TX "
+    curSqlStmt2 = curSqlStmt2 & "	ON TX.MemberID = MX.PersonIDWithCheckDigit AND TX.SkiYearID = 1 AND TX.Event = 'T' AND Left(TX.Div,1) in ('B','G','M','W','O') AND TX.RankScore is not null "
+    curSqlStmt2 = curSqlStmt2 & "LEFT JOIN " & RankingsTableName & " AS JX "
+    curSqlStmt2 = curSqlStmt2 & "	ON JX.MemberID = MX.PersonIDWithCheckDigit AND JX.SkiYearID = 1 AND JX.Event = 'J' AND Left(JX.Div,1) in ('B','G','M','W','O') AND JX.RankScore is not null "
+    curSqlStmt2 = curSqlStmt2 & "LEFT JOIN " & RankingsTableName & " AS OX "
+    curSqlStmt2 = curSqlStmt2 & "	ON OX.MemberID = MX.PersonIDWithCheckDigit AND OX.SkiYearID = 1 AND OX.Event = 'O' AND Left(OX.Div,1) in ('B','G','M','W','O') AND OX.RankScore is not null "
+
+    'Where clause
+    curSqlStmt3 = " "
+    curSqlStmt3 = curSqlStmt3 & "WHERE Typ.ExporttoTouramentRegistrationTemplate = 1"
+    curSqlStmt3 = curSqlStmt3 & "  AND MX.Deceased = 0 "
+    curSqlStmt3 = curSqlStmt3 & "  AND SX.Div is not null"
+
+    IF len(curMemberId) = 0 AND len(curMemberFirstName) = 0  AND len(curMemberLastName) = 0 THEN
+        curSqlStmt3 = curSqlStmt3 & "  AND DateAdd(mm, 18, MX.EffectiveTo) > GetDate()"
+        IF len(curStateSQL) > 0 THEN
+            curSqlStmt3 = curSqlStmt3 & "  AND " & curStateSQL
+        END IF
+    ELSE
+        curSqlStmt3 = curSqlStmt3 & "  AND DateAdd(mm, 18, MX.EffectiveTo) > GetDate()"
+        
+        IF len(curMemberId) > 0 THEN
+            curSqlStmt3 = curSqlStmt3 & "  AND MX.PersonIDWithCheckDigit = '" & curMemberId & "' "
+        ELSE
+            IF len(curMemberFirstName) > 0 OR len(curMemberLastName) > 0 THEN
+                curSqlStmt3 = curSqlStmt3 & "  AND  MX.FirstName like '" & curMemberFirstName & "%' "
+                curSqlStmt3 = curSqlStmt3 & "  AND MX.LastName like '" & curMemberLastName & "%' "
+                IF len(curStateSQL) > 0 THEN
+                    curSqlStmt3 = curSqlStmt3 & "  AND " & curStateSQL
+                END IF
+            ELSEIF len(curStateSQL) > 0 THEN
+                    curSqlStmt3 = curSqlStmt3 & "  AND " & curStateSQL
+            END IF
+        END IF
+
+    END IF
+
+    '	-----------------------------------------------------------------------
+    ' Order by statement
+    '	-----------------------------------------------------------------------
+    curSqlStmt4 = " Order By MX.LastName, MX.FirstName, MX.PersonIDWithCheckDigit, SX.Div"
+
+    '	-----------------------------------------------------------------------
+    ' Execute SQL statement to retrieve skier information and load to registration template
+    '	-----------------------------------------------------------------------
+    buildQueryMemberRankingEquivalents = curSqlStmt1 & curSqlStmt2 & curSqlStmt3 & curSqlStmt4 
+
+End Function
+
 
 ''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''
 ''' Now build a Query to Extract the Desired Members, joining in data 

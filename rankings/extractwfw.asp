@@ -1,11 +1,8 @@
+<!--#include virtual="/rankings/settingshq.asp"-->
+
 <%
 IF Session("adminmenulevel")<10 THEN Response.Redirect "DefaultHQ.asp?process=login" 
 IF Session("UploadMode") <> "Zip" AND Session("UploadMode") <> "Rpt" THEN Response.Redirect "DefaultHQ.asp?process=login"
-%>
-
-<!--#include file="settingsHQ.asp"-->
-
-<%
 
 WriteIndexPageHeader
 

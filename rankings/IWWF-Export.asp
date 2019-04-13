@@ -1,7 +1,7 @@
 <!--#include virtual="/rankings/SettingsHQ.asp"-->
 <%
 Response.Buffer = True
-Server.ScriptTimeout = 2400 
+Server.ScriptTimeout = 2400
 
 Dim tempLast, tempFirst, tempPlace, tempDiv, tempSL, tempTR, tempJU, tempScore, tempAlt
 Dim tempEvent, tempPQ1, tempPQ2, tempSex, tempYOB, TempSlmMiss, tempSpecial, tempIWSF, tempExport
@@ -21,15 +21,17 @@ RecsNoLic = 0
 LastNoLicMem = "000000000"
 
 ' Validate TourID value for scores to be Exported.
+' Example of manual rerun
+' http://usawaterski.org/rankings/IWWF-Export.asp?TourID=19S043R
 sTourID = SQLClean(Session("TourID"))
 IF len(sTourID) <=0 THEN
     sTourID = Request.QueryString("TourID")
-END IF	
+END IF
 
 IF len(sTourID) <=0 THEN
     ErrMsg = ErrMsg & "<br />Tournament ID not provided.  Setting default"
     sTourID = "99C999A"
-END IF	
+END IF
 
 WriteDebugSQL ("IWWF-Export.asp: Begin processing for TourId=" & sTourID)
 
@@ -44,7 +46,7 @@ set rs = Server.CreateObject("ADODB.recordset")
 sSQL = "Select top 1 ST.TSanction, ST.TName, ST.TSiteID, ST.TSite,"
 sSQL = sSQL & " Convert(char(8),ST.TDateE,112) as TDateE,"
 sSQL = sSQL & " Convert(char(12),ST.TDateE,107) as TDPretty,"
-sSQL = sSQL & " ST.TDirName, ST.TDirEMail, CJ.CJudgName," 
+sSQL = sSQL & " ST.TDirName, ST.TDirEMail, CJ.CJudgName,"
 sSQL = sSQL & " CJ.CJudgEMail, CC.CScorName, CC.CScorEMail"
 sSQL = sSQL & " FROM " & SanctionTableName & " ST LEFT JOIN " & TRegSetupTableName
 sSQL = sSQL & " RT on RT.TournAppID = ST.TournAppID LEFT JOIN " & PostTourTableName
@@ -52,13 +54,13 @@ sSQL = sSQL & " PT on PT.TournAppID = ST.TournAppID LEFT JOIN (Select '" & left(
 sSQL = sSQL & "' as TournAppID, FirstName + ' ' + LastName as CJudgName, Email as CJudgEMail"
 sSQL = sSQL & " FROM " & MemberTablename & " Where patindex('%@%',Email) > 0 and"
 sSQL = sSQL & " PersonID in (Select Cast(case when len(CJudgePID)<9 then CJudgePID"
-sSQL = sSQL & " else right(CJudgePID,8) end as integer) FROM " & TRegSetupTableName 
+sSQL = sSQL & " else right(CJudgePID,8) end as integer) FROM " & TRegSetupTableName
 sSQL = sSQL & " WHERE TournAppID = '" & left(sTourID,6) & "' and isnumeric(CJudgePID) = 1))"
 sSQL = sSQL & " CJ on CJ.TournAppID = ST.TournAppID LEFT JOIN (Select '" & left(sTourID,6)
 sSQL = sSQL & "' as TournAppID, FirstName + ' ' + LastName as CScorName, Email as CScorEMail"
 sSQL = sSQL & " FROM " & MemberTablename & " Where patindex('%@%',Email) > 0 and"
 sSQL = sSQL & " PersonID in (Select Cast(case when len(CScorePID)<9 then CScorePID"
-sSQL = sSQL & " else right(CScorePID,8) end as integer) FROM " & TRegSetupTableName 
+sSQL = sSQL & " else right(CScorePID,8) end as integer) FROM " & TRegSetupTableName
 sSQL = sSQL & " WHERE TournAppID = '" & left(sTourID,6) & "' and isnumeric(CScorePID) = 1))"
 sSQL = sSQL & " CC on CC.TournAppID = ST.TournAppID where upper(ST.TournAppID) = '"
 sSQL = sSQL & left(sTourID,6) & "'"
@@ -91,7 +93,7 @@ ELSE
    IF len(rs("CScorEmail")) > 0 and instr(eMailTo,rs("CScorName")) = 0 THEN
       IF len(eMailTo) > 0 THEN eMailTo = eMailTo & "; "
       eMailTo = eMailTo & """" & rs("CScorName") & """ <" & rs("CScorEmail") & ">"
-   END IF	
+   END IF
 
    rs.close
    sIWWFSubj = sTName & "," & sTSanction & "," & sTSiteID & "," & Left(sTDateE,4) & "-" & Mid(sTDateE,5,2) & "-" & Right(sTDateE,2)
@@ -114,9 +116,9 @@ IF Session("Firstname") & Session("LastName") = "DannyLeBourgeois" and mid(sTour
 ELSEIF Session("Firstname") & Session("LastName") = "JenniferFrederick-Kelley" and mid(sTourID,3,1) <> "E" THEN
    EmailCC = EmailCC & "; ""Jennifer Frederick-Kelly"" <jennifer@frederickmachine.com>"
 ELSEIF Session("Firstname") & Session("LastName") = "KirbyWhetsel" and mid(sTourID,3,1) <> "S" THEN
-   EmailCC = EmailCC & "; ""Kirby Whetsel"" <kwhetsel@charter.net>" 	
-ELSEIF Session("Firstname") & Session("LastName") = "JudyStanford" and mid(sTourID,3,1) <> "W" THEN	
-   EmailCC = EmailCC & "; ""Judy Stanford"" <judy-don@sbcglobal.net>"	
+   EmailCC = EmailCC & "; ""Kirby Whetsel"" <kwhetsel@charter.net>"
+ELSEIF Session("Firstname") & Session("LastName") = "JudyStanford" and mid(sTourID,3,1) <> "W" THEN
+   EmailCC = EmailCC & "; ""Judy Stanford"" <judy-don@sbcglobal.net>"
 END IF
 
 %>
@@ -155,11 +157,11 @@ if (ie4 || upLevel) {
 
 <style>
 .Message {
-	Width: 100%; 
-	Text-Align:Left; 
-	margin-left: 0; 
-	margin-right: auto; 
-	FONT-SIZE:1.0em; 
+	Width: 100%;
+	Text-Align:Left;
+	margin-left: 0;
+	margin-right: auto;
+	FONT-SIZE:1.0em;
 	FONT-WEIGHT:normal;
     color: red;
 }
@@ -175,9 +177,9 @@ if (ie4 || upLevel) {
                     <BR><BR>
                     <FONT FACE="Helvetica,Verdana,Arial" SIZE=3 COLOR="#000066">
                     <B>Processing Records for Export.<br><br>
-                    Please wait a moment ...<br><br>  
+                    Please wait a moment ...<br><br>
                     </B></FONT>
-                    
+
                     <IMG SRC="/rankings/images/buttons/wait.gif" BORDER=1 WIDTH=75 HEIGHT=15><BR><BR>
                 </TD>
             </TR>
@@ -230,9 +232,9 @@ do while not rs.eof
     tempYOB = right(rs("BirthDate"),4)
     tempAge = FormatNumber(rs("SkiYearAge"),0)
 
-    If rs("MemberFed") = "USA" THEN 
+    If rs("MemberFed") = "USA" THEN
     	tempIWSF = "USA" & rs("MemberID")
-    ELSE 
+    ELSE
     	if rs("ForFedStat") = "Present" THEN
     		tempIWSF = rs("MemberFed") & rs("ForFedID")
     	ELSE
@@ -243,7 +245,7 @@ do while not rs.eof
     tempPlace = ucase(trim(rs("Place")))
     IF right(tempPlace,1) = "T" THEN tempPlace = left(tempPlace,len(tempPlace)-1)
     IF tempPlace = "" THEN tempPlace = "999"
-    
+
     tempDiv = ucase(rs("Div"))
     tempEvent = rs("Event")
     tempExport = "X"
@@ -268,17 +270,17 @@ do while not rs.eof
       tempJU = ""
       IF tempScore < 6 THEN tempSlmMiss = "*": ELSE tempSlmMiss = ""
 
-      IF tempScore > 0 THEN 
-          tempExport = "Y": 
-      ELSE 
+      IF tempScore > 0 THEN
+          tempExport = "Y":
+      ELSE
           tempExport = "N"
           RecBypassedNoScore = RecBypassedNoScore + 1
    	  END IF
 
-      IF tempDiv = "B1" or tempDiv = "G1" THEN 
+      IF tempDiv = "B1" or tempDiv = "G1" THEN
           tempExport = "N"
           RecBypassedForDiv = RecBypassedForDiv + 1
-   	  ELSE 
+   	  ELSE
           IF tempDiv = "B2" or tempDiv = "G2" THEN
               IF tempAge < 12 THEN
                   tempExport = "N"
@@ -297,23 +299,23 @@ do while not rs.eof
       tempSL = ""
       tempTR = ""
       tempJU = FormatNumber(rs("AltScore"),1)
-      
-      IF tempScore > 0 THEN 
-          tempExport = "Y": 
-      ELSE 
+
+      IF tempScore > 0 THEN
+          tempExport = "Y":
+      ELSE
           tempExport = "N"
           RecBypassedNoScore = RecBypassedNoScore + 1
    	  END IF
-      
+
       IF tempPQ1 < "0.235" THEN
           tempExport = "N"
           RecBypassedRampHght = RecBypassedRampHght + 1
    	  END IF
-      IF tempDiv = "B1" or tempDiv = "G1" or tempDiv = "B2" or tempDiv = "G2" THEN 
+      IF tempDiv = "B1" or tempDiv = "G1" or tempDiv = "B2" or tempDiv = "G2" THEN
           tempExport = "N"
           RecBypassedForDiv = RecBypassedForDiv + 1
    	  END IF
-      
+
     CASE "T"
       ' ***************************************
       ' Trick data entry analyzed and formatted
@@ -324,9 +326,9 @@ do while not rs.eof
       tempSL = ""
       tempTR = tempScore
       tempJU = ""
-      IF tempScore > 0 THEN 
-          tempExport = "Y": 
-      ELSE 
+      IF tempScore > 0 THEN
+          tempExport = "Y":
+      ELSE
           tempExport = "N"
           RecBypassedNoScore = RecBypassedNoScore + 1
    	  END IF
@@ -334,7 +336,7 @@ do while not rs.eof
     END SELECT
 
     IF tempExport = "Y" THEN
-    	
+
         objTextOut.write ( tempLast & ";" )
         objTextOut.write ( tempFirst & ";" )
         objTextOut.write ( rs("MemberID") & ";;" )
@@ -358,7 +360,7 @@ do while not rs.eof
         objTextOut.write ( tempPlace & ";" )
         objTextOut.write ( tempIWSF & ";" )
         objTextOut.writeline ( sTSiteID )
-      
+
         RecsSaved = RecsSaved + 1
 
         ''''This statement is used if we want to disable this notification
@@ -401,51 +403,51 @@ do while not rs.eof
 
 			emailBody = emailBody & "<p>As you may already be aware, an IWWF License ID number must now be submitted with all Class L or R"
 			emailBody = emailBody & " scores, in order for those scores to be properly included in the IWWF World Ranking Lists.&nbsp;"
-				
+
 			IF rs("ForFedStat") = "Missing" THEN
 				emailBody = emailBody & " Unfortunately, we find that you have not yet entered your " & rs("MemberFed")
 				emailBody = emailBody & " License ID number into your USA WATER SKI & WAKE SPORTS (USA-WSWS) Membership Profile.&nbsp;"
-		
-			ELSE		
+
+			ELSE
 				emailBody = emailBody & " Unfortunately, we now find that the License ID number value which you entered"
-				emailBody = emailBody & " into your USA WATER SKI & WAKE SPORTS (USA-WSWS) Membership Profile -- """ & rs("ForFedID") 				
+				emailBody = emailBody & " into your USA WATER SKI & WAKE SPORTS (USA-WSWS) Membership Profile -- """ & rs("ForFedID")
 				emailBody = emailBody & """ -- is not valid for Federation code " & rs("MemberFed") & ".&nbsp;"
 
 			END IF
-				
-			emailBody = emailBody & " As a result, we are unable to properly forward your scores from the above-referenced event to IWWF" 
+
+			emailBody = emailBody & " As a result, we are unable to properly forward your scores from the above-referenced event to IWWF"
 			emailBody = emailBody & " for inclusion in the World Ranking Lists.</p>"
 
 			emailBody = emailBody & "<p>Therefore, we ask you to do the following, <b><i>immediately:</i></b></p>"
 
 			emailBody = emailBody & "<ul>"
-				
+
 			emailBody = emailBody & "<li>Obtain your IWWF License ID number.&nbsp; If you do not already know your License ID Number, "
 			emailBody = emailBody & "<a href=""http://www.iwsftournament.com/homologation/showskiers.php"">Click Here</a> to access the IWWF skier"
 			emailBody = emailBody & " listings.&nbsp; If your name and ID is <i><b>not</i></b> listed there, then you will need to contact your home"
 			emailBody = emailBody & " country federation (" & rs("MemberFed") & ") to obtain your License ID number from them.<br>&nbsp;</li>"
-				
-			emailBody = emailBody & "<li>Then, <a href=""http://www.usawaterski.org/members/login/index.asp?m=" & rs("MemberID") & "&p=" 
-			emailBody = emailBody & """>Click Here</a> to go to your USA WATER SKI & WAKE SPORTS (USA-WSWS) ""Members-Only"" login page.&nbsp; Your membership number will" 
+
+			emailBody = emailBody & "<li>Then, <a href=""http://www.usawaterski.org/members/login/index.asp?m=" & rs("MemberID") & "&p="
+			emailBody = emailBody & """>Click Here</a> to go to your USA WATER SKI & WAKE SPORTS (USA-WSWS) ""Members-Only"" login page.&nbsp; Your membership number will"
 			emailBody = emailBody & " be filled in automatically; all you have to do is click the ""<b>Sign In</b>"" button to complete your login.<br>&nbsp;</li>"
-				
+
 			emailBody = emailBody & "<li>Click on the ""<b>Update my Membership Info</b>"" link, which appears on the left-hand side of the page.<br>&nbsp;</li>"
-				
+
 			emailBody = emailBody & "<li>When the profile page opens, scroll to the bottom of the page.<br>&nbsp;</li>"
-				
-			emailBody = emailBody & "<li>If necessary, correct your Home Federation Country from the drop-down selection list, based" 
+
+			emailBody = emailBody & "<li>If necessary, correct your Home Federation Country from the drop-down selection list, based"
 			emailBody = emailBody & " on the 3-letter country code appearing at the front of your IWWF License ID.<br>&nbsp;</li>"
-				
+
 			emailBody = emailBody & "<li>Then add or correct your Home Federation ID Number, by using the remaining numbers from your IWWF License ID."
 			emailBody = emailBody & "&nbsp; <b><i>Do Not</i></b> enter the 3 letters of your country code at the front.<br>&nbsp;</li>"
-				
+
 			emailBody = emailBody & "<li>Then click the ""<b>Update</b>"" button, to save your changes.<br>&nbsp;</li>"
-				
+
 			emailBody = emailBody & "<li>Then finally reply to this email, confirming that you have recorded your License ID in your USA WATER SKI & WAKE SPORTS (USA-WSWS)"
 			emailBody = emailBody & " membership profile –- and we will then re-send your scores to IWWF, associated with that License ID.<br>&nbsp;</li>"
- 
+
 			emailBody = emailBody & "</ul>"
-				
+
 			emailBody = emailBody & "<p>Thank you in advance for your cooperation.</p>"
 
 			emailBody = emailBody & "<p>Melanie Hanson<br>Director of Membership Programs"
@@ -454,7 +456,7 @@ do while not rs.eof
 			emailBody = emailBody & "</div></body></html>"
 
             ' ***************************************
-            ' DLA: Send email regarding something, not quite sure what 
+            ' DLA: Send email regarding something, not quite sure what
             ' ***************************************
 			objMessage.HTMLBody = emailBody
             On Error Resume Next
@@ -467,9 +469,9 @@ do while not rs.eof
                 End If
 
     		RecsNoLic = RecsNoLic + 1
-        
+
         END IF
-    
+
     END IF
 
     ' ***************************************
@@ -495,9 +497,9 @@ set objTextOut = nothing
    else if(ie4) {
      var splash = document.all.splashScreen;
    }
-   
+
    hideObject(splash);
-   </SCRIPT>  
+   </SCRIPT>
 
  <%
    WriteIndexPageHeader
@@ -512,8 +514,8 @@ set objTextOut = nothing
         SetupEmailService
         objMessage.Subject = sIWWFSubj
         objMessage.From = "competition@usawaterski.org"
-		objMessage.To = """IWWF Ranking Data"" <rankingdata@iwsftournament.com>"
-		objMessage.CC = """David Allen"" <mawsa@comcast.net>; ""IWWF-EA"" <competitions@iwwfed-ea.org"
+		objMessage.To = "rankingdata@iwsftournament.com"
+		objMessage.CC = "mawsa@comcast.net; competitions@iwwfed-ea.org"
 
 		objMessage.AddAttachment File2Send
 
@@ -542,13 +544,13 @@ set objTextOut = nothing
         %>
         <br><br>
         <center><h2>File export complete</h2><br>
-        <%=RecsSaved%> Class R/L records were exported to file <%=left(sTourID,6)%>RS.TXT.<br><br>    
+        <%=RecsSaved%> Class R/L records were exported to file <%=left(sTourID,6)%>RS.TXT.<br><br>
 
         <%
-        IF RecsNoLic > 0 THEN 
+        IF RecsNoLic > 0 THEN
             %>
     	    <%=RecsNoLic%> "Need IWWF License ID" Email notices generated and sent.<br><br>
-            <% 
+            <%
         END IF
 
     ELSE
@@ -580,7 +582,7 @@ set objTextOut = nothing
 
     set objMessage=nothing
     set objFSO = nothing
-    WriteIndexPageFooter    
+    WriteIndexPageFooter
 
 %>
 </BODY>

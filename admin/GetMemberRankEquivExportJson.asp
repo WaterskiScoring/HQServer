@@ -4,9 +4,10 @@
 <%
 '	-----------------------------------------------------------------------
 ' Validate TourID value for scores to be Exported.
-' http://usawaterski.org/admin/GetMemberRegExportJson.asp?SanctionId=18E024&MemberId=700040630
-' http://usawaterski.org/admin/GetMemberRegExportJson.asp?SanctionId=18E024&FirstName=Jeff&LastName=Clark
-''	-----------------------------------------------------------------------
+' http://usawaterski.org/admin/GetMemberRankEquivExportJson.asp?SanctionId=19U038&MemberId=700040630
+' http://usawaterski.org/admin/GetMemberRankEquivExportJson.asp?SanctionId=19U038&FirstName=Jeff&LastName=Clark
+' http://usawaterski.org/admin/GetMemberRankEquivExportJson.asp?SanctionId=19U038&State=MA
+'	-----------------------------------------------------------------------
 
 Dim curAuth, curAuthParts, curCredParts, curCount, curRqstAuth, curAuthResult
 Dim curSanctionId, curMemberId, curStateSQL, curState, curTourYear, curTourDate
@@ -29,7 +30,9 @@ IF len(curState) > 0 THEN
     curStateSQL = "State = '" & curState & "'"
 END IF
 
-''''response.write "<br />curSanctionId=" & curSanctionId & ", Region=" & Mid(curSanctionId, 3, 1) & ", sTourName=" & ", curState=" & curState
+''''response.write "<br />curSanctionId=" & curSanctionId & ", Region=" & Mid(curSanctionId, 3, 1) & ", sTourName=" & ", curState=" & curState & ":"
+''''response.write "<br />"
+''''response.End
 
 '	-----------------------------------------------------------------------
 'Open connection to Sanction Database
@@ -43,9 +46,11 @@ rsWaterski.ActiveConnection = WaterskiConnect
 
 Dim curSqlStmt, strTStatus, strTSanction, strTourName, strTourDate
 curSqlStmt = "Select Top 1 TSanction, TStatus, TournAppID, TDateE, TName, TCity, TState from Sanctions.dbo.TSchedul where TournAppID = '" & curSanctionId & "'"
+''''response.write "<br />curSqlStmt=" & curSqlStmt & ":<br/>"
+
 rsWaterski.Open curSqlStmt
 If rsWaterski.EOF THEN
-	response.status = "401 Unauthorized - Invalid sanction number (" & curSanctionId & ")"
+	response.status = "200 401 Unauthorized - Invalid sanction number (" & curSanctionId & ")"
     response.Write(response.Status)
 	response.end
 ELSE
@@ -62,11 +67,7 @@ rsWaterski.Close
 Set rsWaterski = Nothing
 WaterskiConnect.Close
 
-'	-----------------------------------------------------------------------
-' Refresh the list of chief and appointed officials for a tournament
-' The data is stored in a temporary work table for use in build tournament registration entries
-'	-----------------------------------------------------------------------
-refreshApptOfficials(curSanctionId)
+''''response.write "<br />strTSanction=" & strTSanction & ", strTourName=" & strTourName & "<br/>"
 
 '	-----------------------------------------------------------------------
 ' Retrieve member entries for tournament registrations
@@ -82,21 +83,20 @@ curMemberLastName = Replace(curMemberLastName, "'", "''")
 curMemberFirstName = Replace(curMemberFirstName, "'", "''")
 
 curSqlStmt = ""
-IF len(curMemberId) > 0 OR len(curMemberFirstName) > 0  OR len(curMemberLastName) > 0 OR len(curStateSQL) > 0 THEN
-    curSqlStmt = buildQueryMemberRegEntries(curSanctionId, curTourDate, curStateSQL, curMemberId, curMemberFirstName, curMemberLastName)
-
-ELSEIF Mid(curSanctionId, 3, 1) = "U" THEN
-    curSqlStmt = buildQueryMemberRegNcwsaEntries(curSanctionId, curTourDate)
-
-ELSE
-    curSqlStmt = buildQueryMemberRegEntries(curSanctionId, curTourDate, curStateSQL, curMemberId, curMemberFirstName, curMemberLastName)
-END IF
+curSqlStmt = buildQueryMemberRankingEquivalents(curSanctionId, curTourDate, curStateSQL, curMemberId, curMemberFirstName, curMemberLastName)
+''''response.write "<br />curSqlStmt=" & curSqlStmt & ":<br/>"
 
 '	-----------------------------------------------------------------------
 ' Execute SQL statement to retrieve skier information and load to registration template
 '	-----------------------------------------------------------------------
+    On Error Resume Next
 response.ContentType="application/json"
 response.status = "200 Completed"
+        If Err.Number <> 0 Then
+            response.write "<br />Err.Number=" & Err.Number & ", Err.Description=" & Err.Description & " |"
+            On Error Goto 0
+        End If
+
     On Error Resume Next
 QueryToJSON(WaterskiConnect, curSqlStmt).flush
     If Err.Number <> 0 Then
