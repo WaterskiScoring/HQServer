@@ -1,0 +1,124 @@
+
+
+
+	.container {
+			font-family: Arial, Helvetica, sans-serif; 
+			font-weight:normal; 
+			color:black;
+			font-size:12px;
+			font-weight:bold;
+			padding:0px;
+			width:320px;
+			height:device-height;	
+			height:auto;	
+			display:inline-block;
+			margin-left:auto;
+ 			margin-right: auto;
+ 			position:fixed;
+   	}
+
+
+	.span10 { width:10%; display:inline-block; }
+	.span15 { width:15%; display:inline-block; }
+	.span20 { width:20%; display:inline-block; }
+	.span25 { width:25%; display:inline-block; }
+	.span30 { width:30%; display:inline-block; }
+	.span35 { width:35%; display:inline-block; }
+	.span40 { width:40%; display:inline-block; }
+	.span50 { width:50%; display:inline-block; }
+	.span60 { width:60%; display:inline-block; }
+	.span65 { width:65%; display:inline-block; }
+	.span70 { width:70%; display:inline-block; }
+	.span75 { width:75%; display:inline-block; }
+	.span80 { width:80%; display:inline-block; }	
+	.span85 { width:85%; display:inline-block; }
+	.span100 { width:100%; display:inline-block}
+
+
+
+div.scroll {
+		width:100%;
+		height:420px;
+		overflow:scroll;
+		}	
+
+.bannerheader {
+		margin:0px;		
+    border-style:solid; 
+    border-width:1px;
+    width:70%;
+	}	
+.navbox {
+		font-size:15px;
+		margin-left:0px;
+		margin-right:0px;
+		margin:0px;		
+		padding-top:15px;
+		padding-bottom:0px;
+    border-radius:5px;
+    border-radius:5px;    
+    text-align:center;
+    background:#FFA500;
+    width:95%;
+    height:35px;
+		}
+
+
+.tabtour {
+		font-size:12px;
+		margin-left:0px;
+		margin-right:0px;
+		margin-top:2px;
+    border-top-left-radius:7px;
+    border-top-right-radius:7px;    
+		border-top: 1px solid;
+    border-left: 1px solid;
+    border-right: 1px solid;
+    text-align:left;
+    padding-left:10px;
+    padding-top:2px;
+    padding-bottom:2px;    
+    width:91%;
+    height:15px;
+		}
+
+.tourbottom {
+		font-size:10px;
+		margin-left:0px;
+		margin-right:0px;
+    border-bottom-left-radius:7px;
+    border-bottom-right-radius:7px;    
+    border-bottom: 1px solid;
+    border-left: 1px solid;
+    border-right: 1px solid;
+    
+    text-align:left;
+    padding-left:10px;
+    width:91%;
+    min-height:50px;
+    height:auto;
+		}
+
+
+.tourdetails {
+		font-size:11px;
+		margin-left:0px;
+		margin-right:0px;
+    border-bottom-left-radius:7px;
+    border-bottom-right-radius:7px;    
+    border-bottom: 1px solid;
+    border-left: 1px solid;
+    border-right: 1px solid;
+    
+    text-align:left;
+    padding-left:10px;
+    width:91%;
+    min-height:300px;
+    height:auto;
+	} 
+	
+.tourdetailline {
+		padding-top:5px;
+		padding-bottom:5px;			
+		verical-align:top;
+	}

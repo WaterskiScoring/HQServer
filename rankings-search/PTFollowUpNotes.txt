@@ -1,0 +1,76 @@
+
+Post-Tournament followup eMails -- part two -- events 2 or more weeks old.
+
+Variant 1 -- where ALL reports are completely missing (TStatus = 2) ...
+
+= = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = =
+
+Dear Tournament Organizer and/or Chief Official(s) --
+
+The post-tournament reports from 10C057C CASS-CAWS Kick off Classic
+05-23-2010 have not yet been posted in the Sanction control system.
+
+It has now been [x] weeks since the above-referenced event was 
+scheduled to take place, according to our records.  If the 
+competition did NOT actually take place as planned, then please 
+advise us so that we can revise the status of your tournament in 
+the Sanction control system.
+
+However, if the competition DID run as planned, then you need to 
+get the post-tournament reports in soon.  The WSTIMS Zip file 
+should be emailed to [seeding rep name], your Regional seeding 
+committee representative, who is copied herein.  If you are 
+having difficulty producing any of those reports, or the Zip
+file itself, please contact [FirstNm] for assistance.
+
+You need to be aware that any subsequent sanction applications for 
+your organization cannot be approved, until these missing reports
+have been received and checked off.  ( include only if 6+ wks )
+
+Thank you for your hard work and continued support,
+
+Traci Baylon
+Competition Services Coordinator
+tbaylon@usawaterski.org
+1-863-324-4341 ext 121
+
+
+= = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = =
+
+Variant 2 -- (TStatus = 4) where only SOME reports still missing ...
+
+= = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = =
+
+Dear Tournament Organizer and/or Chief Official(s) --
+
+The post-tournament reports from 10C057C CASS-CAWS Kick off Classic
+05-23-2010 have not all been posted in the Sanction control system.
+
+While some of the required reports have been received and checked
+off, the following items are still marked outstanding as of today:
+
+	[ list of specific items ]
+
+If these missing items have been mailed in the past few days and
+this eMail is crossing your package in the mail, please disregard 
+this notice.  Otherwise, please note that it has now been [x] weeks 
+since the above-referenced event took place, and these missing items 
+need to be submitted soon. 
+
+You need to be aware that any subsequent sanction applications for 
+your organization cannot be approved, until these missing reports
+have been received and checked off.  ( include only if 6+ wks )
+
+Electronic submission of these items to your Regional seeding 
+representative, [seeding rep name], is preferred -- although you 
+may submit direct to USA Waterski HQ by postal mail instead.  If 
+you are having difficulty producing any of those reports, or the 
+WSTIMS Zip file itself, please contact [FirstNm] for assistance.
+
+Thank you for your hard work and continued support,
+
+Traci Baylon
+Competition Services Coordinator
+tbaylon@usawaterski.org
+1-863-324-4341 ext 121
+

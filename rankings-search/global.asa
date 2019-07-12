@@ -1,0 +1,41 @@
+<script language="VBScript" runat="server">
+Sub Application_OnStart
+	Application("WaterSkiConn") = "Provider=SQLOLEDB;SERVER=jaguar.epolk.net;Database=USAWaterski;uid=waterski;pwd=usa456"
+	Application("isDown") = False
+	
+	Dim SanctionConn 
+	Application("SanctionConn") = "Provider=SQLOLEDB;SERVER=jaguar.epolk.net;Database=Sanctions;uid=Sanctions_Admin;pwd=qej8h7w34w"
+
+	Dim useSave
+	Application("UseSave") = False
+
+	Dim emailUNranking
+	Application("emailUNranking") = "competition@usawaterski.org"
+	
+	Dim emailPWranking
+	Application("emailPWranking") = "W@t3r$k12019!"
+	
+
+	Dim isSecure
+	Application("isSecure") = False
+
+
+	Application("OLRegUID") = "Sanctions_P"
+	Application("OLRegPW") = "43qe9ho6"
+
+End Sub
+
+Sub Session_OnStart
+	Dim auth
+	Dim aauth
+	Dim UserID
+	Session("auth") = False
+	Session("aauth") = False
+	Session("test") = "Y"
+End Sub
+
+Sub Session_OnEnd
+	Session("auth") = False
+	Session("aauth") = False
+End Sub
+</script>

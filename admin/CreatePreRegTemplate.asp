@@ -115,7 +115,7 @@ curSqlStmt = curSqlStmt & "FROM " & SanctionTableName
 curSqlStmt = curSqlStmt & " WHERE TournAppID = '" & curSanctionId & "' AND TsanApproved = 1"
 rsWaterski.Open curSqlStmt
 If rsWaterski.EOF THEN
-	response.write "Invalid sanction number (" & curSanctionId & "), unable to complete request"
+	response.write "Sanction number is either not approved or not valid (" & curSanctionId & "), unable to complete request"
 	response.status = "401 Unauthorized"
 	response.flush
 	response.end
@@ -326,29 +326,15 @@ Counter3 = 0
 Do until rsMember.EOF
     Counter0 = Counter0 + 1
 
-	IF rsMember("PreReg") = "YES" OR len(rsMember("ApptdOfficial")) > 0 THEN
+	IF rsMember("PreReg") = "YES" OR LEN(TRIM(rsMember("ApptdOfficial"))) > 0 THEN
+        
+        EventSlalom = TRIM(rsMember("EventSlalom"))
+        EventTrick = TRIM(rsMember("EventTrick"))
+        EventJump = TRIM(rsMember("EventJump"))
 
-		IF rsMember("EventSlalom") = rsMember("Div") THEN
-			EventSlalom = rsMember("EventSlalom"): SlalomPaid = rsMember("SlalomPaid")
-		ELSE
-			EventSlalom = "": SlalomPaid = ""
-		END IF
-
-		IF rsMember("EventTrick") = rsMember("Div") THEN
-			EventTrick = rsMember("EventTrick"): TrickPaid = rsMember("TrickPaid")
-		ELSE
-			EventTrick = "": TrickPaid = ""
-		END IF
-
-		IF rsMember("EventJump") = rsMember("Div") THEN
-			EventJump = rsMember("EventJump"): JumpPaid = rsMember("JumpPaid")
-		ELSE
-			EventJump = "": JumpPaid = ""
-		END IF
-
-		IF EventSlalom <> "" OR EventTrick <> "" OR EventJump <> "" OR len(rsMember("ApptdOfficial")) > 0 THEN
+		IF LEN(EventSlalom) > 0 OR LEN(EventTrick) > 0 OR LEN(EventJump) > 0 OR LEN(TRIM(rsMember("ApptdOfficial"))) > 0 THEN
 			Counter1 = Counter1 + 1: RowNo = FormatNumber(Counter1 + 5,0)
-
+            
             objExcelPreReg.addnew
 			objExcelPreReg.Fields(0).Value = rsMember("MemberID")
 			objExcelPreReg.Fields(1).Value = rsMember("LastName")
@@ -367,7 +353,7 @@ Do until rsMember.EOF
 			objExcelPreReg.Fields(9).Value = EventTrick
 			objExcelPreReg.Fields(10).Value = EventJump
 
-			objExcelPreReg.Fields(11).Value = rsMember("ApptdOfficial")
+			objExcelPreReg.Fields(11).Value = TRIM(rsMember("ApptdOfficial"))
 
 			objExcelPreReg.Fields(12).Value = rsMember("SlalomRank")
 			objExcelPreReg.Fields(13).Value = rsMember("TrickRank")
@@ -390,9 +376,9 @@ Do until rsMember.EOF
 			objExcelPreReg.Fields(19).Value = rsMember("TrickBoat")
 			objExcelPreReg.Fields(20).Value = rsMember("JumpHeight")
 
-			objExcelPreReg.Fields(21).Value = SlalomPaid
-			objExcelPreReg.Fields(22).Value = TrickPaid
-			objExcelPreReg.Fields(23).Value = JumpPaid
+			objExcelPreReg.Fields(21).Value = rsMember("SlalomPaid") 
+			objExcelPreReg.Fields(22).Value = rsMember("TrickPaid") 
+			objExcelPreReg.Fields(23).Value = rsMember("JumpPaid") 
 
             objExcelPreReg.Fields(27).Value = rsMember("EffTo")
 

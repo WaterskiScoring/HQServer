@@ -73,6 +73,7 @@ rs.open sSQL, sConnectionToSanctionTable, 3, 3
 IF rs.eof THEN
     ErrMsg = ErrMsg & "<br><br><center><h2>Requested Tournament ID&nbsp; <b>" & sTourID & "</b>&nbsp; not found.</h2></center><br>"
     WriteDebugSQL ("IWWF-Export.asp: ERROR Requested Tournament ID " & sTourID & " not found")
+    %><p><%=ErrMsg %></p><%
 
 ELSE
    sTSanction = rs("TSanction")
@@ -530,7 +531,7 @@ set objTextOut = nothing
                 <DIV ID="debugMsg">
                     <br />Err.Number=<%=Err.Number %>
                     <br />Err.Description=<%=Err.Description %>
-                    <br />
+                    <br />%><p><%=ErrMsg %></p>
                 </DIV>
             <%
             On Error Goto 0 ' But don't let other errors hide!
@@ -587,3 +588,32 @@ set objTextOut = nothing
 %>
 </BODY>
 
+<%
+Sub WriteDebugSQL (inMsg)
+        ErrMsg = ErrMsg & "<BR/> " & inMsg
+	On Error Resume Next
+	    WriteAuditTrail(inMsg)
+        If Err.Number <> 0 Then
+	        ErrMsg = ErrMsg & "<BR/>Error in writing audit trail " & Err.Description & "<BR/>"
+            On Error Goto 0 ' But don't let other errors hide!
+        End If
+END Sub
+
+Sub WriteAuditTrail (inMsg)
+	Dim tempFSO, logobject, PathtoTRA
+
+	PathtoTRA = Server.mappath("/")&"\rankings\" 
+	Set tempFSO=Server.CreateObject("Scripting.FileSystemObject")
+	IF Not (tempFSO.FileExists(PathToTRA & "sql-debug-log.txt")) = true THEN
+	   Set logobject=tempFSO.CreateTextFile(PathToTRA & "sql-debug-log.txt",true)
+	ELSE
+	   Set logobject=tempFSO.OpenTextFile(PathToTRA & "sql-debug-log.txt",8,true)
+	END IF
+
+	logobject.WriteLine("SQL = " & inMsg & " -+- " & date() & " " & time() & " " & session("UserName"))
+	logobject.Close
+
+	Set logobject=nothing
+	Set tempFSO=nothing
+END Sub
+%>

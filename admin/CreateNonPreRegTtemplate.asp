@@ -115,7 +115,7 @@ curSqlStmt = curSqlStmt & "FROM " & SanctionTableName
 curSqlStmt = curSqlStmt & " WHERE TournAppID = '" & curSanctionId & "' AND TsanApproved = 1"
 rsWaterski.Open curSqlStmt
 If rsWaterski.EOF THEN
-	response.write "Invalid sanction number (" & curSanctionId & "), unable to complete request"
+	response.write "Sanction number is either not approved or not valid (" & curSanctionId & "), unable to complete request"
 	response.status = "401 Unauthorized"
 	response.flush
 	response.end

@@ -224,15 +224,7 @@ Function buildQueryMemberRegEntries(curSanctionId, curTourDate, curStateSQL, cur
     curSqlStmt1 = curSqlStmt1 & ", MX.LastName, MX.FirstName"
 
     'Skier division
-    curSqlStmt1 = curSqlStmt1 & ", Coalesce(Case When RD.Div = 'OM' Then RD.Div"
-    curSqlStmt1 = curSqlStmt1 & "          When RD.Div = 'OW' Then RD.Div"
-    curSqlStmt1 = curSqlStmt1 & "          When RD.Div = 'MM' Then RD.Div"
-    curSqlStmt1 = curSqlStmt1 & "          When RD.Div = 'MW' Then RD.Div"
-    curSqlStmt1 = curSqlStmt1 & "          When RD.Div = 'B1' Then RD.Div"
-    curSqlStmt1 = curSqlStmt1 & "          When RD.Div = 'B2' Then RD.Div"
-    curSqlStmt1 = curSqlStmt1 & "          When RD.Div = 'G1' Then RD.Div"
-    curSqlStmt1 = curSqlStmt1 & "          When RD.Div = 'G2' Then RD.Div"
-    curSqlStmt1 = curSqlStmt1 & "          End"
+    curSqlStmt1 = curSqlStmt1 & ", Coalesce(RD.Div"
     curSqlStmt1 = curSqlStmt1 & "   , Case when MX.Age <= 17 and MX.Sex = 'F' Then 'G'"
     curSqlStmt1 = curSqlStmt1 & "          when MX.Age <= 17 then 'B' when MX.Sex = 'F' then 'W' else 'M' end"
     curSqlStmt1 = curSqlStmt1 & "   + Case"

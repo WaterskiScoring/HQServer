@@ -1,0 +1,443 @@
+DLA 2019/04/16 20:00
+SQL = ExtractWfw.asp: TourID: 19S151, Tourzip=d:\webs\usawaterski.org\rankings\PostTourZips\19S151R.ZIP, TourFldr=d:\webs\usawaterski.org\rankings\Scratch\19S151R -+- 4/16/2019 10:13:10 PM dallen
+SQL = ExtractWfw.asp: Get Swift Entry: Sanctions.dbo.TSchedul -+- 4/16/2019 10:13:10 PM dallen
+SQL = ExtractWfw.asp: 19S151R.SBK Full Scorebook Report -+- 4/16/2019 10:13:11 PM dallen
+SQL = ExtractWfw.asp: 19S151R.WSP Rankings Data File (Scores) -+- 4/16/2019 10:13:11 PM dallen
+SQL = ExtractWfw.asp: Extract tournament email address for submitter -+- 4/16/2019 10:13:11 PM dallen
+SQL = ExtractWfw.asp: eMailTo: "KRIS LAPOINT" <kris.lapoint@att.net>; "John Wilkins" <wilkins@northnet.org>; "Kris Lapoint" <> -+- 4/16/2019 10:13:11 PM dallen
+SQL = ExtractWfw.asp: 19S151TS.PRN Tournament Summary Report -+- 4/16/2019 10:13:11 PM dallen
+SQL = ExtractWfw.asp: 19S151TS.TXT WfW Tournament Export Data File -+- 4/16/2019 10:13:11 PM dallen
+SQL = ExtractWfw.asp: 19S151OD.TXT Officials Data File (Credits) -+- 4/16/2019 10:13:11 PM dallen
+SQL = ExtractWfw.asp: 19S151BT.PRN Boat Time Tracking Report -+- 4/16/2019 10:13:11 PM dallen
+SQL = ExtractWfw.asp: 19S151CS.HTM Condensed Scorebook Report -+- 4/16/2019 10:13:11 PM dallen
+SQL = ExtractWfw.asp: 19S151CJ.PRN Chief Judges Tournament Report -+- 4/16/2019 10:13:11 PM dallen
+SQL = ExtractWfw.asp: 19S151CJ.TXT Chief Judges Rept Data File -+- 4/16/2019 10:13:11 PM dallen
+SQL = ExtractWfw.asp: 19S151SD.PRN Safety Directors Report -+- 4/16/2019 10:13:11 PM dallen
+SQL = ExtractWfw.asp: 19S151SD.TXT Safety Directors Data File -+- 4/16/2019 10:13:11 PM dallen
+SQL = ExtractWfw.asp: 19S151TU.PRN Towboat Utilization Report -+- 4/16/2019 10:13:11 PM dallen
+SQL = ExtractWfw.asp: 19S151TU.TXT Towboat Utilization Data File -+- 4/16/2019 10:13:11 PM dallen
+SQL = ExtractWfw.asp: WWPARM.TNY Tournament Control File -+- 4/16/2019 10:13:11 PM dallen
+SQL = ExtractWfw.asp: send emailto "KRIS LAPOINT" <kris.lapoint@att.net>; "John Wilkins" <wilkins@northnet.org>; "Kris Lapoint" <> -+- 4/16/2019 10:13:11 PM dallen
+SQL = ExtractWfw.asp: emailto Owner "Kirby Whetsel" <kwhetsel@charter.net> -+- 4/16/2019 10:13:11 PM dallen
+SQL = ExtractWfw.asp: emailto UploadMode Zip -+- 4/16/2019 10:13:11 PM dallen
+SQL = ExtractWfw.asp: emailto strMissing  -+- 4/16/2019 10:13:11 PM dallen
+SQL = ExtractWfw.asp: Upload Time:  4/16/2019 10:13:11 PM -+- 4/16/2019 10:13:11 PM dallen
+SQL = ExtractWfw.asp: MailTo: "KRIS LAPOINT" <kris.lapoint@att.net>; "John Wilkins" <wilkins@northnet.org>; "Kris Lapoint" <> eMailCC: "Kirby Whetsel" <kwhetsel@charter.net>; competition@usawaterski.org -+- 4/16/2019 10:13:11 PM dallen
+SQL = ExtractWfw.asp: Error sending email: Err.Number=-2147220975 Message=The message could not be sent to the SMTP server. The transport error code was 0x80040217. The server response was not available
+ -+- 4/16/2019 10:13:17 PM dallen
+SQL = ExtractWfw.asp: emailto closed -+- 4/16/2019 10:13:17 PM dallen
+SQL = ExtractWfw.asp:   Upload into d:\webs\usawaterski.org\rankings\PostTourZips\19S151R.ZIP -- all Status flags set and Tournament posted as Complete. -+- 4/16/2019 10:13:17 PM dallen
+SQL = ExtractWfw.asp: FoundNewWSP=False -+- 4/16/2019 10:13:17 PM dallen
+SQL = ExtractWfw.asp: TourID: 19S151, Tourzip=d:\webs\usawaterski.org\rankings\PostTourZips\19S151R.ZIP, TourFldr=d:\webs\usawaterski.org\rankings\Scratch\19S151R -+- 4/16/2019 10:16:07 PM dallen
+SQL = ExtractWfw.asp: Get Swift Entry: Sanctions.dbo.TSchedul -+- 4/16/2019 10:16:07 PM dallen
+SQL = ExtractWfw.asp: 19S151R.SBK Full Scorebook Report -+- 4/16/2019 10:16:07 PM dallen
+SQL = ExtractWfw.asp: 19S151R.WSP Rankings Data File (Scores) -+- 4/16/2019 10:16:07 PM dallen
+SQL = ExtractWfw.asp: Extract tournament email address for submitter -+- 4/16/2019 10:16:07 PM dallen
+SQL = ExtractWfw.asp: eMailTo: "KRIS LAPOINT" <kris.lapoint@att.net>; "John Wilkins" <wilkins@northnet.org>; "Kris Lapoint" <> -+- 4/16/2019 10:16:07 PM dallen
+SQL = ExtractWfw.asp: 19S151TS.PRN Tournament Summary Report -+- 4/16/2019 10:16:07 PM dallen
+SQL = ExtractWfw.asp: 19S151TS.TXT WfW Tournament Export Data File -+- 4/16/2019 10:16:07 PM dallen
+SQL = ExtractWfw.asp: 19S151OD.TXT Officials Data File (Credits) -+- 4/16/2019 10:16:07 PM dallen
+SQL = ExtractWfw.asp: 19S151BT.PRN Boat Time Tracking Report -+- 4/16/2019 10:16:07 PM dallen
+SQL = ExtractWfw.asp: 19S151CS.HTM Condensed Scorebook Report -+- 4/16/2019 10:16:07 PM dallen
+SQL = ExtractWfw.asp: 19S151CJ.PRN Chief Judges Tournament Report -+- 4/16/2019 10:16:07 PM dallen
+SQL = ExtractWfw.asp: 19S151CJ.TXT Chief Judges Rept Data File -+- 4/16/2019 10:16:07 PM dallen
+SQL = ExtractWfw.asp: 19S151SD.PRN Safety Directors Report -+- 4/16/2019 10:16:07 PM dallen
+SQL = ExtractWfw.asp: 19S151SD.TXT Safety Directors Data File -+- 4/16/2019 10:16:07 PM dallen
+SQL = ExtractWfw.asp: 19S151TU.PRN Towboat Utilization Report -+- 4/16/2019 10:16:07 PM dallen
+SQL = ExtractWfw.asp: 19S151TU.TXT Towboat Utilization Data File -+- 4/16/2019 10:16:07 PM dallen
+SQL = ExtractWfw.asp: WWPARM.TNY Tournament Control File -+- 4/16/2019 10:16:07 PM dallen
+SQL = ExtractWfw.asp: send emailto "KRIS LAPOINT" <kris.lapoint@att.net>; "John Wilkins" <wilkins@northnet.org>; "Kris Lapoint" <> -+- 4/16/2019 10:16:07 PM dallen
+SQL = ExtractWfw.asp: emailto Owner "Kirby Whetsel" <kwhetsel@charter.net> -+- 4/16/2019 10:16:07 PM dallen
+SQL = ExtractWfw.asp: emailto UploadMode Zip -+- 4/16/2019 10:16:07 PM dallen
+SQL = ExtractWfw.asp: emailto strMissing  -+- 4/16/2019 10:16:07 PM dallen
+SQL = ExtractWfw.asp: Upload Time:  4/16/2019 10:16:07 PM -+- 4/16/2019 10:16:07 PM dallen
+SQL = ExtractWfw.asp: MailTo: "KRIS LAPOINT" <kris.lapoint@att.net>; "John Wilkins" <wilkins@northnet.org>; "Kris Lapoint" <> eMailCC: "Kirby Whetsel" <kwhetsel@charter.net>; competition@usawaterski.org -+- 4/16/2019 10:16:07 PM dallen
+SQL = ExtractWfw.asp: Error sending email: Err.Number=-2147220975 Message=The message could not be sent to the SMTP server. The transport error code was 0x80040217. The server response was not available
+ -+- 4/16/2019 10:16:13 PM dallen
+SQL = ExtractWfw.asp: emailto closed -+- 4/16/2019 10:16:13 PM dallen
+SQL = ExtractWfw.asp:   Upload into d:\webs\usawaterski.org\rankings\PostTourZips\19S151R.ZIP -- all Status flags set and Tournament posted as Complete. -+- 4/16/2019 10:16:13 PM dallen
+SQL = ExtractWfw.asp: FoundNewWSP=False -+- 4/16/2019 10:16:13 PM dallen
+SQL = ExtractWfw.asp: TourID: 19S151, Tourzip=d:\webs\usawaterski.org\rankings\PostTourZips\19S151R.ZIP, TourFldr=d:\webs\usawaterski.org\rankings\Scratch\19S151R -+- 4/16/2019 11:22:06 PM kwhetsel
+SQL = ExtractWfw.asp: Get Swift Entry: Sanctions.dbo.TSchedul -+- 4/16/2019 11:22:06 PM kwhetsel
+SQL = ExtractWfw.asp: 19S151R.SBK Full Scorebook Report -+- 4/16/2019 11:22:06 PM kwhetsel
+SQL = ExtractWfw.asp: 19S151R.WSP Rankings Data File (Scores) -+- 4/16/2019 11:22:06 PM kwhetsel
+SQL = ExtractWfw.asp: Extract tournament email address for submitter -+- 4/16/2019 11:22:06 PM kwhetsel
+SQL = ExtractWfw.asp: eMailTo: "KRIS LAPOINT" <kris.lapoint@att.net>; "John Wilkins" <wilkins@northnet.org>; "Kris Lapoint" <kris.lapoint@att.net> -+- 4/16/2019 11:22:06 PM kwhetsel
+SQL = ExtractWfw.asp: 19S151TS.PRN Tournament Summary Report -+- 4/16/2019 11:22:06 PM kwhetsel
+SQL = ExtractWfw.asp: 19S151TS.TXT WfW Tournament Export Data File -+- 4/16/2019 11:22:06 PM kwhetsel
+SQL = ExtractWfw.asp: 19S151OD.TXT Officials Data File (Credits) -+- 4/16/2019 11:22:06 PM kwhetsel
+SQL = ExtractWfw.asp: 19S151BT.PRN Boat Time Tracking Report -+- 4/16/2019 11:22:06 PM kwhetsel
+SQL = ExtractWfw.asp: 19S151CS.HTM Condensed Scorebook Report -+- 4/16/2019 11:22:06 PM kwhetsel
+SQL = ExtractWfw.asp: EmailToIWWF File=19S151CS.HTM -+- 4/16/2019 11:22:06 PM kwhetsel
+SQL = ExtractWfw.asp: EmailToIWWF: Error sending email: Err.Number=-2147220975 Message=The message could not be sent to the SMTP server. The transport error code was 0x80040217. The server response was not available
+ -+- 4/16/2019 11:22:13 PM kwhetsel
+SQL = ExtractWfw.asp: 19S151CJ.PRN Chief Judges Tournament Report -+- 4/16/2019 11:22:13 PM kwhetsel
+SQL = ExtractWfw.asp: 19S151CJ.TXT Chief Judges Rept Data File -+- 4/16/2019 11:22:13 PM kwhetsel
+SQL = ExtractWfw.asp: 19S151SD.PRN Safety Directors Report -+- 4/16/2019 11:22:13 PM kwhetsel
+SQL = ExtractWfw.asp: 19S151SD.TXT Safety Directors Data File -+- 4/16/2019 11:22:13 PM kwhetsel
+SQL = ExtractWfw.asp: 19S151TU.PRN Towboat Utilization Report -+- 4/16/2019 11:22:13 PM kwhetsel
+SQL = ExtractWfw.asp: 19S151TU.TXT Towboat Utilization Data File -+- 4/16/2019 11:22:13 PM kwhetsel
+SQL = ExtractWfw.asp: WWPARM.TNY Tournament Control File -+- 4/16/2019 11:22:13 PM kwhetsel
+SQL = ExtractWfw.asp: send emailto "KRIS LAPOINT" <kris.lapoint@att.net>; "John Wilkins" <wilkins@northnet.org>; "Kris Lapoint" <kris.lapoint@att.net> -+- 4/16/2019 11:22:13 PM kwhetsel
+SQL = ExtractWfw.asp: emailto Owner "Kirby Whetsel" <kwhetsel@charter.net> -+- 4/16/2019 11:22:13 PM kwhetsel
+SQL = ExtractWfw.asp: emailto UploadMode Zip -+- 4/16/2019 11:22:13 PM kwhetsel
+SQL = ExtractWfw.asp: emailto strMissing  -+- 4/16/2019 11:22:13 PM kwhetsel
+SQL = ExtractWfw.asp: Upload Time:  4/16/2019 11:22:13 PM -+- 4/16/2019 11:22:13 PM kwhetsel
+SQL = ExtractWfw.asp: MailTo: "KRIS LAPOINT" <kris.lapoint@att.net>; "John Wilkins" <wilkins@northnet.org>; "Kris Lapoint" <kris.lapoint@att.net> eMailCC: "Kirby Whetsel" <kwhetsel@charter.net>; competition@usawaterski.org -+- 4/16/2019 11:22:13 PM kwhetsel
+SQL = ExtractWfw.asp: Error sending email: Err.Number=-2147220975 Message=The message could not be sent to the SMTP server. The transport error code was 0x80040217. The server response was not available
+ -+- 4/16/2019 11:22:19 PM kwhetsel
+SQL = ExtractWfw.asp: emailto closed -+- 4/16/2019 11:22:19 PM kwhetsel
+SQL = ExtractWfw.asp:   Upload into d:\webs\usawaterski.org\rankings\PostTourZips\19S151R.ZIP -- all Status flags set and Tournament posted as Complete. -+- 4/16/2019 11:22:19 PM kwhetsel
+SQL = ExtractWfw.asp: FoundNewWSP=True -+- 4/16/2019 11:22:19 PM kwhetsel
+SQL = ExtractWfw.asp: ScoreCount=0 on usawsrank.Scores -+- 4/16/2019 11:22:19 PM kwhetsel
+SQL = ExtractWfw.asp: TourID: 19U045, Tourzip=d:\webs\usawaterski.org\rankings\PostTourZips\19U045C.ZIP, TourFldr=d:\webs\usawaterski.org\rankings\Scratch\19U045C -+- 4/17/2019 8:49:59 AM rrriii
+SQL = ExtractWfw.asp: Get Swift Entry: Sanctions.dbo.TSchedul -+- 4/17/2019 8:49:59 AM rrriii
+SQL = ExtractWfw.asp: 19U045C.SBK Full Scorebook Report -+- 4/17/2019 8:49:59 AM rrriii
+SQL = ExtractWfw.asp: 19U045C.WSP Rankings Data File (Scores) -+- 4/17/2019 8:49:59 AM rrriii
+SQL = ExtractWfw.asp: Create Rankings Data File for processing d:\webs\usawaterski.org\rankings\Scratch\19U045C\19U045C.WSP -+- 4/17/2019 8:49:59 AM rrriii
+SQL = ExtractWfw.asp: Extract tournament email address for submitter -+- 4/17/2019 8:49:59 AM rrriii
+SQL = ExtractWfw.asp: eMailTo: "Abbegayle Young" <uclawaterski@gmail.com>; "Jeff Rush" <jeff.rush@hotmail.com>; "Jackie Horton" <jackiehorton85@gmail.com> -+- 4/17/2019 8:49:59 AM rrriii
+SQL = ExtractWfw.asp: 19U045TS.PRN Tournament Summary Report -+- 4/17/2019 8:49:59 AM rrriii
+SQL = ExtractWfw.asp: 19U045TS.TXT WfW Tournament Export Data File -+- 4/17/2019 8:49:59 AM rrriii
+SQL = ExtractWfw.asp: 19U045OD.TXT Officials Data File (Credits) -+- 4/17/2019 8:49:59 AM rrriii
+SQL = ExtractWfw.asp: 19U045BT.PRN Boat Time Tracking Report -+- 4/17/2019 8:49:59 AM rrriii
+SQL = ExtractWfw.asp: 19U045JT.CSV Jump Time Data File -+- 4/17/2019 8:49:59 AM rrriii
+SQL = ExtractWfw.asp: 19U045CS.HTM Condensed Scorebook Report -+- 4/17/2019 8:49:59 AM rrriii
+SQL = ExtractWfw.asp: 19U045CJ.PRN Chief Judges Tournament Report -+- 4/17/2019 8:49:59 AM rrriii
+SQL = ExtractWfw.asp: 19U045CJ.TXT Chief Judges Rept Data File -+- 4/17/2019 8:49:59 AM rrriii
+SQL = ExtractWfw.asp: 19U045SD.PRN Safety Directors Report -+- 4/17/2019 8:49:59 AM rrriii
+SQL = ExtractWfw.asp: 19U045SD.TXT Safety Directors Data File -+- 4/17/2019 8:49:59 AM rrriii
+SQL = ExtractWfw.asp: 19U045TU.PRN Towboat Utilization Report -+- 4/17/2019 8:49:59 AM rrriii
+SQL = ExtractWfw.asp: 19U045TU.TXT Towboat Utilization Data File -+- 4/17/2019 8:49:59 AM rrriii
+SQL = ExtractWfw.asp: WWPARM.TNY Tournament Control File -+- 4/17/2019 8:49:59 AM rrriii
+SQL = ExtractWfw.asp: send emailto "Abbegayle Young" <uclawaterski@gmail.com>; "Jeff Rush" <jeff.rush@hotmail.com>; "Jackie Horton" <jackiehorton85@gmail.com> -+- 4/17/2019 8:49:59 AM rrriii
+SQL = ExtractWfw.asp: emailto Owner "Robert Rhyne" <rrriii@mindspring.com> -+- 4/17/2019 8:49:59 AM rrriii
+SQL = ExtractWfw.asp: emailto UploadMode Zip -+- 4/17/2019 8:49:59 AM rrriii
+SQL = ExtractWfw.asp: emailto strMissing  -+- 4/17/2019 8:49:59 AM rrriii
+SQL = ExtractWfw.asp: Upload Time:  4/17/2019 8:49:59 AM -+- 4/17/2019 8:49:59 AM rrriii
+SQL = ExtractWfw.asp: MailTo: "Abbegayle Young" <uclawaterski@gmail.com>; "Jeff Rush" <jeff.rush@hotmail.com>; "Jackie Horton" <jackiehorton85@gmail.com> eMailCC: "Kirby Whetsel" <kwhetsel@charter.net>; "Jeff Surdej" <j_surdej@yahoo.com>; "Adam Koehler" <adam.t.koehler@gmail.com>; "Joey McNamara" <ncwsa@joeymcnamara.com>; competition@usawaterski.org -+- 4/17/2019 8:49:59 AM rrriii
+SQL = ExtractWfw.asp: Error sending email: Err.Number=-2147220975 Message=The message could not be sent to the SMTP server. The transport error code was 0x80040217. The server response was not available
+ -+- 4/17/2019 8:50:06 AM rrriii
+SQL = ExtractWfw.asp: emailto closed -+- 4/17/2019 8:50:06 AM rrriii
+SQL = ExtractWfw.asp:   Upload into d:\webs\usawaterski.org\rankings\PostTourZips\19U045C.ZIP -- all Status flags set and Tournament posted as Complete. -+- 4/17/2019 8:50:06 AM rrriii
+SQL = ExtractWfw.asp: FoundNewWSP=True -+- 4/17/2019 8:50:06 AM rrriii
+SQL = ExtractWfw.asp: ScoreCount=0 on usawsrank.Scores -+- 4/17/2019 8:50:06 AM rrriii
+SQL = ExtractWfw.asp: TourID: 19W155, Tourzip=d:\webs\usawaterski.org\rankings\PostTourZips\19W155C.ZIP, TourFldr=d:\webs\usawaterski.org\rankings\Scratch\19W155C -+- 4/17/2019 12:18:48 PM jstanford
+SQL = ExtractWfw.asp: Get Swift Entry: Sanctions.dbo.TSchedul -+- 4/17/2019 12:18:48 PM jstanford
+SQL = ExtractWfw.asp: 19W155C.SBK Full Scorebook Report -+- 4/17/2019 12:18:48 PM jstanford
+SQL = ExtractWfw.asp: 19W155C.WSP Rankings Data File (Scores) -+- 4/17/2019 12:18:48 PM jstanford
+SQL = ExtractWfw.asp: Extract tournament email address for submitter -+- 4/17/2019 12:18:48 PM jstanford
+SQL = ExtractWfw.asp: eMailTo: "Greg Badal" <skibadal1@gmail.com>; "George Canepa" <georgecanepax@gmail.com> -+- 4/17/2019 12:18:48 PM jstanford
+SQL = ExtractWfw.asp: 19W155TS.PRN Tournament Summary Report -+- 4/17/2019 12:18:48 PM jstanford
+SQL = ExtractWfw.asp: 19W155TS.TXT WfW Tournament Export Data File -+- 4/17/2019 12:18:48 PM jstanford
+SQL = ExtractWfw.asp: 19W155OD.TXT Officials Data File (Credits) -+- 4/17/2019 12:18:48 PM jstanford
+SQL = ExtractWfw.asp: 19W155BT.PRN Boat Time Tracking Report -+- 4/17/2019 12:18:48 PM jstanford
+SQL = ExtractWfw.asp: 19W155CS.HTM Condensed Scorebook Report -+- 4/17/2019 12:18:48 PM jstanford
+SQL = ExtractWfw.asp: 19W155CJ.PRN Chief Judges Tournament Report -+- 4/17/2019 12:18:48 PM jstanford
+SQL = ExtractWfw.asp: 19W155CJ.TXT Chief Judges Rept Data File -+- 4/17/2019 12:18:48 PM jstanford
+SQL = ExtractWfw.asp: 19W155SD.PRN Safety Directors Report -+- 4/17/2019 12:18:48 PM jstanford
+SQL = ExtractWfw.asp: 19W155SD.TXT Safety Directors Data File -+- 4/17/2019 12:18:48 PM jstanford
+SQL = ExtractWfw.asp: 19W155TU.PRN Towboat Utilization Report -+- 4/17/2019 12:18:48 PM jstanford
+SQL = ExtractWfw.asp: 19W155TU.TXT Towboat Utilization Data File -+- 4/17/2019 12:18:48 PM jstanford
+SQL = ExtractWfw.asp: WWPARM.TNY Tournament Control File -+- 4/17/2019 12:18:48 PM jstanford
+SQL = ExtractWfw.asp: send emailto "Greg Badal" <skibadal1@gmail.com>; "George Canepa" <georgecanepax@gmail.com> -+- 4/17/2019 12:18:48 PM jstanford
+SQL = ExtractWfw.asp: emailto Owner "Judy Stanford" <judy-don@sbcglobal.net> -+- 4/17/2019 12:18:48 PM jstanford
+SQL = ExtractWfw.asp: emailto UploadMode Zip -+- 4/17/2019 12:18:48 PM jstanford
+SQL = ExtractWfw.asp: emailto strMissing  -+- 4/17/2019 12:18:48 PM jstanford
+SQL = ExtractWfw.asp: Upload Time:  4/17/2019 12:18:48 PM -+- 4/17/2019 12:18:48 PM jstanford
+SQL = ExtractWfw.asp: MailTo: "Greg Badal" <skibadal1@gmail.com>; "George Canepa" <georgecanepax@gmail.com> eMailCC: "Kirby Whetsel" <kwhetsel@charter.net>; competition@usawaterski.org -+- 4/17/2019 12:18:48 PM jstanford
+SQL = ExtractWfw.asp: Error sending email: Err.Number=-2147220975 Message=The message could not be sent to the SMTP server. The transport error code was 0x80040217. The server response was not available
+ -+- 4/17/2019 12:18:55 PM jstanford
+SQL = ExtractWfw.asp: emailto closed -+- 4/17/2019 12:18:55 PM jstanford
+SQL = ExtractWfw.asp:   Upload into d:\webs\usawaterski.org\rankings\PostTourZips\19W155C.ZIP -- all Status flags set and Tournament posted as Complete. -+- 4/17/2019 12:18:55 PM jstanford
+SQL = ExtractWfw.asp: FoundNewWSP=False -+- 4/17/2019 12:18:55 PM jstanford
+SQL = ExtractWfw.asp: TourID: 19W155, Tourzip=d:\webs\usawaterski.org\rankings\PostTourZips\19W155C.ZIP, TourFldr=d:\webs\usawaterski.org\rankings\Scratch\19W155C -+- 4/17/2019 12:20:35 PM jstanford
+SQL = ExtractWfw.asp: Get Swift Entry: Sanctions.dbo.TSchedul -+- 4/17/2019 12:20:35 PM jstanford
+SQL = ExtractWfw.asp: 19W155C.SBK Full Scorebook Report -+- 4/17/2019 12:20:35 PM jstanford
+SQL = ExtractWfw.asp: 19W155C.WSP Rankings Data File (Scores) -+- 4/17/2019 12:20:35 PM jstanford
+SQL = ExtractWfw.asp: Extract tournament email address for submitter -+- 4/17/2019 12:20:35 PM jstanford
+SQL = ExtractWfw.asp: eMailTo: "Greg Badal" <skibadal1@gmail.com>; "George Canepa" <georgecanepax@gmail.com> -+- 4/17/2019 12:20:35 PM jstanford
+SQL = ExtractWfw.asp: 19W155TS.PRN Tournament Summary Report -+- 4/17/2019 12:20:35 PM jstanford
+SQL = ExtractWfw.asp: 19W155TS.TXT WfW Tournament Export Data File -+- 4/17/2019 12:20:35 PM jstanford
+SQL = ExtractWfw.asp: 19W155OD.TXT Officials Data File (Credits) -+- 4/17/2019 12:20:35 PM jstanford
+SQL = ExtractWfw.asp: 19W155BT.PRN Boat Time Tracking Report -+- 4/17/2019 12:20:35 PM jstanford
+SQL = ExtractWfw.asp: 19W155CS.HTM Condensed Scorebook Report -+- 4/17/2019 12:20:35 PM jstanford
+SQL = ExtractWfw.asp: 19W155CJ.PRN Chief Judges Tournament Report -+- 4/17/2019 12:20:35 PM jstanford
+SQL = ExtractWfw.asp: 19W155CJ.TXT Chief Judges Rept Data File -+- 4/17/2019 12:20:35 PM jstanford
+SQL = ExtractWfw.asp: 19W155SD.PRN Safety Directors Report -+- 4/17/2019 12:20:35 PM jstanford
+SQL = ExtractWfw.asp: 19W155SD.TXT Safety Directors Data File -+- 4/17/2019 12:20:35 PM jstanford
+SQL = ExtractWfw.asp: 19W155TU.PRN Towboat Utilization Report -+- 4/17/2019 12:20:35 PM jstanford
+SQL = ExtractWfw.asp: 19W155TU.TXT Towboat Utilization Data File -+- 4/17/2019 12:20:35 PM jstanford
+SQL = ExtractWfw.asp: WWPARM.TNY Tournament Control File -+- 4/17/2019 12:20:35 PM jstanford
+SQL = ExtractWfw.asp: send emailto "Greg Badal" <skibadal1@gmail.com>; "George Canepa" <georgecanepax@gmail.com> -+- 4/17/2019 12:20:35 PM jstanford
+SQL = ExtractWfw.asp: emailto Owner "Judy Stanford" <judy-don@sbcglobal.net> -+- 4/17/2019 12:20:35 PM jstanford
+SQL = ExtractWfw.asp: emailto UploadMode Rpt -+- 4/17/2019 12:20:35 PM jstanford
+SQL = ExtractWfw.asp: emailto strMissing  -+- 4/17/2019 12:20:35 PM jstanford
+SQL = ExtractWfw.asp: Upload Time:  4/17/2019 12:20:35 PM -+- 4/17/2019 12:20:35 PM jstanford
+SQL = ExtractWfw.asp: MailTo: "Greg Badal" <skibadal1@gmail.com>; "George Canepa" <georgecanepax@gmail.com> eMailCC: "Kirby Whetsel" <kwhetsel@charter.net>; competition@usawaterski.org -+- 4/17/2019 12:20:35 PM jstanford
+SQL = ExtractWfw.asp: Error sending email: Err.Number=-2147220975 Message=The message could not be sent to the SMTP server. The transport error code was 0x80040217. The server response was not available
+ -+- 4/17/2019 12:20:41 PM jstanford
+SQL = ExtractWfw.asp: emailto closed -+- 4/17/2019 12:20:41 PM jstanford
+SQL = ExtractWfw.asp:   Upload into d:\webs\usawaterski.org\rankings\PostTourZips\19W155C.ZIP -- all Status flags set and Tournament posted as Complete. -+- 4/17/2019 12:20:41 PM jstanford
+SQL = ExtractWfw.asp: FoundNewWSP=True -+- 4/17/2019 12:20:41 PM jstanford
+SQL = ExtractWfw.asp: ScoreCount=0 on usawsrank.Scores -+- 4/17/2019 12:20:41 PM jstanford
+SQL = ExtractWfw.asp: TourID: 19S109, Tourzip=d:\webs\usawaterski.org\rankings\PostTourZips\19S109R.ZIP, TourFldr=d:\webs\usawaterski.org\rankings\Scratch\19S109R -+- 4/17/2019 7:49:02 PM kwhetsel
+SQL = ExtractWfw.asp: Get Swift Entry: Sanctions.dbo.TSchedul -+- 4/17/2019 7:49:02 PM kwhetsel
+SQL = ExtractWfw.asp: 19S109R.SBK Full Scorebook Report -+- 4/17/2019 7:49:02 PM kwhetsel
+SQL = ExtractWfw.asp: 19S109R.WSP Rankings Data File (Scores) -+- 4/17/2019 7:49:02 PM kwhetsel
+SQL = ExtractWfw.asp: Extract tournament email address for submitter -+- 4/17/2019 7:49:02 PM kwhetsel
+SQL = ExtractWfw.asp: eMailTo: "Curtis Rabe" <rabecurtis@aol.com>; "Bill Wenner" <teddyw@tampabay.rr.com>; "Brenda Nichols" <brendanichols166@gmail.com> -+- 4/17/2019 7:49:02 PM kwhetsel
+SQL = ExtractWfw.asp: 19S109TS.PRN Tournament Summary Report -+- 4/17/2019 7:49:02 PM kwhetsel
+SQL = ExtractWfw.asp: 19S109TS.TXT WfW Tournament Export Data File -+- 4/17/2019 7:49:02 PM kwhetsel
+SQL = ExtractWfw.asp: 19S109OD.TXT Officials Data File (Credits) -+- 4/17/2019 7:49:02 PM kwhetsel
+SQL = ExtractWfw.asp: 19S109BT.PRN Boat Time Tracking Report -+- 4/17/2019 7:49:02 PM kwhetsel
+SQL = ExtractWfw.asp: 19S109JT.CSV Jump Time Data File -+- 4/17/2019 7:49:02 PM kwhetsel
+SQL = ExtractWfw.asp: EmailToIWWF File=19S109JT.CSV -+- 4/17/2019 7:49:02 PM kwhetsel
+SQL = ExtractWfw.asp: EmailToIWWF: Error sending email: Err.Number=-2147220975 Message=The message could not be sent to the SMTP server. The transport error code was 0x80040217. The server response was not available
+ -+- 4/17/2019 7:49:09 PM kwhetsel
+SQL = ExtractWfw.asp: 19S109CS.HTM Condensed Scorebook Report -+- 4/17/2019 7:49:10 PM kwhetsel
+SQL = ExtractWfw.asp: EmailToIWWF File=19S109CS.HTM -+- 4/17/2019 7:49:10 PM kwhetsel
+SQL = ExtractWfw.asp: EmailToIWWF: Error sending email: Err.Number=-2147220975 Message=The message could not be sent to the SMTP server. The transport error code was 0x80040217. The server response was not available
+ -+- 4/17/2019 7:49:16 PM kwhetsel
+SQL = ExtractWfw.asp: 19S109CJ.PRN Chief Judges Tournament Report -+- 4/17/2019 7:49:16 PM kwhetsel
+SQL = ExtractWfw.asp: 19S109CJ.TXT Chief Judges Rept Data File -+- 4/17/2019 7:49:16 PM kwhetsel
+SQL = ExtractWfw.asp: 19S109SD.PRN Safety Directors Report -+- 4/17/2019 7:49:16 PM kwhetsel
+SQL = ExtractWfw.asp: 19S109SD.TXT Safety Directors Data File -+- 4/17/2019 7:49:16 PM kwhetsel
+SQL = ExtractWfw.asp: 19S109TU.PRN Towboat Utilization Report -+- 4/17/2019 7:49:16 PM kwhetsel
+SQL = ExtractWfw.asp: 19S109TU.TXT Towboat Utilization Data File -+- 4/17/2019 7:49:16 PM kwhetsel
+SQL = ExtractWfw.asp: EmailToIWWF File=19S109HD.TXT -+- 4/17/2019 7:49:16 PM kwhetsel
+SQL = ExtractWfw.asp: EmailToIWWF: Error sending email: Err.Number=-2147220975 Message=The message could not be sent to the SMTP server. The transport error code was 0x80040217. The server response was not available
+ -+- 4/17/2019 7:49:22 PM kwhetsel
+SQL = ExtractWfw.asp: WWPARM.TNY Tournament Control File -+- 4/17/2019 7:49:22 PM kwhetsel
+SQL = ExtractWfw.asp: send emailto "Curtis Rabe" <rabecurtis@aol.com>; "Bill Wenner" <teddyw@tampabay.rr.com>; "Brenda Nichols" <brendanichols166@gmail.com> -+- 4/17/2019 7:49:22 PM kwhetsel
+SQL = ExtractWfw.asp: emailto Owner "Kirby Whetsel" <kwhetsel@charter.net> -+- 4/17/2019 7:49:22 PM kwhetsel
+SQL = ExtractWfw.asp: emailto UploadMode Zip -+- 4/17/2019 7:49:22 PM kwhetsel
+SQL = ExtractWfw.asp: emailto strMissing  -+- 4/17/2019 7:49:22 PM kwhetsel
+SQL = ExtractWfw.asp: Upload Time:  4/17/2019 7:49:22 PM -+- 4/17/2019 7:49:22 PM kwhetsel
+SQL = ExtractWfw.asp: MailTo: "Curtis Rabe" <rabecurtis@aol.com>; "Bill Wenner" <teddyw@tampabay.rr.com>; "Brenda Nichols" <brendanichols166@gmail.com> eMailCC: "Kirby Whetsel" <kwhetsel@charter.net>; competition@usawaterski.org -+- 4/17/2019 7:49:22 PM kwhetsel
+SQL = ExtractWfw.asp: Error sending email: Err.Number=-2147220975 Message=The message could not be sent to the SMTP server. The transport error code was 0x80040217. The server response was not available
+ -+- 4/17/2019 7:49:28 PM kwhetsel
+SQL = ExtractWfw.asp: emailto closed -+- 4/17/2019 7:49:28 PM kwhetsel
+SQL = ExtractWfw.asp:   Upload into d:\webs\usawaterski.org\rankings\PostTourZips\19S109R.ZIP -- all Status flags set and Tournament posted as Complete. -+- 4/17/2019 7:49:28 PM kwhetsel
+SQL = ExtractWfw.asp: FoundNewWSP=True -+- 4/17/2019 7:49:28 PM kwhetsel
+SQL = ExtractWfw.asp: ScoreCount=0 on usawsrank.Scores -+- 4/17/2019 7:49:28 PM kwhetsel
+SQL = ExtractWfw.asp: TourID: 19U042, Tourzip=d:\webs\usawaterski.org\rankings\PostTourZips\19U042C.ZIP, TourFldr=d:\webs\usawaterski.org\rankings\Scratch\19U042C -+- 4/18/2019 10:30:28 PM rrriii
+SQL = ExtractWfw.asp: Get Swift Entry: Sanctions.dbo.TSchedul -+- 4/18/2019 10:30:28 PM rrriii
+SQL = ExtractWfw.asp: 19U042C.SBK Full Scorebook Report -+- 4/18/2019 10:30:28 PM rrriii
+SQL = ExtractWfw.asp: 19U042C.WSP Rankings Data File (Scores) -+- 4/18/2019 10:30:28 PM rrriii
+SQL = ExtractWfw.asp: Create Rankings Data File for processing d:\webs\usawaterski.org\rankings\Scratch\19U042C\19U042C.WSP -+- 4/18/2019 10:30:28 PM rrriii
+SQL = ExtractWfw.asp: Extract tournament email address for submitter -+- 4/18/2019 10:30:28 PM rrriii
+SQL = ExtractWfw.asp: eMailTo: "Harry Spavin" <harry_spav@hotmail.com>; "Taryn Grant" <taryn.grant22@gmail.com>; "Lisa Holland" <lisa@sportpixusa.net> -+- 4/18/2019 10:30:28 PM rrriii
+SQL = ExtractWfw.asp: 19U042TS.PRN Tournament Summary Report -+- 4/18/2019 10:30:28 PM rrriii
+SQL = ExtractWfw.asp: 19U042TS.TXT WfW Tournament Export Data File -+- 4/18/2019 10:30:28 PM rrriii
+SQL = ExtractWfw.asp: 19U042OD.TXT Officials Data File (Credits) -+- 4/18/2019 10:30:28 PM rrriii
+SQL = ExtractWfw.asp: 19U042BT.PRN Boat Time Tracking Report -+- 4/18/2019 10:30:28 PM rrriii
+SQL = ExtractWfw.asp: 19U042JT.CSV Jump Time Data File -+- 4/18/2019 10:30:28 PM rrriii
+SQL = ExtractWfw.asp: 19U042CS.HTM Condensed Scorebook Report -+- 4/18/2019 10:30:28 PM rrriii
+SQL = ExtractWfw.asp: 19U042CJ.PRN Chief Judges Tournament Report -+- 4/18/2019 10:30:28 PM rrriii
+SQL = ExtractWfw.asp: 19U042CJ.TXT Chief Judges Rept Data File -+- 4/18/2019 10:30:28 PM rrriii
+SQL = ExtractWfw.asp: 19U042SD.PRN Safety Directors Report -+- 4/18/2019 10:30:28 PM rrriii
+SQL = ExtractWfw.asp: 19U042SD.TXT Safety Directors Data File -+- 4/18/2019 10:30:28 PM rrriii
+SQL = ExtractWfw.asp: 19U042TU.PRN Towboat Utilization Report -+- 4/18/2019 10:30:28 PM rrriii
+SQL = ExtractWfw.asp: 19U042TU.TXT Towboat Utilization Data File -+- 4/18/2019 10:30:28 PM rrriii
+SQL = ExtractWfw.asp: WWPARM.TNY Tournament Control File -+- 4/18/2019 10:30:28 PM rrriii
+SQL = ExtractWfw.asp: send emailto "Harry Spavin" <harry_spav@hotmail.com>; "Taryn Grant" <taryn.grant22@gmail.com>; "Lisa Holland" <lisa@sportpixusa.net> -+- 4/18/2019 10:30:28 PM rrriii
+SQL = ExtractWfw.asp: emailto Owner "Robert Rhyne" <rrriii@mindspring.com> -+- 4/18/2019 10:30:28 PM rrriii
+SQL = ExtractWfw.asp: emailto UploadMode Zip -+- 4/18/2019 10:30:28 PM rrriii
+SQL = ExtractWfw.asp: emailto strMissing  -+- 4/18/2019 10:30:28 PM rrriii
+SQL = ExtractWfw.asp: Upload Time:  4/18/2019 10:30:28 PM -+- 4/18/2019 10:30:28 PM rrriii
+SQL = ExtractWfw.asp: MailTo: "Harry Spavin" <harry_spav@hotmail.com>; "Taryn Grant" <taryn.grant22@gmail.com>; "Lisa Holland" <lisa@sportpixusa.net> eMailCC: "Kirby Whetsel" <kwhetsel@charter.net>; "Jeff Surdej" <j_surdej@yahoo.com>; "Adam Koehler" <adam.t.koehler@gmail.com>; "Joey McNamara" <ncwsa@joeymcnamara.com>; competition@usawaterski.org -+- 4/18/2019 10:30:28 PM rrriii
+SQL = ExtractWfw.asp: Error sending email: Err.Number=-2147220975 Message=The message could not be sent to the SMTP server. The transport error code was 0x80040217. The server response was not available
+ -+- 4/18/2019 10:30:35 PM rrriii
+SQL = ExtractWfw.asp: emailto closed -+- 4/18/2019 10:30:35 PM rrriii
+SQL = ExtractWfw.asp:   Upload into d:\webs\usawaterski.org\rankings\PostTourZips\19U042C.ZIP -- all Status flags set and Tournament posted as Complete. -+- 4/18/2019 10:30:35 PM rrriii
+SQL = ExtractWfw.asp: FoundNewWSP=True -+- 4/18/2019 10:30:35 PM rrriii
+SQL = ExtractWfw.asp: ScoreCount=0 on usawsrank.Scores -+- 4/18/2019 10:30:35 PM rrriii
+SQL = ExtractWfw.asp: TourID: 19U039, Tourzip=d:\webs\usawaterski.org\rankings\PostTourZips\19U039C.ZIP, TourFldr=d:\webs\usawaterski.org\rankings\Scratch\19U039C -+- 4/20/2019 8:17:21 AM rrriii
+SQL = ExtractWfw.asp: Get Swift Entry: Sanctions.dbo.TSchedul -+- 4/20/2019 8:17:21 AM rrriii
+SQL = ExtractWfw.asp: 19U039C.SBK Full Scorebook Report -+- 4/20/2019 8:17:22 AM rrriii
+SQL = ExtractWfw.asp: 19U039C.WSP Rankings Data File (Scores) -+- 4/20/2019 8:17:22 AM rrriii
+SQL = ExtractWfw.asp: Create Rankings Data File for processing d:\webs\usawaterski.org\rankings\Scratch\19U039C\19U039C.WSP -+- 4/20/2019 8:17:22 AM rrriii
+SQL = ExtractWfw.asp: Extract tournament email address for submitter -+- 4/20/2019 8:17:22 AM rrriii
+SQL = ExtractWfw.asp: eMailTo: "Ellie Staver" <e651s992@ku.edu>; "Dennis Downes" <dennis.downes@pec1.com>; "Delaina Downes" <delainadownes517@gmail.com> -+- 4/20/2019 8:17:22 AM rrriii
+SQL = ExtractWfw.asp: 19U039TS.PRN Tournament Summary Report -+- 4/20/2019 8:17:22 AM rrriii
+SQL = ExtractWfw.asp: 19U039TS.TXT WfW Tournament Export Data File -+- 4/20/2019 8:17:22 AM rrriii
+SQL = ExtractWfw.asp: 19U039OD.TXT Officials Data File (Credits) -+- 4/20/2019 8:17:22 AM rrriii
+SQL = ExtractWfw.asp: 19U039BT.PRN Boat Time Tracking Report -+- 4/20/2019 8:17:22 AM rrriii
+SQL = ExtractWfw.asp: 19U039JT.CSV Jump Time Data File -+- 4/20/2019 8:17:22 AM rrriii
+SQL = ExtractWfw.asp: 19U039CS.HTM Condensed Scorebook Report -+- 4/20/2019 8:17:22 AM rrriii
+SQL = ExtractWfw.asp: 19U039CJ.PRN Chief Judges Tournament Report -+- 4/20/2019 8:17:22 AM rrriii
+SQL = ExtractWfw.asp: 19U039CJ.TXT Chief Judges Rept Data File -+- 4/20/2019 8:17:22 AM rrriii
+SQL = ExtractWfw.asp: 19U039SD.PRN Safety Directors Report -+- 4/20/2019 8:17:22 AM rrriii
+SQL = ExtractWfw.asp: 19U039SD.TXT Safety Directors Data File -+- 4/20/2019 8:17:22 AM rrriii
+SQL = ExtractWfw.asp: 19U039TU.PRN Towboat Utilization Report -+- 4/20/2019 8:17:22 AM rrriii
+SQL = ExtractWfw.asp: 19U039TU.TXT Towboat Utilization Data File -+- 4/20/2019 8:17:22 AM rrriii
+SQL = ExtractWfw.asp: WWPARM.TNY Tournament Control File -+- 4/20/2019 8:17:22 AM rrriii
+SQL = ExtractWfw.asp: send emailto "Ellie Staver" <e651s992@ku.edu>; "Dennis Downes" <dennis.downes@pec1.com>; "Delaina Downes" <delainadownes517@gmail.com> -+- 4/20/2019 8:17:22 AM rrriii
+SQL = ExtractWfw.asp: emailto Owner "Robert Rhyne" <rrriii@mindspring.com> -+- 4/20/2019 8:17:22 AM rrriii
+SQL = ExtractWfw.asp: emailto UploadMode Zip -+- 4/20/2019 8:17:22 AM rrriii
+SQL = ExtractWfw.asp: emailto strMissing  -+- 4/20/2019 8:17:22 AM rrriii
+SQL = ExtractWfw.asp: Upload Time:  4/20/2019 8:17:22 AM -+- 4/20/2019 8:17:22 AM rrriii
+SQL = ExtractWfw.asp: MailTo: "Ellie Staver" <e651s992@ku.edu>; "Dennis Downes" <dennis.downes@pec1.com>; "Delaina Downes" <delainadownes517@gmail.com> eMailCC: "Kirby Whetsel" <kwhetsel@charter.net>; "Jeff Surdej" <j_surdej@yahoo.com>; "Adam Koehler" <adam.t.koehler@gmail.com>; "Joey McNamara" <ncwsa@joeymcnamara.com>; competition@usawaterski.org -+- 4/20/2019 8:17:22 AM rrriii
+SQL = ExtractWfw.asp: Error sending email: Err.Number=-2147220975 Message=The message could not be sent to the SMTP server. The transport error code was 0x80040217. The server response was not available
+ -+- 4/20/2019 8:17:28 AM rrriii
+SQL = ExtractWfw.asp: emailto closed -+- 4/20/2019 8:17:28 AM rrriii
+SQL = ExtractWfw.asp:   Upload into d:\webs\usawaterski.org\rankings\PostTourZips\19U039C.ZIP -- all Status flags set and Tournament posted as Complete. -+- 4/20/2019 8:17:28 AM rrriii
+SQL = ExtractWfw.asp: FoundNewWSP=True -+- 4/20/2019 8:17:28 AM rrriii
+SQL = ExtractWfw.asp: ScoreCount=0 on usawsrank.Scores -+- 4/20/2019 8:17:29 AM rrriii
+SQL = ExtractWfw.asp: TourID: 19S109, Tourzip=d:\webs\usawaterski.org\rankings\PostTourZips\19S109R.ZIP, TourFldr=d:\webs\usawaterski.org\rankings\Scratch\19S109R -+- 4/24/2019 9:14:44 PM kwhetsel
+SQL = ExtractWfw.asp: Get Swift Entry: Sanctions.dbo.TSchedul -+- 4/24/2019 9:14:44 PM kwhetsel
+SQL = ExtractWfw.asp: 19S109R.SBK Full Scorebook Report -+- 4/24/2019 9:14:45 PM kwhetsel
+SQL = ExtractWfw.asp: 19S109R.WSP Rankings Data File (Scores) -+- 4/24/2019 9:14:45 PM kwhetsel
+SQL = ExtractWfw.asp: Extract tournament email address for submitter -+- 4/24/2019 9:14:45 PM kwhetsel
+SQL = ExtractWfw.asp: eMailTo: "Curtis Rabe" <rabecurtis@aol.com>; "Bill Wenner" <teddyw@tampabay.rr.com>; "Brenda Nichols" <brendanichols166@gmail.com> -+- 4/24/2019 9:14:45 PM kwhetsel
+SQL = ExtractWfw.asp: 19S109TS.PRN Tournament Summary Report -+- 4/24/2019 9:14:45 PM kwhetsel
+SQL = ExtractWfw.asp: 19S109TS.TXT WfW Tournament Export Data File -+- 4/24/2019 9:14:45 PM kwhetsel
+SQL = ExtractWfw.asp: 19S109OD.TXT Officials Data File (Credits) -+- 4/24/2019 9:14:45 PM kwhetsel
+SQL = ExtractWfw.asp: 19S109BT.PRN Boat Time Tracking Report -+- 4/24/2019 9:14:45 PM kwhetsel
+SQL = ExtractWfw.asp: 19S109JT.CSV Jump Time Data File -+- 4/24/2019 9:14:45 PM kwhetsel
+SQL = ExtractWfw.asp: 19S109CS.HTM Condensed Scorebook Report -+- 4/24/2019 9:14:45 PM kwhetsel
+SQL = ExtractWfw.asp: 19S109CJ.PRN Chief Judges Tournament Report -+- 4/24/2019 9:14:45 PM kwhetsel
+SQL = ExtractWfw.asp: 19S109CJ.TXT Chief Judges Rept Data File -+- 4/24/2019 9:14:45 PM kwhetsel
+SQL = ExtractWfw.asp: 19S109SD.PRN Safety Directors Report -+- 4/24/2019 9:14:45 PM kwhetsel
+SQL = ExtractWfw.asp: 19S109SD.TXT Safety Directors Data File -+- 4/24/2019 9:14:45 PM kwhetsel
+SQL = ExtractWfw.asp: 19S109TU.PRN Towboat Utilization Report -+- 4/24/2019 9:14:45 PM kwhetsel
+SQL = ExtractWfw.asp: 19S109TU.TXT Towboat Utilization Data File -+- 4/24/2019 9:14:45 PM kwhetsel
+SQL = ExtractWfw.asp: WWPARM.TNY Tournament Control File -+- 4/24/2019 9:14:45 PM kwhetsel
+SQL = ExtractWfw.asp: send emailto "Curtis Rabe" <rabecurtis@aol.com>; "Bill Wenner" <teddyw@tampabay.rr.com>; "Brenda Nichols" <brendanichols166@gmail.com> -+- 4/24/2019 9:14:45 PM kwhetsel
+SQL = ExtractWfw.asp: emailto Owner "Kirby Whetsel" <kwhetsel@charter.net> -+- 4/24/2019 9:14:45 PM kwhetsel
+SQL = ExtractWfw.asp: emailto UploadMode Zip -+- 4/24/2019 9:14:45 PM kwhetsel
+SQL = ExtractWfw.asp: emailto strMissing  -+- 4/24/2019 9:14:45 PM kwhetsel
+SQL = ExtractWfw.asp: Upload Time:  4/24/2019 9:14:45 PM -+- 4/24/2019 9:14:45 PM kwhetsel
+SQL = ExtractWfw.asp: MailTo: "Curtis Rabe" <rabecurtis@aol.com>; "Bill Wenner" <teddyw@tampabay.rr.com>; "Brenda Nichols" <brendanichols166@gmail.com> eMailCC: "Kirby Whetsel" <kwhetsel@charter.net>; competition@usawaterski.org -+- 4/24/2019 9:14:45 PM kwhetsel
+SQL = ExtractWfw.asp: Error sending email: Err.Number=-2147220975 Message=The message could not be sent to the SMTP server. The transport error code was 0x80040217. The server response was not available
+ -+- 4/24/2019 9:14:52 PM kwhetsel
+SQL = ExtractWfw.asp: emailto closed -+- 4/24/2019 9:14:52 PM kwhetsel
+SQL = ExtractWfw.asp:   Upload into d:\webs\usawaterski.org\rankings\PostTourZips\19S109R.ZIP -- all Status flags set and Tournament posted as Complete. -+- 4/24/2019 9:14:52 PM kwhetsel
+SQL = ExtractWfw.asp: FoundNewWSP=False -+- 4/24/2019 9:14:52 PM kwhetsel
+SQL = ExtractWfw.asp: TourID: 19S134, Tourzip=d:\webs\usawaterski.org\rankings\PostTourZips\19S134R.ZIP, TourFldr=d:\webs\usawaterski.org\rankings\Scratch\19S134R -+- 4/24/2019 9:21:47 PM kwhetsel
+SQL = ExtractWfw.asp: Get Swift Entry: Sanctions.dbo.TSchedul -+- 4/24/2019 9:21:47 PM kwhetsel
+SQL = ExtractWfw.asp: 19S134R.SBK Full Scorebook Report -+- 4/24/2019 9:21:47 PM kwhetsel
+SQL = ExtractWfw.asp: 19S134R.WSP Rankings Data File (Scores) -+- 4/24/2019 9:21:47 PM kwhetsel
+SQL = ExtractWfw.asp: Extract tournament email address for submitter -+- 4/24/2019 9:21:47 PM kwhetsel
+SQL = ExtractWfw.asp: eMailTo: "Kyle Eade" <kyle@skifluid.com>; "Bill Wenner" <teddyw@tampabay.rr.com>; "Brenda Nichols" <brendanichols166@gmail.com> -+- 4/24/2019 9:21:47 PM kwhetsel
+SQL = ExtractWfw.asp: 19S134TS.PRN Tournament Summary Report -+- 4/24/2019 9:21:47 PM kwhetsel
+SQL = ExtractWfw.asp: 19S134TS.TXT WfW Tournament Export Data File -+- 4/24/2019 9:21:47 PM kwhetsel
+SQL = ExtractWfw.asp: 19S134OD.TXT Officials Data File (Credits) -+- 4/24/2019 9:21:47 PM kwhetsel
+SQL = ExtractWfw.asp: 19S134BT.PRN Boat Time Tracking Report -+- 4/24/2019 9:21:47 PM kwhetsel
+SQL = ExtractWfw.asp: 19S134JT.CSV Jump Time Data File -+- 4/24/2019 9:21:47 PM kwhetsel
+SQL = ExtractWfw.asp: EmailToIWWF File=19S134JT.CSV -+- 4/24/2019 9:21:47 PM kwhetsel
+SQL = ExtractWfw.asp: EmailToIWWF: Error sending email: Err.Number=-2147220975 Message=The message could not be sent to the SMTP server. The transport error code was 0x80040217. The server response was not available
+ -+- 4/24/2019 9:21:54 PM kwhetsel
+SQL = ExtractWfw.asp: 19S134CS.HTM Condensed Scorebook Report -+- 4/24/2019 9:21:54 PM kwhetsel
+SQL = ExtractWfw.asp: EmailToIWWF File=19S134CS.HTM -+- 4/24/2019 9:21:54 PM kwhetsel
+SQL = ExtractWfw.asp: EmailToIWWF: Error sending email: Err.Number=-2147220975 Message=The message could not be sent to the SMTP server. The transport error code was 0x80040217. The server response was not available
+ -+- 4/24/2019 9:22:01 PM kwhetsel
+SQL = ExtractWfw.asp: 19S134CJ.PRN Chief Judges Tournament Report -+- 4/24/2019 9:22:01 PM kwhetsel
+SQL = ExtractWfw.asp: 19S134CJ.TXT Chief Judges Rept Data File -+- 4/24/2019 9:22:01 PM kwhetsel
+SQL = ExtractWfw.asp: 19S134SD.PRN Safety Directors Report -+- 4/24/2019 9:22:01 PM kwhetsel
+SQL = ExtractWfw.asp: 19S134SD.TXT Safety Directors Data File -+- 4/24/2019 9:22:01 PM kwhetsel
+SQL = ExtractWfw.asp: 19S134TU.PRN Towboat Utilization Report -+- 4/24/2019 9:22:01 PM kwhetsel
+SQL = ExtractWfw.asp: 19S134TU.TXT Towboat Utilization Data File -+- 4/24/2019 9:22:01 PM kwhetsel
+SQL = ExtractWfw.asp: EmailToIWWF File=19S134HD.TXT -+- 4/24/2019 9:22:01 PM kwhetsel
+SQL = ExtractWfw.asp: EmailToIWWF: Error sending email: Err.Number=-2147220975 Message=The message could not be sent to the SMTP server. The transport error code was 0x80040217. The server response was not available
+ -+- 4/24/2019 9:22:07 PM kwhetsel
+SQL = ExtractWfw.asp: WWPARM.TNY Tournament Control File -+- 4/24/2019 9:22:07 PM kwhetsel
+SQL = ExtractWfw.asp: send emailto "Kyle Eade" <kyle@skifluid.com>; "Bill Wenner" <teddyw@tampabay.rr.com>; "Brenda Nichols" <brendanichols166@gmail.com> -+- 4/24/2019 9:22:07 PM kwhetsel
+SQL = ExtractWfw.asp: emailto Owner "Kirby Whetsel" <kwhetsel@charter.net> -+- 4/24/2019 9:22:07 PM kwhetsel
+SQL = ExtractWfw.asp: emailto UploadMode Zip -+- 4/24/2019 9:22:07 PM kwhetsel
+SQL = ExtractWfw.asp: emailto strMissing  -+- 4/24/2019 9:22:07 PM kwhetsel
+SQL = ExtractWfw.asp: Upload Time:  4/24/2019 9:22:07 PM -+- 4/24/2019 9:22:07 PM kwhetsel
+SQL = ExtractWfw.asp: MailTo: "Kyle Eade" <kyle@skifluid.com>; "Bill Wenner" <teddyw@tampabay.rr.com>; "Brenda Nichols" <brendanichols166@gmail.com> eMailCC: "Kirby Whetsel" <kwhetsel@charter.net>; competition@usawaterski.org -+- 4/24/2019 9:22:07 PM kwhetsel
+SQL = ExtractWfw.asp: Error sending email: Err.Number=-2147220975 Message=The message could not be sent to the SMTP server. The transport error code was 0x80040217. The server response was not available
+ -+- 4/24/2019 9:22:13 PM kwhetsel
+SQL = ExtractWfw.asp: emailto closed -+- 4/24/2019 9:22:13 PM kwhetsel
+SQL = ExtractWfw.asp:   Upload into d:\webs\usawaterski.org\rankings\PostTourZips\19S134R.ZIP -- all Status flags set and Tournament posted as Complete. -+- 4/24/2019 9:22:13 PM kwhetsel
+SQL = ExtractWfw.asp: FoundNewWSP=True -+- 4/24/2019 9:22:13 PM kwhetsel
+SQL = ExtractWfw.asp: ScoreCount=0 on usawsrank.Scores -+- 4/24/2019 9:22:14 PM kwhetsel
+SQL = ExtractWfw.asp: TourID: 19S151, Tourzip=d:\webs\usawaterski.org\rankings\PostTourZips\19S151R.ZIP, TourFldr=d:\webs\usawaterski.org\rankings\Scratch\19S151R -+- 4/26/2019 8:22:52 PM dallen
+SQL = ExtractWfw.asp: Get Swift Entry: Sanctions.dbo.TSchedul -+- 4/26/2019 8:22:52 PM dallen
+SQL = ExtractWfw.asp: 19S151R.SBK Full Scorebook Report -+- 4/26/2019 8:22:52 PM dallen
+SQL = ExtractWfw.asp: 19S151R.WSP Rankings Data File (Scores) -+- 4/26/2019 8:22:52 PM dallen
+SQL = ExtractWfw.asp: Extract tournament email address for submitter -+- 4/26/2019 8:22:52 PM dallen
+SQL = ExtractWfw.asp: eMailTo: "KRIS LAPOINT" <kris.lapoint@att.net>; "John Wilkins" <wilkins@northnet.org>; "Kris Lapoint" <kris.lapoint@att.net> -+- 4/26/2019 8:22:52 PM dallen
+SQL = ExtractWfw.asp: 19S151TS.PRN Tournament Summary Report -+- 4/26/2019 8:22:52 PM dallen
+SQL = ExtractWfw.asp: 19S151TS.TXT WfW Tournament Export Data File -+- 4/26/2019 8:22:52 PM dallen
+SQL = ExtractWfw.asp: 19S151OD.TXT Officials Data File (Credits) -+- 4/26/2019 8:22:52 PM dallen
+SQL = ExtractWfw.asp: 19S151BT.PRN Boat Time Tracking Report -+- 4/26/2019 8:22:52 PM dallen
+SQL = ExtractWfw.asp: 19S151CS.HTM Condensed Scorebook Report -+- 4/26/2019 8:22:52 PM dallen
+SQL = ExtractWfw.asp: 19S151CJ.PRN Chief Judges Tournament Report -+- 4/26/2019 8:22:52 PM dallen
+SQL = ExtractWfw.asp: 19S151CJ.TXT Chief Judges Rept Data File -+- 4/26/2019 8:22:52 PM dallen
+SQL = ExtractWfw.asp: 19S151SD.PRN Safety Directors Report -+- 4/26/2019 8:22:52 PM dallen
+SQL = ExtractWfw.asp: 19S151SD.TXT Safety Directors Data File -+- 4/26/2019 8:22:52 PM dallen
+SQL = ExtractWfw.asp: 19S151TU.PRN Towboat Utilization Report -+- 4/26/2019 8:22:52 PM dallen
+SQL = ExtractWfw.asp: 19S151TU.TXT Towboat Utilization Data File -+- 4/26/2019 8:22:52 PM dallen
+SQL = ExtractWfw.asp: WWPARM.TNY Tournament Control File -+- 4/26/2019 8:22:52 PM dallen
+SQL = ExtractWfw.asp: send emailto "KRIS LAPOINT" <kris.lapoint@att.net>; "John Wilkins" <wilkins@northnet.org>; "Kris Lapoint" <kris.lapoint@att.net> -+- 4/26/2019 8:22:52 PM dallen
+SQL = ExtractWfw.asp: emailto Owner "Kirby Whetsel" <kwhetsel@charter.net> -+- 4/26/2019 8:22:52 PM dallen
+SQL = ExtractWfw.asp: emailto UploadMode Zip -+- 4/26/2019 8:22:52 PM dallen
+SQL = ExtractWfw.asp: emailto strMissing  -+- 4/26/2019 8:22:52 PM dallen
+SQL = ExtractWfw.asp: Upload Time:  4/26/2019 8:22:52 PM -+- 4/26/2019 8:22:52 PM dallen
+SQL = ExtractWfw.asp: MailTo: "KRIS LAPOINT" <kris.lapoint@att.net>; "John Wilkins" <wilkins@northnet.org>; "Kris Lapoint" <kris.lapoint@att.net> eMailCC: "Kirby Whetsel" <kwhetsel@charter.net>; competition@usawaterski.org -+- 4/26/2019 8:22:52 PM dallen
+SQL = ExtractWfw.asp: Error sending email: Err.Number=-2147220975 Message=The message could not be sent to the SMTP server. The transport error code was 0x80040217. The server response was not available
+ -+- 4/26/2019 8:22:59 PM dallen
+SQL = ExtractWfw.asp: emailto closed -+- 4/26/2019 8:22:59 PM dallen
+SQL = ExtractWfw.asp:   Upload into d:\webs\usawaterski.org\rankings\PostTourZips\19S151R.ZIP -- all Status flags set and Tournament posted as Complete. -+- 4/26/2019 8:22:59 PM dallen
+SQL = ExtractWfw.asp: FoundNewWSP=False -+- 4/26/2019 8:22:59 PM dallen
+SQL = ExtractWfw.asp: TourID: 19S148, Tourzip=d:\webs\usawaterski.org\rankings\PostTourZips\19S148R.ZIP, TourFldr=d:\webs\usawaterski.org\rankings\Scratch\19S148R -+- 4/27/2019 8:17:56 PM dallen
+SQL = ExtractWfw.asp: Get Swift Entry: Sanctions.dbo.TSchedul -+- 4/27/2019 8:17:56 PM dallen
+SQL = ExtractWfw.asp: 19S148R.SBK Full Scorebook Report -+- 4/27/2019 8:17:56 PM dallen
+SQL = ExtractWfw.asp: 19S148R.WSP Rankings Data File (Scores) -+- 4/27/2019 8:17:56 PM dallen
+SQL = ExtractWfw.asp: Extract tournament email address for submitter -+- 4/27/2019 8:17:56 PM dallen
+SQL = ExtractWfw.asp: eMailTo: "Bill Sowers" <billsowers39@gmail.com>; "Patricia Burt" <tbatc73@gmail.com>; "Patricia Burt" <tbatc73@gmail.com> -+- 4/27/2019 8:17:56 PM dallen
+SQL = ExtractWfw.asp: 19S148TS.PRN Tournament Summary Report -+- 4/27/2019 8:17:56 PM dallen
+SQL = ExtractWfw.asp: 19S148TS.TXT WfW Tournament Export Data File -+- 4/27/2019 8:17:56 PM dallen
+SQL = ExtractWfw.asp: 19S148OD.TXT Officials Data File (Credits) -+- 4/27/2019 8:17:56 PM dallen
+SQL = ExtractWfw.asp: 19S148BT.PRN Boat Time Tracking Report -+- 4/27/2019 8:17:56 PM dallen
+SQL = ExtractWfw.asp: 19S148CS.HTM Condensed Scorebook Report -+- 4/27/2019 8:17:56 PM dallen
+SQL = ExtractWfw.asp: 19S148CJ.PRN Chief Judges Tournament Report -+- 4/27/2019 8:17:56 PM dallen
+SQL = ExtractWfw.asp: 19S148CJ.TXT Chief Judges Rept Data File -+- 4/27/2019 8:17:56 PM dallen
+SQL = ExtractWfw.asp: 19S148SD.PRN Safety Directors Report -+- 4/27/2019 8:17:56 PM dallen
+SQL = ExtractWfw.asp: 19S148SD.TXT Safety Directors Data File -+- 4/27/2019 8:17:56 PM dallen
+SQL = ExtractWfw.asp: 19S148TU.PRN Towboat Utilization Report -+- 4/27/2019 8:17:56 PM dallen
+SQL = ExtractWfw.asp: 19S148TU.TXT Towboat Utilization Data File -+- 4/27/2019 8:17:56 PM dallen
+SQL = ExtractWfw.asp: WWPARM.TNY Tournament Control File -+- 4/27/2019 8:17:56 PM dallen
+SQL = ExtractWfw.asp: send emailto "Bill Sowers" <billsowers39@gmail.com>; "Patricia Burt" <tbatc73@gmail.com>; "Patricia Burt" <tbatc73@gmail.com> -+- 4/27/2019 8:17:56 PM dallen
+SQL = ExtractWfw.asp: emailto Owner "Kirby Whetsel" <kwhetsel@charter.net> -+- 4/27/2019 8:17:56 PM dallen
+SQL = ExtractWfw.asp: emailto UploadMode Zip -+- 4/27/2019 8:17:56 PM dallen
+SQL = ExtractWfw.asp: emailto strMissing  -+- 4/27/2019 8:17:56 PM dallen
+SQL = ExtractWfw.asp: Upload Time:  4/27/2019 8:17:56 PM -+- 4/27/2019 8:17:56 PM dallen
+SQL = ExtractWfw.asp: MailTo: "Bill Sowers" <billsowers39@gmail.com>; "Patricia Burt" <tbatc73@gmail.com>; "Patricia Burt" <tbatc73@gmail.com> eMailCC: "Kirby Whetsel" <kwhetsel@charter.net>; competition@usawaterski.org -+- 4/27/2019 8:17:56 PM dallen
+SQL = ExtractWfw.asp: Error sending email: Err.Number=-2147220975 Message=The message could not be sent to the SMTP server. The transport error code was 0x80040217. The server response was not available
+ -+- 4/27/2019 8:18:03 PM dallen
+SQL = ExtractWfw.asp: emailto closed -+- 4/27/2019 8:18:03 PM dallen
+SQL = ExtractWfw.asp:   Upload into d:\webs\usawaterski.org\rankings\PostTourZips\19S148R.ZIP -- all Status flags set and Tournament posted as Complete. -+- 4/27/2019 8:18:03 PM dallen
+SQL = ExtractWfw.asp: FoundNewWSP=False -+- 4/27/2019 8:18:03 PM dallen
+SQL = ExtractWfw.asp: TourID: 19S148, Tourzip=d:\webs\usawaterski.org\rankings\PostTourZips\19S148R.ZIP, TourFldr=d:\webs\usawaterski.org\rankings\Scratch\19S148R -+- 4/27/2019 8:29:51 PM dallen
+SQL = ExtractWfw.asp: Get Swift Entry: Sanctions.dbo.TSchedul -+- 4/27/2019 8:29:51 PM dallen
+SQL = ExtractWfw.asp: 19S148R.SBK Full Scorebook Report -+- 4/27/2019 8:29:51 PM dallen
+SQL = ExtractWfw.asp: 19S148R.WSP Rankings Data File (Scores) -+- 4/27/2019 8:29:51 PM dallen
+SQL = ExtractWfw.asp: Extract tournament email address for submitter -+- 4/27/2019 8:29:51 PM dallen
+SQL = ExtractWfw.asp: eMailTo: "Bill Sowers" <billsowers39@gmail.com>; "Patricia Burt" <tbatc73@gmail.com>; "Patricia Burt" <tbatc73@gmail.com> -+- 4/27/2019 8:29:51 PM dallen
+SQL = ExtractWfw.asp: 19S148TS.PRN Tournament Summary Report -+- 4/27/2019 8:29:51 PM dallen
+SQL = ExtractWfw.asp: 19S148TS.TXT WfW Tournament Export Data File -+- 4/27/2019 8:29:51 PM dallen
+SQL = ExtractWfw.asp: 19S148OD.TXT Officials Data File (Credits) -+- 4/27/2019 8:29:51 PM dallen
+SQL = ExtractWfw.asp: 19S148BT.PRN Boat Time Tracking Report -+- 4/27/2019 8:29:51 PM dallen
+SQL = ExtractWfw.asp: 19S148CS.HTM Condensed Scorebook Report -+- 4/27/2019 8:29:51 PM dallen
+SQL = ExtractWfw.asp: 19S148CJ.PRN Chief Judges Tournament Report -+- 4/27/2019 8:29:51 PM dallen
+SQL = ExtractWfw.asp: 19S148CJ.TXT Chief Judges Rept Data File -+- 4/27/2019 8:29:51 PM dallen
+SQL = ExtractWfw.asp: 19S148SD.PRN Safety Directors Report -+- 4/27/2019 8:29:51 PM dallen
+SQL = ExtractWfw.asp: 19S148SD.TXT Safety Directors Data File -+- 4/27/2019 8:29:51 PM dallen
+SQL = ExtractWfw.asp: 19S148TU.PRN Towboat Utilization Report -+- 4/27/2019 8:29:51 PM dallen
+SQL = ExtractWfw.asp: 19S148TU.TXT Towboat Utilization Data File -+- 4/27/2019 8:29:51 PM dallen
+SQL = ExtractWfw.asp: WWPARM.TNY Tournament Control File -+- 4/27/2019 8:29:51 PM dallen
+SQL = ExtractWfw.asp: send emailto "Bill Sowers" <billsowers39@gmail.com>; "Patricia Burt" <tbatc73@gmail.com>; "Patricia Burt" <tbatc73@gmail.com> -+- 4/27/2019 8:29:51 PM dallen
+SQL = ExtractWfw.asp: emailto Owner "Kirby Whetsel" <kwhetsel@charter.net> -+- 4/27/2019 8:29:51 PM dallen
+SQL = ExtractWfw.asp: emailto UploadMode Zip -+- 4/27/2019 8:29:51 PM dallen
+SQL = ExtractWfw.asp: emailto strMissing  -+- 4/27/2019 8:29:51 PM dallen
+SQL = ExtractWfw.asp: Upload Time:  4/27/2019 8:29:51 PM -+- 4/27/2019 8:29:51 PM dallen
+SQL = ExtractWfw.asp: MailTo: "Bill Sowers" <billsowers39@gmail.com>; "Patricia Burt" <tbatc73@gmail.com>; "Patricia Burt" <tbatc73@gmail.com> eMailCC: "Kirby Whetsel" <kwhetsel@charter.net>; competition@usawaterski.org -+- 4/27/2019 8:29:51 PM dallen
+SQL = ExtractWfw.asp: email sent -+- 4/27/2019 8:29:53 PM dallen
+SQL = ExtractWfw.asp: emailto closed -+- 4/27/2019 8:29:53 PM dallen
+SQL = ExtractWfw.asp:   Upload into d:\webs\usawaterski.org\rankings\PostTourZips\19S148R.ZIP -- all Status flags set and Tournament posted as Complete. -+- 4/27/2019 8:29:53 PM dallen
+SQL = ExtractWfw.asp: FoundNewWSP=False -+- 4/27/2019 8:29:53 PM dallen
