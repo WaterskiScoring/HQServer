@@ -6,26 +6,15 @@
 
 
 <%
-
-'	**********	
-'	**********	Modified March 2011 to now support both DOS and WfW ZIP files
-'	**********	
-
-
 Dim strError
 strError = ""
-
 WriteIndexPageHeader
-
 %>
-
 		<table border="0" cellspacing="1" cellpadding="1">
-
 		<tr>
 			<td>&nbsp;&nbsp;&nbsp;</td>
 
 			<td valign="top"><font face="Verdana, Arial, Helvetica, sans-serif" Size="2">
-    	
 <%
 
 Dim objUpload, objfso, objZip
@@ -36,14 +25,6 @@ Set objUpload = New clsUpload
 Set objFSO = Server.CreateObject("Scripting.FileSystemObject")
 Set objZip = Server.CreateObject("SoftComplex.Zip")
 Set objRS = Server.CreateObject("ADODB.recordset")
-
-
-' Pick up the uploaded file and diagnose it.
-' Grab the file name and extension and size.
-'	Modified Mar 2010 for IE 8 -- try FileName
-'	first, if null then use FilePath instead.
-
-'	strFileName = ucase(objUpload.Fields("ZipFile").FileName)
 
 strFileName = trim(ucase(objUpload.Fields("ZipFile").FileName))
 IF strFileName = "" then strFileName = ucase(objUpload.Fields("ZipFile").FilePath)
@@ -68,11 +49,11 @@ ELSEIF strFileExt = "LZH" THEN
 ELSEIF Instr(".CSV.HTM.PRN.SBK.TXT.WSP.ZIP", "." & ucase(strFileExt)) = 0 THEN
 	strError = "Unrecognized Report File Type:&nbsp; " & strFileName
 ELSEIF strFileExt = "ZIP" THEN
-	
+
 	' Uploaded File is ZIP Type.
 	' Create a Session variable with pathname in the Scratch
 	' sub-folder, and store the incoming upload file there.
-	
+
 	Session("UploadMode") = "Zip"
 	Session("strZipPath") = PathtoScratch & "\" & strFileName
 	objUpload("ZipFile").SaveAs Session("strZipPath")
@@ -108,13 +89,13 @@ ELSEIF strFileExt = "ZIP" THEN
 		Session("strTourName") = Mid(strWSPARM,I2+2,I3-I2-2)
 		Session("strTourZip") = PathtoZips & "\" & Session("strTourID") & ".ZIP"
 
-		' Now that we have the official Sanction ID, let's look to SWIFT 
+		' Now that we have the official Sanction ID, let's look to SWIFT
 		' Tschedul table and get access to the particulars of that affair.
-		
+
 		' ====================================================
 		'	SWIFT Lookup & Validation logic here
 		' ====================================================
-             
+
 		sSQL = "Select top 1 * from " & SanctionTableName & " where upper(TournAppID) = '"
 		sSQL = sSQL & ucase(left(Session("strTourID"),6)) & "'"
 		objRS.open sSQL, sConnectionToSanctionTable
@@ -126,7 +107,7 @@ ELSEIF strFileExt = "ZIP" THEN
 		ELSE
 			TSanction = objRS("TSanction")
 			DispSanction = TSanction
-			IF Session("strTourID") <> TSanction THEN 
+			IF Session("strTourID") <> TSanction THEN
 				DispSanction = "<font color=red>" & TSanction & "</font>"
 			END IF
 			TName = Replace(objRS("TName"),","," ")
@@ -135,7 +116,7 @@ ELSEIF strFileExt = "ZIP" THEN
 			IF Mid(TDateE,2,1) = "-" THEN TDateE = "0" & TDateE
 			IF Mid(TDateE,5,1) = "-" THEN TDateE = Left(TDateE,3) & "0" & Right(TDateE,6)
 			Session("strIWWFSubj") = TName & "," & TSanction & "," & TSiteID & "," & Right(TDateE,4) & "-" & Left(TDateE,5)
-			IF Session("strTourDate") <> TDateE THEN 
+			IF Session("strTourDate") <> TDateE THEN
 				TDateE = "<font color=red>" & TDateE & "</font>"
 			END IF
 			Tstatus = objRS("Tstatus")
@@ -144,11 +125,11 @@ ELSEIF strFileExt = "ZIP" THEN
 
 		'	Now recap what we've found so far and then check for various exceptions.
 		'	First show Input file particulars, then SWIFT's
-				
+
 		%>
 
 		<p><%=Session("strFileInfo")%></p>
-	
+
 		<p><b>Upload:&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
 			<%=Session("strTourID")%>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
 			<%=Session("strTourName")%>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
@@ -156,81 +137,81 @@ ELSEIF strFileExt = "ZIP" THEN
 			&nbsp;SWIFT:&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
 			<%=DispSanction%>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
 			<%=TName%>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
-			<%=TDateE%></b></p>	
+			<%=TDateE%></b></p>
 
 		<%
-			
+
 		'	If Can't find SWIFT entry for supplied Sanction App ID, then display error message.
 
-		IF TStatus < 0 THEN 
-				
+		IF TStatus < 0 THEN
+
 			%>
-				<p><font color="red"><b>Exception:&nbsp; TourID used to score this Tournament 
+				<p><font color="red"><b>Exception:&nbsp; TourID used to score this Tournament
 					not found in SWIFT.</b></font></p>
-			<%	
-		
+			<%
+
 		'	If Sanction Status incomplete or Cancelled, then display error message.
 
-		ELSEIF TStatus < 2 or TStatus = 3 THEN 
-				
+		ELSEIF TStatus < 2 or TStatus = 3 THEN
+
 			%>
-				<p><font color="red"><b>Exception:&nbsp; Sanction for this Event is either 
+				<p><font color="red"><b>Exception:&nbsp; Sanction for this Event is either
 					incomplete or has been cancelled.&nbsp; Post-tournament upload will not be
-					allowed.&nbsp; Please report these particulars to your Regional EVP and  
+					allowed.&nbsp; Please report these particulars to your Regional EVP and
 					copy the competition department at USA Waterski HQ.</b></font></p>
-			<%	
-		
+			<%
+
 		'	If Sanction Suffix code doesn't match, then display error message.  Further,
 		'	If SWIFT suffix is A or B or P, then disallow Upload -- otherwise just warn.
 
-		ELSEIF TSanction <> Session("strTourID") THEN 
-			
-			IF	Instr("ABPLR",Mid(TSanction,7,1)) > 0 THEN 
-			
+		ELSEIF TSanction <> Session("strTourID") THEN
+
+			IF	Instr("ABPLR",Mid(TSanction,7,1)) > 0 THEN
+
 				TStatus = -1 %>
 
 				<p><font color="red"><b>Exception:&nbsp; Highest Class suffix on TourID used to
 					score this tournament does not match SWIFT.&nbsp; Post-tournament upload will not be
 					allowed.&nbsp; Please advise the submitter of this discrepancy and ask them to either
-					revise their scoring details and resubmit -- or else have SWIFT corrected, if the 
+					revise their scoring details and resubmit -- or else have SWIFT corrected, if the
 					error lies on that side.</b></font></p>
-			
+
 			<% ELSE %>
-			
+
 				<p><font color="red"><b>Warning:&nbsp; Highest Class scored as
 					(<%=Mid(Session("strTourID"),7,1)%>) does not match SWIFT.</b></font></p>
 
 			<%	END IF
-		
+
 		END IF
-		
+
 		'	If End Dates don't match, then display warning.
 
-		IF TStatus > 0 AND Session("strTourDate") <> TDateE THEN 
-				
+		IF TStatus > 0 AND Session("strTourDate") <> TDateE THEN
+
 			%>
 				<p><font color="red"><b>Warning:&nbsp; Reported End Date does
 					not match SWIFT.</b></font></p>
-			<%	
-		
+			<%
+
 		END IF
-		
+
 		'	If previously uploaded then warn and show last date updated.
 
-		IF objFSO.FileExists(Session("strTourZip")) = true THEN 
+		IF objFSO.FileExists(Session("strTourZip")) = true THEN
 			Set objFile = objFSO.GetFile(Session("strTourZip"))
 			strZipDate = objFile.DateLastModified
-			Set objFile = Nothing	
-				
+			Set objFile = Nothing
+
 			%>
-				<p><font color="red"><b>Reports Archive for Tournament 
+				<p><font color="red"><b>Reports Archive for Tournament
 					<%=Session("strTourID")%> already exists</b></font><br>
-					&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; 
+					&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
 					( last posted to on <%=strZipDate%> ).</p>
-			<%	
-		
+			<%
+
 		END IF
-		
+
 		' ===========================================
 		' possibly add other advisory conditions here
 		' ===========================================
@@ -255,25 +236,25 @@ ELSEIF strFileExt = "ZIP" THEN
 		%>
 
 		<% IF TStatus = 2 or TStatus > 3 THEN %>
-		
+
 					<td><form method=post action="<%=strExtractModule%>">
 
-			<% IF objFSO.FileExists(Session("strTourZip")) = true THEN %> 
+			<% IF objFSO.FileExists(Session("strTourZip")) = true THEN %>
 
 		 				<input type=submit style="width:13em" value="Re-Upload Tournament"
- 	 					title="Re-Process this Tournament, adding any new files, and replacing any previously uploaded files that now have newer datestamps">						
+ 	 					title="Re-Process this Tournament, adding any new files, and replacing any previously uploaded files that now have newer datestamps">
 
 			<% ELSE %>
 
  						<input type=submit style="width:13em" value="Upload Tournament"
-							title="Process this Tournament, extracting key data files from the incoming Zip file">					
+							title="Process this Tournament, extracting key data files from the incoming Zip file">
 
 			<% END IF %>
 
  		  		</form></td>
 				<td>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</td>
 
-		<% END IF 
+		<% END IF
 
 	END IF
 
@@ -282,10 +263,10 @@ ELSE
 	' Uploaded File is something other than ZIP Type.
 	' Create a Session variable with pathname in the Scratch
 	' sub-folder, and store the incoming upload file there.
-	
+
 	Session("UploadMode") = "Rpt"
 
-	' First we validate the file name 
+	' First we validate the file name
 
 	IF strFileExt <> "WSP" AND strFileExt <> "SBK" AND Instr("BT.PRN/JT.CSV/OD.TXT/CJ.PRN/CJ.TXT/HD.TXT/SD.PRN/SD.TXT/TU.PRN/TU.TXT/TS.PRN/TS.TXT/CS.HTM", Mid(strFileName,7)) = 0 THEN
 		strError = "Unrecognized Report File Type:&nbsp; " & strFileName
@@ -301,18 +282,18 @@ ELSE
 		Next
 		Set objFilesInFolder = Nothing
 		Set objFolder = Nothing
-		
+
 		IF strZipFile = "" THEN
 			strError = "Tournament Archive not found for " & Left(strFileName,6) & "<br>"
 			strError = strError & "&nbsp;&nbsp; (Main .ZIP file must be uploaded first)"
 		ELSE
-		
-			' Upload File Validated, and associated Zip Archive file was found. 
+
+			' Upload File Validated, and associated Zip Archive file was found.
 			' We're good -- finish setting up to process this single report file.
 
 
 
-			Session("strTourID") = Left(strZipFile,7)			
+			Session("strTourID") = Left(strZipFile,7)
 			Session("strZipPath") = PathtoScratch & "\" & strFileName
 			objUpload("ZipFile").SaveAs Session("strZipPath")
 			Session("strTourZip") = PathtoZips & "\" & strZipFile
@@ -330,7 +311,7 @@ ELSE
 			' ====================================================
 			'	SWIFT Lookup & Validation logic here
 			' ====================================================
-             
+
 			sSQL = "Select top 1 * from " & SanctionTableName & " where upper(TournAppID) = '"
 			sSQL = sSQL & ucase(left(Session("strTourID"),6)) & "'"
 			objRS.open sSQL, sConnectionToSanctionTable
@@ -356,15 +337,15 @@ ELSE
 
 			'	Now recap status and then offer upload and abort options
 			'	Show Input file particulars, then SWIFT info on this tournament
-		
+
 			%>
 
 			<p><%=Session("strFileInfo")%></p>
-	
+
 			<p><b>SWIFT:&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
 				<%=TSanction%>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
 				<%=TName%>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
-				<%=TDateE%></b></p>	
+				<%=TDateE%></b></p>
 
 				</td></tr>
 
@@ -377,7 +358,7 @@ ELSE
 			<tr>
 				<td>&nbsp;&nbsp;&nbsp;</td>
 				<td><TABLE align=center><tr>
-		
+
 				<td><form method=post action="<%=strExtractModule%>">
 
  						<input type=submit style="width:13em" value="Upload This File"
@@ -386,15 +367,15 @@ ELSE
  		  		</form></td>
 				<td>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</td>
 
-			<% 
-			
+			<%
+
 		END IF
-		
+
 	END IF
-	
+
 END IF
 
-' If we have an error message string, then spit out only incoming 
+' If we have an error message string, then spit out only incoming
 ' file info along with that specified Error message string.
 
 IF strError <> "" THEN

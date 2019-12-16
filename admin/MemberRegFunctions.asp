@@ -76,8 +76,6 @@ Function CheckBasicAuth()
         curUser = Request.QueryString("user")
         curpassword = Request.QueryString("password")
 		curRqstAuth = ValidateSanctionAccess(curUser, curpassword)
-	    ''''response.write "ValidateSanctionAccess Credentials=" & curUser & "," & curpassword & "," & curRqstAuth & "<br/><br/>"
-	    ''''response.end
 	END IF
 	CheckBasicAuth = curRqstAuth
 End Function
